@@ -18,4 +18,4 @@ Locked decisions. Change one only by adding a new row, never by silent edit.
 ## Still open (need Lebi)
 - Leica kernel pin is not permanent (see below); ask Lebi before applying it or rebooting.
 - Who types the 1,500-word human set (D4 assumes the 3 team members).
-- Whether Aksharantar Tamil test overlaps Dakshina train (unchecked; blocks use as extra test set).
+- ~~Aksharantar overlap~~ resolved: use `data/aksharantar-tamil/tam_test.no_dakshina.tsv` (4,335 rows); see `docs/datasets/`.

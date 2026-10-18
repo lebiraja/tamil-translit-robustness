@@ -35,6 +35,6 @@ Each question lists what it depends on and a default recommendation. The evidenc
 10. **Licence obligations.** Dakshina is CC BY-SA 4.0. If we publish cleaned splits or a derived test set, they must be CC BY-SA with attribution. Are we publishing data, or code only? Is the course report public?
 
 11. **Verification tasks before final numbers** (no decision needed, but someone must own each):
-    - Check overlap between the Aksharantar Tamil test and Dakshina train/dev.
+    - Aksharantar overlap: done (DATASET.md §8). Filtered robustness file: `data/aksharantar-tamil/tam_test.no_dakshina.tsv` (4,335 rows; rule: source ≠ Dakshina and NFC native word not in any Dakshina split). Verified.
     - Confirm the Bhasha-Abhijnaanam Tamil count.
     - Decide how to handle the 15 sentences duplicated across dev and test.
