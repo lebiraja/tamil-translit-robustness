@@ -6,7 +6,7 @@ Prepend an entry for each real bug or documentation error fixed: symptom, root c
 - **Symptom:** `DECISIONS.md` row D10 still said the laptop was an RTX 5070 after F1 had been applied elsewhere.
 - **Root cause:** F1 corrected D7, `CLAUDE.md` and `HANDOVER.md` but D10 was missed.
 - **Fix:** `DECISIONS.md` D10 changed to "laptop RTX 4050 for development" (commit `7522579`); the later rewrite of `DECISIONS.md` keeps the correct values in D7 and D10.
-- **Verification:** `grep -rn "laptop.*5070" .` over the docs finds only the sentences that describe the mistake itself.
+- **Verification:** ran `grep -rn "laptop.*5070" --include=*.md .`; every match either states the correct split (laptop RTX 4050, Leica RTX 5070) or describes the mistake itself.
 
 ## F1 · 2026-10-18 · Wrong GPU attributed to the laptop
 - **Symptom:** early docs said the laptop has an RTX 5070 (12 GB, Blackwell) and planned PyTorch for it.
