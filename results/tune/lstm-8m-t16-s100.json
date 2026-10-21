@@ -1,0 +1,144 @@
+{
+ "config": {
+  "name": "lstm-8m-t16",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 8000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 128,
+  "lr": 0.0003574799126734441,
+  "warmup": 800,
+  "dropout": 0.4,
+  "label_smoothing": 0.05,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 184,
+  "hidden": 368,
+  "layers": 2,
+  "dropout": 0.4
+ },
+ "n_params": 8041954,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 1.1941473655921004,
+   "dev_cer_greedy": 12.153956063582783
+  },
+  {
+   "epoch": 1,
+   "train_loss": 0.6918746846210583,
+   "dev_cer_greedy": 10.195917346811209
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.6330368189360298,
+   "dev_cer_greedy": 9.923023343037274
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.5969488132845399,
+   "dev_cer_greedy": 9.370814208918972
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.570982166802601,
+   "dev_cer_greedy": 8.819274526263149
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.5514620881763681,
+   "dev_cer_greedy": 8.788284668273953
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.5343377323567093,
+   "dev_cer_greedy": 8.588573571696463
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.5208652424635473,
+   "dev_cer_greedy": 8.563417509018823
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.5090202725623179,
+   "dev_cer_greedy": 8.658070507554381
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.4990119071930001,
+   "dev_cer_greedy": 8.55984569775333
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.49047184187943255,
+   "dev_cer_greedy": 8.531118849897313
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.48264514422045524,
+   "dev_cer_greedy": 8.490195378076223
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.475937349446835,
+   "dev_cer_greedy": 8.770582562417403
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.47021422809250746,
+   "dev_cer_greedy": 8.92401107241718
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.4648526693530495,
+   "dev_cer_greedy": 8.7043486025538
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.4603820947064179,
+   "dev_cer_greedy": 8.695419233860166
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.4564973835758639,
+   "dev_cer_greedy": 8.911509956246093
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.45248969964816954,
+   "dev_cer_greedy": 8.882935976426467
+  }
+ ],
+ "best_dev_crit": 8.490195378076223,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 8.352531476024645,
+  "mrr": 0.7262195121951214,
+  "n": 6806.0,
+  "top1": 64.91331178372025,
+  "top5": 83.74963267704966
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 283.1871018409729
+}

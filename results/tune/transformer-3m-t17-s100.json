@@ -1,0 +1,191 @@
+{
+ "config": {
+  "name": "transformer-3m-t17",
+  "arch": "transformer",
+  "direction": "roman2native",
+  "params": 3000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 64,
+  "lr": 0.0010940902924522096,
+  "warmup": 800,
+  "dropout": 0.05,
+  "label_smoothing": 0.1,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "d_model": 192,
+  "heads": 4,
+  "enc_layers": 3,
+  "dec_layers": 3,
+  "ff": 768,
+  "dropout": 0.05
+ },
+ "n_params": 3153074,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 1.9681210510683702,
+   "dev_cer_greedy": 30.265037862551793
+  },
+  {
+   "epoch": 1,
+   "train_loss": 1.135921469789238,
+   "dev_cer_greedy": 16.131163937061313
+  },
+  {
+   "epoch": 2,
+   "train_loss": 1.0096618689201504,
+   "dev_cer_greedy": 13.71852116449366
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.958382329119063,
+   "dev_cer_greedy": 12.324754880074295
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.9270222057030053,
+   "dev_cer_greedy": 12.026503312914114
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.9049875452865931,
+   "dev_cer_greedy": 11.392698956993856
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.8869691354142403,
+   "dev_cer_greedy": 10.874573607415213
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.8733174170138964,
+   "dev_cer_greedy": 10.865643919775687
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.8611457413417682,
+   "dev_cer_greedy": 10.556299669613358
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.852030524998801,
+   "dev_cer_greedy": 10.555079297042434
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.8438634709589273,
+   "dev_cer_greedy": 10.459862487722118
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.8369256765512724,
+   "dev_cer_greedy": 10.408443912631936
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.8307471997456402,
+   "dev_cer_greedy": 10.313420841146531
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.8253870802594033,
+   "dev_cer_greedy": 10.208418909506545
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.8202677431397767,
+   "dev_cer_greedy": 10.20645069114548
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.8158181932150816,
+   "dev_cer_greedy": 10.102687739976783
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.8119696118473821,
+   "dev_cer_greedy": 10.017502500357194
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.8081236042473526,
+   "dev_cer_greedy": 10.054828282106692
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.8049080276654219,
+   "dev_cer_greedy": 10.17681728880157
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.8019239238560464,
+   "dev_cer_greedy": 10.233970351848544
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.7987266015718486,
+   "dev_cer_greedy": 9.852841375861699
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.795654429078518,
+   "dev_cer_greedy": 10.249678525503644
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.7936657749029266,
+   "dev_cer_greedy": 10.23181883126161
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.7909347295844987,
+   "dev_cer_greedy": 9.940705815116445
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.7885381075514524,
+   "dev_cer_greedy": 10.006786683811972
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.786637308998855,
+   "dev_cer_greedy": 9.96910328076724
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.7847521022727123,
+   "dev_cer_greedy": 10.197703284339115
+  }
+ ],
+ "best_dev_crit": 9.852841375861699,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 9.63887698242606,
+  "mrr": 0.6942599666960517,
+  "n": 6806.0,
+  "top1": 61.73964149280047,
+  "top5": 80.97267117249486
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 435.1756658554077
+}

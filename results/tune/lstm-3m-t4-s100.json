@@ -1,0 +1,119 @@
+{
+ "config": {
+  "name": "lstm-3m-t4",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 3000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 64,
+  "lr": 0.001217426452170837,
+  "warmup": 800,
+  "dropout": 0.1,
+  "label_smoothing": 0.0,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 112,
+  "hidden": 224,
+  "layers": 2,
+  "dropout": 0.1
+ },
+ "n_params": 2992018,
+ "commit": "254a6ca",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 0.5244039465167346,
+   "dev_cer_greedy": 11.149607986712624
+  },
+  {
+   "epoch": 1,
+   "train_loss": 0.2355514810062859,
+   "dev_cer_greedy": 10.07447359491365
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.1798761605988385,
+   "dev_cer_greedy": 10.29771578590181
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.1446212827370784,
+   "dev_cer_greedy": 10.14751580526485
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.11726173255932797,
+   "dev_cer_greedy": 9.811940778311575
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.09762216828727006,
+   "dev_cer_greedy": 10.011071823993714
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.08366463144750155,
+   "dev_cer_greedy": 9.58444202367984
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.0720889114588084,
+   "dev_cer_greedy": 9.98660594695955
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.06320584326160748,
+   "dev_cer_greedy": 10.163770471308913
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.05736378720342823,
+   "dev_cer_greedy": 10.022323421734084
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.052306104957748976,
+   "dev_cer_greedy": 10.769010965460586
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.04753791067098655,
+   "dev_cer_greedy": 10.50648283744687
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.04570661440044759,
+   "dev_cer_greedy": 10.388427538173051
+  }
+ ],
+ "best_dev_crit": 9.58444202367984,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 9.42014750790221,
+  "mrr": 0.691776863551768,
+  "n": 6806.0,
+  "top1": 61.254775198354395,
+  "top5": 80.63473405818395
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 277.3343017101288
+}

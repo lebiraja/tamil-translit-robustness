@@ -1,0 +1,199 @@
+{
+ "config": {
+  "name": "lstm-3m-t10",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 3000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 512,
+  "lr": 0.00046520029704447537,
+  "warmup": 800,
+  "dropout": 0.4,
+  "label_smoothing": 0.05,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 112,
+  "hidden": 224,
+  "layers": 2,
+  "dropout": 0.4
+ },
+ "n_params": 2992018,
+ "commit": "254a6ca",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 2.3881593618765087,
+   "dev_cer_greedy": 27.95656677501161
+  },
+  {
+   "epoch": 1,
+   "train_loss": 0.9817944649023614,
+   "dev_cer_greedy": 13.520271477049473
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.7962960572491438,
+   "dev_cer_greedy": 12.078942668333632
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.730343463159865,
+   "dev_cer_greedy": 11.22164672262904
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.6926636855790782,
+   "dev_cer_greedy": 10.610444349192742
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.6650794116378952,
+   "dev_cer_greedy": 10.2196820860868
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.6436954196355194,
+   "dev_cer_greedy": 9.97463923417631
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.6263777547148386,
+   "dev_cer_greedy": 9.972497053255706
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.6119248815012563,
+   "dev_cer_greedy": 9.845697753330715
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.5986828009281692,
+   "dev_cer_greedy": 9.395649533878629
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.5877110439273864,
+   "dev_cer_greedy": 9.284923384648355
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.5778592700690399,
+   "dev_cer_greedy": 9.192384626375196
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.5685695482661987,
+   "dev_cer_greedy": 9.16526770725435
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.5601129864037986,
+   "dev_cer_greedy": 8.9869981425918
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.5534580064035174,
+   "dev_cer_greedy": 8.861663749687466
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.5471250122687884,
+   "dev_cer_greedy": 8.881308711647677
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.5401203349840358,
+   "dev_cer_greedy": 8.959888559488517
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.5341137533151659,
+   "dev_cer_greedy": 8.767323903414773
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.5290082175410333,
+   "dev_cer_greedy": 8.936671786262814
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.5239822860775398,
+   "dev_cer_greedy": 8.852734221523734
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.5189061412141227,
+   "dev_cer_greedy": 8.753036148021145
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.5145023802812525,
+   "dev_cer_greedy": 8.64914097939065
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.5104092432360154,
+   "dev_cer_greedy": 8.551221603086155
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.5068011871096207,
+   "dev_cer_greedy": 8.616994678001214
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.5027155173499734,
+   "dev_cer_greedy": 8.824159731399792
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.49942411952099264,
+   "dev_cer_greedy": 8.761340095721122
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.4961401276945065,
+   "dev_cer_greedy": 8.7256232588042
+  },
+  {
+   "epoch": 27,
+   "train_loss": 0.4932822830468943,
+   "dev_cer_greedy": 8.720577204700504
+  },
+  {
+   "epoch": 28,
+   "train_loss": 0.4903610365407344,
+   "dev_cer_greedy": 8.754196728337739
+  }
+ ],
+ "best_dev_crit": 8.551221603086155,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 8.445849407058152,
+  "mrr": 0.7245788030169453,
+  "n": 6806.0,
+  "top1": 64.42844548927417,
+  "top5": 84.14634146341463
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 172.7352659702301
+}
