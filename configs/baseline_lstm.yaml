@@ -1,0 +1,8 @@
+name: base-lstm-3m
+arch: lstm
+params: 3000000
+epochs: 60
+patience: 8
+batch_size: 128
+lr: 0.001
+dropout: 0.2

@@ -1,0 +1,7 @@
+# native -> roman model used only to synthesise A3 data (D12 sources, filtered pool)
+name: reverse-lstm
+arch: lstm
+direction: native2roman
+params: 3000000
+epochs: 40
+patience: 5
