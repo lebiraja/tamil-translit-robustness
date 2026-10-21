@@ -2,6 +2,13 @@
 
 Newest entry on top.
 
+## 2026-10-21 · Self-survival layer (resume, retry, supervisor, cron)
+- Approved by Lebi. `src/translit/train.py`: atomic per-epoch `last.pt` and resume (new Config field `resume`, default on); `tests/test_resume.py` confirms an interrupted-then-resumed run gives the same loss curve and dev CER as an uninterrupted one. Training maths, data, seeds and metrics are unchanged, so finished tuning and C3 runs stay valid; runs that started before the change finished with the old code and are unaffected.
+- `src/translit/retry.py` + wiring in `run_matrix.py` and `tune.py`: 3 tries per run, tracebacks to `logs/failed_runs.txt`, queue keeps going.
+- `scripts/supervisor.py` replaces `scripts_pipeline.sh`; user cron (`@reboot`, every 10 min, flock) keeps it alive. Safety: kernel and temperature gate, 3-job cap, no kills, no sudo. Details in AUTOPILOT.md section 8.
+- 30 tests pass (resume test run separately, about 1 min on CPU).
+- Needs Lebi: nothing. Reminder: GitHub token and sudo password were pasted in chat; rotate them. Local commits are not pushed (no token stored).
+
 ## 2026-10-21 · C3 started early (5 of 6 configs tuned)
 - Tuning 103/120: BiLSTM 1M/3M/8M and Transformer 1M/3M done; Transformer-8M still tuning (alone, queued after 3M). Started C3 now in two workers (seeds 0-2, 3-4) instead of waiting; GPU 10.9/12 GB, so no third job.
 - Guard added to `scripts/run_matrix.py`: c3/c2 runs are SKIPPED (not run with default hyperparameters) when their tuned config does not exist yet. Without it Transformer-8M would have silently trained untuned.
