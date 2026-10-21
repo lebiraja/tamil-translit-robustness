@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import random
 import subprocess
 import time
@@ -45,6 +46,7 @@ class Config(BaseModel):
     noisy_suite: str | None = "data/synth/noisy_test"  # dir of test.<OP>.<p>.tsv, evaluated at the end
     independent_suite: str | None = "data/synth/independent"  # Aksharantar non-Dakshina sets
     beam: int = 10
+    resume: bool = True  # save last.pt every epoch and continue from it if present
     eval_test: bool = True  # False for tuning runs: selection must use dev only
     out_dir: str = "results/runs"
     ckpt_dir: str = "runs"
@@ -55,6 +57,15 @@ def set_seed(s: int) -> None:
     np.random.seed(s)
     torch.manual_seed(s)
     torch.cuda.manual_seed_all(s)
+
+
+def save_last(path: Path, model, opt, sched, ep: int, best: float, bad: int, hist: list, dev: str) -> None:
+    """Atomic per-epoch training state (write a temp file, then rename), so a crash or power cut cannot corrupt it."""
+    tmp = path.with_suffix(".tmp")
+    torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "sched": sched.state_dict(), "epoch": ep, "best": best,
+                "bad": bad, "hist": hist, "rng_cpu": torch.get_rng_state(),
+                "rng_cuda": torch.cuda.get_rng_state() if dev == "cuda" else None}, tmp)
+    os.replace(tmp, path)
 
 
 def git_commit() -> str:
@@ -127,7 +138,21 @@ def run(cfg: Config) -> dict:
     ck = ROOT / cfg.ckpt_dir / run_id
     ck.mkdir(parents=True, exist_ok=True)
     best, bad, hist = 1e9, 0, []
-    for ep in range(cfg.epochs):
+    start = 0
+    last = ck / "last.pt"
+    if cfg.resume and last.exists():  # continue an interrupted run from its last finished epoch
+        st = torch.load(last, map_location=dev, weights_only=False)
+        model.load_state_dict(st["model"])
+        opt.load_state_dict(st["opt"])
+        sched.load_state_dict(st["sched"])
+        best, bad, hist, start = st["best"], st["bad"], st["hist"], st["epoch"] + 1
+        torch.set_rng_state(st["rng_cpu"].cpu())
+        if dev == "cuda":
+            torch.cuda.set_rng_state(st["rng_cuda"].cpu())
+        print(f"[{run_id}] resumed after epoch {st['epoch']}", flush=True)
+    for ep in range(start, cfg.epochs):
+        if bad >= cfg.patience:
+            break
         rng = random.Random(cfg.seed * 100003 + ep)
         items = [(policy.noisy(r, rng) if cfg.direction == "roman2native" else r, n) for r, n in train_pairs]
         loader = DataLoader(D.PairDataset(items, vocab), batch_size=cfg.batch_size, shuffle=True, collate_fn=D.collate,
@@ -160,8 +185,10 @@ def run(cfg: Config) -> dict:
             torch.save({"model": model.state_dict(), "kw": kw, "arch": cfg.arch, "vocab": vocab.to_json()}, ck / "best.pt")
         else:
             bad += 1
-            if bad >= cfg.patience:
-                break
+        if cfg.resume:
+            save_last(last, model, opt, sched, ep, best, bad, hist, dev)
+        if bad >= cfg.patience:
+            break
     model.load_state_dict(torch.load(ck / "best.pt", map_location=dev)["model"])
     result: dict = {
         "config": cfg.model_dump(), "model_kw": kw, "n_params": n_params(model), "commit": git_commit(),

@@ -16,6 +16,7 @@ import yaml
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from translit.retry import with_retries  # noqa: E402
 from translit.train import ROOT, Config, run  # noqa: E402
 
 SIZES = {"1m": 1_000_000, "3m": 3_000_000, "8m": 8_000_000}
@@ -49,8 +50,10 @@ def main() -> None:
         if f.exists():
             r = json.loads(f.read_text())
         else:
-            r = run(Config(name=name, arch=a.arch, params=SIZES[a.size], seed=100, noisy_suite=None, independent_suite=None,
-                           eval_test=False, out_dir="results/tune", **hp))
+            r = with_retries(lambda: run(Config(name=name, arch=a.arch, params=SIZES[a.size], seed=100, noisy_suite=None,
+                                                independent_suite=None, eval_test=False, out_dir="results/tune", **hp)), name)
+            if r is None:
+                continue
         cer = r["dev"]["cer"]
         print(f"{name} dev CER {cer:.2f} hp {hp}", flush=True)
         if cer < best[0]:
