@@ -2,6 +2,12 @@
 
 Newest entry on top.
 
+## 2026-10-21 · C3 started early (5 of 6 configs tuned)
+- Tuning 103/120: BiLSTM 1M/3M/8M and Transformer 1M/3M done; Transformer-8M still tuning (alone, queued after 3M). Started C3 now in two workers (seeds 0-2, 3-4) instead of waiting; GPU 10.9/12 GB, so no third job.
+- Guard added to `scripts/run_matrix.py`: c3/c2 runs are SKIPPED (not run with default hyperparameters) when their tuned config does not exist yet. Without it Transformer-8M would have silently trained untuned.
+- `scripts_pipeline.sh` rewritten: waits for 6 configs and for the early C3 workers, then finishes C3 (Transformer-8M) and runs C2 in two workers (seeds 0-2, 3-4). Reason: avoids two processes training the same run.
+- Needs Lebi: nothing.
+
 ## 2026-10-21 · Autopilot on Leica: tuning running, analysis tooling ready
 - Autopilot session started on Leica (healthcheck OK: kernel 6.17.0-22-generic, RTX 5070). Tuning at 36/120 trials; BiLSTM trials take 1.5-5 min, Transformer-3m 6-11 min. Best dev CER so far: BiLSTM-3m 8.35, BiLSTM-1m 8.39, Transformer-3m 8.72 (dev, beam 10, seed 100).
 - Wrote `src/translit/stats.py` (corpus CER, paired bootstrap, Kruskal-Wallis + eta2, Dunn + Holm, Cohen's d) with hand-computed tests (`tests/test_stats.py`; suite now 28 passed), `scripts/evaluate_ckpt.py` (per-item npz; reproduces the gate JSON exactly: clean CER 9.239, MIX.0.3 25.167, AK-all 12.311; about 4.3 min per checkpoint) and `scripts/aggregate.py` (smoke-tested on synthetic inputs in a scratch dir via `AGG_ROOT`).

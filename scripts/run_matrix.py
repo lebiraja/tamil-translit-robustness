@@ -74,6 +74,10 @@ def main() -> None:
     a = ap.parse_args()
     cfgs = plan(a.block, [int(x) for x in a.seeds.split(",")], a.size)
     for i, c in enumerate(cfgs, 1):
+        sz = next((k for k, v in SIZES.items() if v == c.params), None)
+        if a.block in ("c3", "c2") and not (ROOT / "configs" / f"best_{c.arch}_{sz or '3m'}.yaml").exists():
+            print(f"[{i}/{len(cfgs)}] {c.name} seed {c.seed} SKIPPED: tuned config best_{c.arch}_{sz}.yaml not ready", flush=True)
+            continue
         done = ROOT / c.out_dir / f"{c.name}-s{c.seed}.json"
         print(f"[{i}/{len(cfgs)}] {c.name} seed {c.seed} {'(done)' if done.exists() else ''}", flush=True)
         if a.dry or done.exists():
