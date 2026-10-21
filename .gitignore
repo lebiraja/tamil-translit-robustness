@@ -9,3 +9,5 @@ data/
 .claude/
 runs/
 *.log
+whatsapp/
+data/private/
