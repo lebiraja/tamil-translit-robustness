@@ -60,13 +60,14 @@ select{background:var(--surface);color:var(--text);border:1px solid var(--line);
   <div class="top"><h1>LEICA / RUN MONITOR</h1><span class="stage" id="stage">connecting…</span><span class="stage" id="sync"></span></div>
   <div class="meters" id="meters"></div>
   <nav id="nav">
-    <button data-t="now" class="on">Now</button><button data-t="tune">Tuning</button><button data-t="res">Results</button>
+    <button data-t="now" class="on">Now</button><button data-t="tune">Tuning</button><button data-t="noise">Noise</button><button data-t="res">Results</button>
     <button data-t="past">Past runs</button><button data-t="logs">Logs</button>
   </nav>
 </header>
 <main>
 <section id="now" class="on"></section>
 <section id="tune"></section>
+<section id="noise"></section>
 <section id="res"></section>
 <section id="past"></section>
 <section id="logs"></section>
@@ -108,8 +109,8 @@ function line(el,series,o={}){
   }
   el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="${esc(o.aria||"chart")}">${g}<line class="cx" y1="${m.t}" y2="${H-m.b}" stroke="var(--text2)" stroke-opacity=".5" style="display:none"/><rect x="${m.l}" y="0" width="${W-m.l-m.r}" height="${H}" fill="transparent"/></svg>`;
   const svg=$("svg",el),cx=$(".cx",svg);
-  svg.addEventListener("mousemove",e=>{const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)/b.width*W,xv=Math.round(x0+(px-m.l)/(W-m.l-m.r)*(x1-x0));
-    if(xv<x0||xv>x1)return;cx.setAttribute("x1",X(xv));cx.setAttribute("x2",X(xv));cx.style.display="";
+  svg.addEventListener("mousemove",e=>{const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)/b.width*W,xr=x0+(px-m.l)/(W-m.l-m.r)*(x1-x0);
+    if(xr<x0-.5||xr>x1+.5)return;const xv=xs.reduce((a,c)=>Math.abs(c-xr)<Math.abs(a-xr)?c:a,xs[0]);cx.setAttribute("x1",X(xv));cx.setAttribute("x2",X(xv));cx.style.display="";
     tip.style.display="block";tip.style.left=e.clientX+14+"px";tip.style.top=e.clientY+10+"px";
     tip.textContent=(o.xl||"epoch")+" "+xv+"\n"+series.map(s=>{const i=s.x.indexOf(xv);return(s.label||"")+" "+(i<0||s.y[i]==null?"–":s.y[i].toFixed(o.dec??2))}).join("\n")});
   svg.addEventListener("mouseleave",()=>{tip.style.display="none";cx.style.display="none"});
@@ -196,6 +197,28 @@ function tune(){
   for(const k of all){const t=(combos[k]||[]),best=t.length?Math.min(...t.map(a=>a.cer)):null;
     strip($(`[data-k="${k}"] .s1`),t.map(a=>({x:a.t,y:a.cer,hp:`lr ${a.hp.lr.toExponential(1)} bs ${a.hp.batch_size} drop ${a.hp.dropout}`})),best,{color:col(k)})}
 }
+
+const OPS=["V-DROP","KEY","MIX","DIGRAPH","REPEAT","V-LEN","GEM"],OPC=["#3987e5","#d95926","#199e70","#c98500","#d55181","#008300","#9085e9"];
+let noiseSel=null;
+function noise(){
+  const el=$("#noise"),rows=S.results.filter(r=>r.test&&r.noisy&&Object.keys(r.noisy).length);
+  const names=[...new Set(rows.map(r=>r.name))].sort();
+  if(!names.length){el.innerHTML='<h2>CER vs noise severity</h2><div class="empty">No finished run with noisy-test results yet.</div>';return}
+  if(!noiseSel||!names.includes(noiseSel))noiseSel=names.find(n=>n.startsWith("gate-lstm"))||names[0];
+  const sel=rows.filter(r=>r.name===noiseSel),mean=f=>ms(sel.map(f))[0];
+  const cl=mean(r=>r.test.cer),ser=OPS.map((op,i)=>({label:op,color:OPC[i],x:[0,10,20,30,50],
+    y:[cl,...[.1,.2,.3,.5].map(p=>mean(r=>r.noisy[op+"."+p]))]}));
+  el.innerHTML=`<h2>How much does typing noise hurt? · CER on the Dakshina test set (lower is better)</h2>
+   <div style="display:flex;gap:14px;align-items:center;margin-bottom:8px"><select id="ns">${names.map(n=>`<option ${n===noiseSel?"selected":""}>${n}</option>`).join("")}</select>
+   <span class="note">${sel.length} seed${sel.length==1?"":"s"} averaged · severity 0 = clean input</span></div>
+   <div class="legend">${ser.map(s=>`<span><span class="sw" style="background:${s.color}"></span>${s.label}</span>`).join("")}</div>
+   <div id="nc"></div>
+   <h2>Same data as a table</h2><table><tr><th>noise</th><th>0</th><th>10%</th><th>20%</th><th>30%</th><th>50%</th></tr>
+   ${ser.map(s=>`<tr><td><span class="sw" style="background:${s.color}"></span>${s.label}</td>${s.y.map(v=>`<td>${f2(v)}</td>`).join("")}</tr>`).join("")}</table>
+   <div class="note">Severity is the nominal per-position noise probability; realised edit rates are in data/synth/noisy_test/manifest.json.</div>`;
+  $("#ns").onchange=e=>{noiseSel=e.target.value;noise()};
+  line($("#nc"),ser,{h:340,rm:70,xl:"severity %",aria:"CER versus noise severity",dec:2});
+}
 function group(block){
   const g={};for(const r of S.results.filter(r=>r.block==block&&r.test))(g[r.name]??=[]).push(r);return g}
 function res(){
@@ -240,7 +263,7 @@ async function logs(first){
   lg.textContent=t;if(follow)lg.scrollTop=lg.scrollHeight;
   const m=S.logs.find(l=>l.name===logFile);$("#ls").textContent=m?`${(m.size/1024).toFixed(0)} KB · ${m.active?"being written":"idle"}`:"";
 }
-const draw={now,tune,res,past,logs};
+const draw={now,tune,noise,res,past,logs};
 function render(){if(!S)return;head();draw[tab](tab==="logs"&&!$("#lf"))}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===tab));render()});
