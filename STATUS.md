@@ -2,6 +2,13 @@
 
 Newest entry on top.
 
+## 2026-10-21 · Autopilot on Leica: tuning running, analysis tooling ready
+- Autopilot session started on Leica (healthcheck OK: kernel 6.17.0-22-generic, RTX 5070). Tuning at 36/120 trials; BiLSTM trials take 1.5-5 min, Transformer-3m 6-11 min. Best dev CER so far: BiLSTM-3m 8.35, BiLSTM-1m 8.39, Transformer-3m 8.72 (dev, beam 10, seed 100).
+- Wrote `src/translit/stats.py` (corpus CER, paired bootstrap, Kruskal-Wallis + eta2, Dunn + Holm, Cohen's d) with hand-computed tests (`tests/test_stats.py`; suite now 28 passed), `scripts/evaluate_ckpt.py` (per-item npz; reproduces the gate JSON exactly: clean CER 9.239, MIX.0.3 25.167, AK-all 12.311; about 4.3 min per checkpoint) and `scripts/aggregate.py` (smoke-tested on synthetic inputs in a scratch dir via `AGG_ROOT`).
+- Scheduling: `tune.py` has no lock, so two workers on the same combo would collide. Detached the chain wrapper of worker 3 (our own `sh` process); `transformer 3m` keeps running and `transformer 8m` will be launched by hand as its own worker once GPU memory allows (Transformer-3m alone uses 6 GB).
+- Git identity on Leica set repo-locally to match earlier commits.
+- Needs Lebi: nothing yet.
+
 ## 2026-10-21 (afternoon) · Live dashboard on Leica port 8383
 - Built and deployed `scripts/dashboard/` (stdlib python server + offline SVG page): live loss/dev-CER curves with a verdict per job, tuning view for all 6 searches, results tables, past-run comparison, live log tail, GPU/CPU/RAM/disk/kernel header. Details: `docs/dashboard.md`. Verified in a browser from the laptop (all tabs render; JSON NaN bug and axis clipping fixed). It is already showing real overfitting in the BiLSTM gate run (train loss to ~0 while dev CER rises).
 - Merging Leica's local commits with ours conflicted once in STATUS.md (both prepended); resolved by keeping both entries. Leica session is progressing on its own (tuning 37/120, analysis tooling written and tested).
