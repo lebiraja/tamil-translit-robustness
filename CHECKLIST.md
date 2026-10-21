@@ -18,9 +18,9 @@ Soft internal target about 2026-11-01 (Lebi: deadline does not matter, D8). Phas
 - [ ] Answer the open items in `DECISIONS.md` (who types; Leica kernel pin; Leica free)
 - [ ] Laptop venv or Docker, CUDA 12.8+ PyTorch, pinned `requirements.txt`
 - [ ] GPU smoke test on the laptop (RTX 4050), later on Leica (RTX 5070, `uname -r` = 6.17.0-22-generic)
-- [ ] Fetch Dakshina Tamil by byte range into `data/dakshina-ta/`; verify 25,000 / 2,500 / 2,500 words and 68,218 / 6,827 / 6,864 pairs; record sha256
+- [x] Fetch Dakshina Tamil by byte range into `data/dakshina-ta/`; counts verified; sha256 recorded (2026-10-21)
 - [ ] Data cleaning rule for the roughly 0.35% suspect pairs, logged; test set not silently cleaned
-- [ ] Repo skeleton: `src/translit/`, `configs/`, `scripts/`, `results/`, `tests/`, `paper/`
+- [x] Repo skeleton: `src/translit/`, `configs/`, `scripts/`, `results/`, `tests/`, `paper/`
 - [ ] Verify the NVIDIA container toolkit on Leica (or choose a venv there)
 
 ## Phase 2: human-typed set (parallel with Phase 3)
@@ -34,7 +34,7 @@ Soft internal target about 2026-11-01 (Lebi: deadline does not matter, D8). Phas
 ## Phase 3: code
 - [ ] Loaders (Dakshina, Aksharantar filtered, human set), NFC and lowercase handling, vocab from train only, with tests
 - [ ] Metrics: CER, top-k, MRR, multi-reference handling, with hand-computed tests
-- [ ] Noise operators V-DROP, V-LEN, GEM, DIGRAPH (symmetric), KEY, REPEAT, MIX with determinism, pairing and never-empty tests
+- [x] Noise operators V-DROP (code and tests done; realised rates to be measured), V-LEN, GEM, DIGRAPH (symmetric), KEY, REPEAT, MIX with determinism, pairing and never-empty tests
 - [ ] BiLSTM+attention model; pre-LN Transformer; parameter-budget helper (1M / 3M / 8M)
 - [ ] Training loop (seeds, early stopping on dev, optional bf16), beam search, results JSON writer
 - [ ] CPU end-to-end smoke test (tiny model, 100 pairs)
