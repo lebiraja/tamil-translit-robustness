@@ -17,6 +17,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from translit import data as D  # noqa: E402
 from translit.decode import greedy, sample  # noqa: E402
+from translit.metrics import edit_distance  # noqa: E402
+
+MAX_REL_EDIT, MIN_REL_LEN = 0.35, 0.6  # quality filter vs the greedy romanization
 from translit.models import build  # noqa: E402
 
 
@@ -36,23 +39,28 @@ def main() -> None:
     words = [l.split("\t")[0] for l in (D.ROOT / "data/synth/native_pool.tsv").read_text(encoding="utf-8").splitlines()]
     samp: set[tuple[str, str]] = set()
     gre: list[tuple[str, str]] = []
+    dropped = 0
     for s in range(0, len(words), 512):
         chunk = words[s : s + 512]
         src, _ = D.collate([(v.enc_src(w), [1, 2]) for w in chunk])
         src = src.to(dev)
+        g = {}
         for w, ids in zip(chunk, greedy(m, src), strict=True):
             r = v.dec_tgt(ids)
             if r:
                 gre.append((r, w))
+                g[w] = r
         for _ in range(a.k):
             for w, ids in zip(chunk, sample(m, src, a.temp), strict=True):
                 r = v.dec_tgt(ids)
-                if r:
+                if r and w in g and len(r) >= MIN_REL_LEN * len(g[w]) and edit_distance(r, g[w]) <= MAX_REL_EDIT * len(g[w]):
                     samp.add((r, w))
+                else:
+                    dropped += 1
     out = D.ROOT / "data/synth"
     (out / "a3_sampled.tsv").write_text("".join(f"{r}\t{n}\n" for r, n in sorted(samp)), encoding="utf-8")
     (out / "a3_greedy.tsv").write_text("".join(f"{r}\t{n}\n" for r, n in gre), encoding="utf-8")
-    print(f"words {len(words)}  sampled pairs {len(samp)}  greedy pairs {len(gre)}")
+    print(f"words {len(words)}  sampled pairs {len(samp)} (dropped by filter {dropped})  greedy pairs {len(gre)}")
 
 
 if __name__ == "__main__":
