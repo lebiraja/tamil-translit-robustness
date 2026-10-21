@@ -1,0 +1,27 @@
+\section{Method}
+\label{sec:method}
+\textbf{Models.}
+Both models are character-level with separate source and target vocabularies built from training data.
+The BiLSTM uses a two-layer bidirectional encoder, a two-layer LSTM decoder and Luong general attention~\cite{luong2015effective,bahdanau2015neural}.
+The Transformer is a pre-LN encoder-decoder with three layers per side and learned positions~\cite{vaswani2017attention}.
+Each architecture is built at about 1M, 3M and 8M trainable parameters by choosing the width.
+
+\textbf{Training and decoding.}
+Adam, cross-entropy with optional label smoothing, gradient clipping at 1.0, early stopping on development CER.
+Decoding uses beam search with beam 10 to produce an $n$-best list.
+
+\textbf{Metrics.}
+CER is the corpus-level Levenshtein distance over code points between the top hypothesis and the closest attested reference, divided by reference length.
+Top-$k$ accuracy counts an input correct if any of the best $k$ hypotheses equals any reference; MRR uses the rank of the first correct hypothesis.
+
+\textbf{Augmentation conditions.}
+A0: Dakshina only.
+A1: random character noise (deletion, insertion, substitution, swap).
+A2: the Tamil-phonological operators.
+A3: Dakshina plus sampled back-transliteration.
+A4: A2 plus A3.
+CTRL: Dakshina plus the same pool words romanized greedily, which separates more data from more spelling variation.
+Online noise is re-drawn every epoch with 40\% of items left clean; held-out variants of A2 omit one operator and are tested on it.
+
+\textbf{Statistics.}
+Five seeds per configuration; mean and standard deviation; paired bootstrap over test items for system pairs; Kruskal--Wallis with Dunn post-hoc for more than two systems; Spearman correlation between synthetic and human-set degradation.

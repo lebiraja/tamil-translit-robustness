@@ -1,0 +1,8 @@
+\section{Experimental Setup}
+All models are trained with PyTorch 2.11 (CUDA 12.8) on an RTX 5070 (12\,GB).
+Hyperparameters are chosen by 20 random-search trials per architecture and size using development CER only; test data are never used for selection.
+
+\textbf{Reproduction check.}
+Before any new experiment we verify that our implementation matches published results.
+With one seed and 3M parameters, our BiLSTM reaches development CER 8.95 and top-1 62.8\% against 8.4 and 65.3\% reported by Roark et al.~\cite{roark2020dakshina}, and our Transformer reaches CER 9.38 against 9.4.
+Both CERs are within one point of the published values; the 2.5-point top-1 gap for the BiLSTM may come from differences in how references are counted and is not hidden.

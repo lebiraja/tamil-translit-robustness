@@ -1,0 +1,19 @@
+\section{Related Work}
+\textbf{Transliteration datasets and systems.}
+Dakshina covers twelve South Asian languages with native-script Wikipedia text, a romanization lexicon and romanized sentences~\cite{roark2020dakshina}.
+Aksharantar and the IndicXlit model extend coverage to 21 languages with millions of pairs~\cite{madhani2023aksharantar}.
+Earlier systems include Brahmi-Net~\cite{kunchukuttan2015brahminet} and the shared tasks collected in NEWS~\cite{chen2018news}.
+Context-aware and large-model approaches have recently been compared with character models~\cite{kirov2024context,azam2025beyond}.
+
+\textbf{Noisy and informal romanization.}
+Keyboard data show how users romanize at scale~\cite{hellsten2017keyboard}, and a large study documents Latin-script variation across South Asian languages~\cite{wolfsonkin2019latin}.
+For Tamil, a shorthand-aware study examines vowel dropping but evaluates no neural model~\cite{herath2024tamzhi}, and a Malayalam study reports CER rising from 7.4 to 22.7 when vowels are dropped~\cite{baiju2024malayalam}.
+Code-mixed Tamil corpora provide real informal text without Tamil-script labels~\cite{chakravarthi2020tamilmix}.
+
+\textbf{Robustness and augmentation.}
+Character models are brittle to noise unless trained with it~\cite{belinkov2018synthetic}, and mixing noise types helps~\cite{karpukhin2019training}.
+Synthetic variation improves romanized language identification~\cite{benton2025romanizedlid}, and sampled back-translation is a standard way to create synthetic parallel data~\cite{sennrich2016backtranslation}.
+We transfer these ideas to Tamil transliteration.
+
+\textbf{Evaluation practice.}
+Parameter confounds and weak statistics can reverse conclusions in character-level transduction~\cite{moran2020effective}; we match model size and tuning budget and report seed variance.
