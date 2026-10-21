@@ -60,12 +60,13 @@ select{background:var(--surface);color:var(--text);border:1px solid var(--line);
   <div class="top"><h1>LEICA / RUN MONITOR</h1><span class="stage" id="stage">connecting…</span><span class="stage" id="sync"></span></div>
   <div class="meters" id="meters"></div>
   <nav id="nav">
-    <button data-t="now" class="on">Now</button><button data-t="tune">Tuning</button><button data-t="noise">Noise</button><button data-t="res">Results</button>
-    <button data-t="past">Past runs</button><button data-t="logs">Logs</button>
+    <button data-t="now" class="on">Now</button><button data-t="runs">Runs</button><button data-t="tune">Tuning</button><button data-t="noise">Noise</button><button data-t="res">Results</button>
+    <button data-t="past">Compare</button><button data-t="logs">Logs</button>
   </nav>
 </header>
 <main>
 <section id="now" class="on"></section>
+<section id="runs"></section>
 <section id="tune"></section>
 <section id="noise"></section>
 <section id="res"></section>
@@ -104,6 +105,7 @@ function line(el,series,o={}){
     const pts=s.x.map((x,i)=>s.y[i]==null?null:[X(x),Y(s.y[i])]).filter(Boolean);
     if(!pts.length)continue;
     g+=`<polyline fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${pts.map(p=>p.join(",")).join(" ")}"/>`;
+    for(const mi of s.marks||[]){if(s.y[mi]!=null)g+=`<circle cx="${X(s.x[mi])}" cy="${Y(s.y[mi])}" r="${mi===s.best?6:4}" fill="none" stroke="${mi===s.best?"var(--text)":s.color}" stroke-width="1.5"/>`}
     const L=pts[pts.length-1];g+=`<circle cx="${L[0]}" cy="${L[1]}" r="3.5" fill="${s.color}" stroke="var(--bg)" stroke-width="2"/>`;
     if(series.length<=4&&s.label)g+=`<text x="${L[0]+6}" y="${L[1]+3}" style="fill:var(--text2)">${esc(s.label)}</text>`;
   }
@@ -175,6 +177,45 @@ function now(){
   for(const [n,r] of act){const b=el.querySelector(`[data-run="${CSS.escape(n)}"]`);
     line($(".c1",b),[{x:r.ep,y:r.cer,color:col(n),label:"dev CER"}],{ref:[{y:PUB,label:"pub 8.4"}],clip:(best??10)*1.6+1,aria:"dev CER over epochs"});
     line($(".c2",b),[{x:r.ep,y:r.loss,color:col(n),label:"loss"}],{dec:3,min0:true,aria:"train loss over epochs"})}
+}
+
+const RS={blk:"all",arch:"all",state:"all",q:"",n:12,open:null};
+const blockOf=n=>/^gate-/.test(n)?"gate":/^c3-/.test(n)?"c3":/^c2-/.test(n)?"c2":/^reverse-/.test(n)?"reverse":"tune";
+function ckptInfo(r){ // a checkpoint is saved whenever dev CER sets a new best (train.py); derive the save epochs from the log
+  const c=r.cer.some(x=>x!=null)?r.cer:r.loss,saves=[];let b=1e9;
+  c.forEach((v,i)=>{if(v!=null&&v<b-1e-4){b=v;saves.push(i)}});
+  return {saves,best:saves.length?saves[saves.length-1]:null,val:b};
+}
+function runs(){
+  const el=$("#runs"),all=Object.entries(S.runs).map(([n,r])=>({n,r,blk:blockOf(n),arch:/transformer/.test(n)?"transformer":"lstm"}));
+  const fin=Object.fromEntries(S.results.map(x=>[x.file,x]));
+  let list=all.filter(x=>(RS.blk=="all"||x.blk==RS.blk)&&(RS.arch=="all"||x.arch==RS.arch)&&(RS.state=="all"||(RS.state=="running")==x.r.active)&&x.n.includes(RS.q))
+    .sort((a,b)=>b.r.active-a.r.active||b.r.mtime-a.r.mtime);
+  const shown=list.slice(0,RS.n);
+  const opt=(k,vs)=>`<select data-k="${k}">${vs.map(v=>`<option ${RS[k]==v?"selected":""}>${v}</option>`).join("")}</select>`;
+  let h=`<h2>Every training run · loss and dev CER per epoch · rings = checkpoint saved (best.pt overwritten on each new best)</h2>
+   <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:6px">${opt("blk",["all","tune","gate","c3","c2","reverse"])}${opt("arch",["all","lstm","transformer"])}${opt("state",["all","running","finished"])}
+   <input id="rq" placeholder="search run name" value="${esc(RS.q)}" style="background:var(--surface);color:var(--text);border:1px solid var(--line);padding:6px 8px;font:12px var(--mono)">
+   <span class="note">${list.length} runs match · showing ${shown.length}</span></div>`;
+  for(const {n,r} of shown){
+    const k=ckptInfo(r),f=fin[n],[cls,txt,why]=verdict(r),open=RS.open===n;
+    h+=`<div class="run" data-run="${esc(n)}"><div><div class="name" style="cursor:pointer" data-open="${esc(n)}"><span class="sw" style="background:${col(n)}"></span>${esc(n)}</div>
+     <div class="meta"><span class="v ${r.active?cls:"idle"}">${r.active?"● running":"■ finished"}</span>${r.active?` · ${txt}`:""}<br>epochs ${r.ep.length}${f?` · ${dur(f.wall_s)}`:""}<br>
+     best ${k.best!=null?`<b style="color:var(--text)">${f2(k.val)}</b> at epoch ${r.ep[k.best]}`:"–"}<br>
+     checkpoint: ${r.ckpt?`best.pt ${r.ckpt.mb.toFixed(1)} MB · ${k.saves.length} saves`:"none on disk"}${f&&f.test?`<br>test CER ${f2(f.test.cer)}`:""}${f&&f.dev?` · dev (beam) ${f2(f.dev.cer)}`:""}<br><a style="color:var(--text2);cursor:pointer" data-open="${esc(n)}">${open?"hide":"show"} raw log</a></div></div>
+     <div><div class="ct">dev CER (greedy)</div><div class="c1"></div></div><div><div class="ct">train loss</div><div class="c2"></div></div>
+     ${open?`<pre class="log" style="grid-column:1/-1;height:240px;margin:0" id="rl">loading…</pre>`:""}</div>`;
+  }
+  if(list.length>shown.length)h+=`<button id="more" style="margin:14px 0;background:var(--surface);color:var(--text);border:1px solid var(--line);padding:8px 14px;font:12px var(--mono);cursor:pointer">show 12 more (${list.length-shown.length} left)</button>`;
+  el.innerHTML=h;
+  el.querySelectorAll("select").forEach(x=>x.onchange=e=>{RS[x.dataset.k]=e.target.value;RS.n=12;runs()});
+  const rq=$("#rq");rq.oninput=e=>{RS.q=e.target.value;RS.n=12;const p=rq.selectionStart;runs();const q=$("#rq");q.focus();q.setSelectionRange(p,p)};
+  const mo=$("#more");if(mo)mo.onclick=()=>{RS.n+=12;runs()};
+  el.querySelectorAll("[data-open]").forEach(a=>a.onclick=()=>{RS.open=RS.open===a.dataset.open?null:a.dataset.open;runs()});
+  for(const {n,r} of shown){const b=el.querySelector(`[data-run="${CSS.escape(n)}"]`),k=ckptInfo(r),hasC=r.cer.some(x=>x!=null);
+    line($(".c1",b),[{x:r.ep,y:r.cer,color:col(n),label:"dev CER",marks:hasC?k.saves:[],best:k.best}],{ref:[{y:PUB,label:"pub 8.4"}],clip:(hasC?k.val:10)*1.6+1,h:130,aria:"dev CER"});
+    line($(".c2",b),[{x:r.ep,y:r.loss,color:col(n),label:"loss",marks:hasC?[]:k.saves,best:k.best}],{dec:3,min0:true,h:130,aria:"train loss"})}
+  if(RS.open){fetch("/api/runlog?run="+encodeURIComponent(RS.open)).then(x=>x.text()).then(t=>{const pr=$("#rl");if(pr){pr.textContent=t;pr.scrollTop=pr.scrollHeight}})}
 }
 function tune(){
   const rows=S.results.filter(r=>r.block=="tune"&&r.dev),el=$("#tune");
@@ -263,7 +304,7 @@ async function logs(first){
   lg.textContent=t;if(follow)lg.scrollTop=lg.scrollHeight;
   const m=S.logs.find(l=>l.name===logFile);$("#ls").textContent=m?`${(m.size/1024).toFixed(0)} KB · ${m.active?"being written":"idle"}`:"";
 }
-const draw={now,tune,noise,res,past,logs};
+const draw={now,runs,tune,noise,res,past,logs};
 function render(){if(!S)return;head();draw[tab](tab==="logs"&&!$("#lf"))}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===tab));render()});

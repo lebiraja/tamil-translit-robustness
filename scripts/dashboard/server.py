@@ -114,7 +114,10 @@ def state() -> dict:
         active = now - st.st_mtime < 240
         files.append(dict(name=p.name, size=st.st_size, mtime=st.st_mtime, active=active))
         for name, r in parsed["runs"].items():
-            runs[name] = dict(r, log=p.name, active=active and parsed["last"] == name, mtime=st.st_mtime)
+            ck = ROOT / "runs" / name / "best.pt"
+            cks = ck.stat() if ck.exists() else None
+            runs[name] = dict(r, log=p.name, active=active and parsed["last"] == name, mtime=st.st_mtime,
+                              ckpt=dict(path=f"runs/{name}/best.pt", mb=cks.st_size / 1e6, mtime=cks.st_mtime) if cks else None)
     status = json.loads(sh(["python3", str(ROOT / "scripts/autopilot_status.py"), "--json"]) or "{}")
     return dict(now=now, gpu=gpu(), system=system(), stage=status, runs=runs, results=results(), logs=files,
                 done=(LOGS / "AUTOPILOT_DONE").exists(), stuck=(LOGS / "AUTOPILOT_STUCK").exists())
@@ -148,6 +151,14 @@ class H(BaseHTTPRequestHandler):
                 return self.send(404, b"no such log", "text/plain")
             lines = p.read_text(errors="ignore").splitlines()[-n:]
             return self.send(200, "\n".join(lines).encode(), "text/plain; charset=utf-8")
+        if u.path == "/api/runlog":
+            q = parse_qs(u.query)
+            run = q.get("run", [""])[0]
+            hit = [f for f in LOGS.glob("*.log") if f"[{run}]" in f.read_text(errors="ignore")] if re.fullmatch(r"[\w.\-]+", run) else []
+            if not hit:
+                return self.send(404, b"no such run", "text/plain")
+            lines = [l for l in hit[0].read_text(errors="ignore").splitlines() if f"[{run}]" in l or l.startswith(run.rsplit("-s", 1)[0])]
+            return self.send(200, "\n".join(lines[-600:]).encode(), "text/plain; charset=utf-8")
         self.send(404, b"not found", "text/plain")
 
 
