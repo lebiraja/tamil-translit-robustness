@@ -15,6 +15,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
+from translit.retry import with_retries  # noqa: E402
 from translit.train import ROOT, Config, run  # noqa: E402
 
 SIZES = {"1m": 1_000_000, "3m": 3_000_000, "8m": 8_000_000}
@@ -82,7 +83,9 @@ def main() -> None:
         print(f"[{i}/{len(cfgs)}] {c.name} seed {c.seed} {'(done)' if done.exists() else ''}", flush=True)
         if a.dry or done.exists():
             continue
-        r = run(c)
+        r = with_retries(lambda c=c: run(c), f"{c.name}-s{c.seed}")
+        if r is None:
+            continue
         print(f"   dev CER {r['dev']['cer']:.2f} top1 {r['dev']['top1']:.1f} | test CER {r['test']['cer']:.2f} top1 {r['test']['top1']:.1f}")
 
 
