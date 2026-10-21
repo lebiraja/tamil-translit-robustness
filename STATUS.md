@@ -2,6 +2,11 @@
 
 Newest entry on top.
 
+## 2026-10-21 · Dashboard: new Plan tab (checklist and live timer)
+- Requested by Lebi. `scripts/dashboard/server.py` gets `plan()` (checklist of 38 items derived from files on disk: set-up, tuning per combo, C3 per arch/size, C2 per arch/condition, analysis and wrap-up; start time = first tuning trial; timer stops when `logs/AUTOPILOT_DONE` exists) and the page gets a Plan tab with a ticking elapsed clock, a countdown to the estimated finish and per-item progress bars.
+- Time-left estimate is rough (measured run times, assumes no crashes and Claude online for the write-up). First reading: about 24 h left at 13/38 items. Checked by headless Firefox screenshot. Server restarted on port 8383 (`sh scripts/dashboard/run.sh`).
+- Needs Lebi: nothing.
+
 ## 2026-10-21 · Self-survival layer (resume, retry, supervisor, cron)
 - Approved by Lebi. `src/translit/train.py`: atomic per-epoch `last.pt` and resume (new Config field `resume`, default on); `tests/test_resume.py` confirms an interrupted-then-resumed run gives the same loss curve and dev CER as an uninterrupted one. Training maths, data, seeds and metrics are unchanged, so finished tuning and C3 runs stay valid; runs that started before the change finished with the old code and are unaffected.
 - `src/translit/retry.py` + wiring in `run_matrix.py` and `tune.py`: 3 tries per run, tracebacks to `logs/failed_runs.txt`, queue keeps going.
