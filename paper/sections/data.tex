@@ -1,0 +1,43 @@
+\section{Data}
+\label{sec:data}
+\textbf{Training and clean evaluation.}
+We use the Dakshina Tamil romanization lexicon: 25{,}000 training words (68{,}218 pairs), 2{,}500 development words (6{,}827 pairs) and 2{,}500 test words (6{,}864 pairs)~\cite{roark2020dakshina}.
+Splits are word-disjoint.
+Inputs are lowercased Latin; outputs are NFC-normalized Tamil code points.
+A romanization with several attested native forms is scored against all of them.
+
+\textbf{Independent test.}
+Aksharantar's Tamil test file contains every Dakshina test pair.
+We keep only rows whose word occurs in no Dakshina split, giving three subsets: AK-Freq (2{,}607 inputs), AK-NEI (991) and AK-NEF (706).
+
+\textbf{Synthetic noisy test sets.}
+Seven operators act on the romanized input only (\Cref{tab:ops}).
+Each of 6{,}833 distinct test inputs is perturbed at severity $p\in\{0.1,0.2,0.3,0.5\}$ with a seed derived from the word, operator and severity, so sets are exactly reproducible and each noisy item stays paired with its clean form and references.
+We report the realised character-edit rate of every set rather than the nominal $p$.
+
+\begin{table}[t]
+\caption{Noise operators. $p$ is the per-position probability (REPEAT: per word; KEY: scaled by 0.25).}
+\label{tab:ops}
+\centering
+\begin{tabular}{ll}
+\toprule
+Operator & Effect \\
+\midrule
+V-DROP & delete non-initial vowels \\
+V-LEN & collapse doubled vowels \\
+GEM & collapse doubled consonants \\
+DIGRAPH & th/t, dh/d, sh/s, ch/c/s swaps; zh$\to$l/z \\
+KEY & adjacent QWERTY key substitution \\
+REPEAT & stretch one vowel by 1--3 letters \\
+MIX & random combination of the above \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Real-typing sets.}
+A word set drawn from the authors' own private chat exports (words only, no messages) was labelled with Tamil spellings by a language model and is being verified by the authors; and a team-typed set of about 1{,}500 Dakshina test words is collected under a fixed protocol.
+\emph{Both sets are in preparation; their sizes and verification status are reported in Section~\ref{sec:results} once final.}
+
+\textbf{Synthetic training data.}
+For the augmentation study (\Cref{sec:method}) we build 60{,}000 additional Tamil words from the IndicXlit unigram list, removing every Dakshina word, every independent-test word and any word sharing a five-code-point stem prefix with a held-out word.
+A Tamil-to-Latin BiLSTM trained on Dakshina romanizes them, giving 123{,}488 quality-filtered sampled pairs and a 60{,}000-pair greedy control.

@@ -1,0 +1,47 @@
+\documentclass[conference]{IEEEtran}
+
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{cleveref}
+\usepackage[backend=biber,style=ieee]{biblatex}
+\addbibresource{refs.bib}
+
+\begin{document}
+
+\title{How Robust Is Character-Level Transliteration to Informal Typing?\\
+A Paired Noise Benchmark for Romanized Tamil}
+
+\author{\IEEEauthorblockN{Lebi Raja}
+\IEEEauthorblockA{Department of AI \& Data Science\\
+Karunya Institute of Technology and Sciences, India}}
+
+\maketitle
+
+\begin{abstract}
+Tamil speakers routinely type Tamil in Latin letters (``Tanglish'') and software must convert it back to Tamil script.
+Published transliteration models are trained and tested on carefully romanized text, so their behaviour on hurried, informal typing is largely unmeasured.
+We study this gap for word-level Latin-to-Tamil transliteration with character-level sequence-to-sequence models.
+We contribute (i)~a paired robustness benchmark that applies seven Tamil-specific noise operators at four severities to the Dakshina test lexicon, so every noisy input is tied to its clean form and gold answer, together with a real-chat word set and a team-typed set;
+(ii)~an augmentation study comparing random character noise, Tamil-phonological noise and sampled back-transliteration against a more-data control;
+and (iii)~a parameter-matched comparison of a BiLSTM with attention and a small pre-LN Transformer, with five seeds and equal tuning budget.
+Our implementation reproduces the published Dakshina baselines within one CER point.
+Results of the benchmark and the augmentation study are reported in Section~\ref{sec:results}.
+\end{abstract}
+
+\begin{IEEEkeywords}
+transliteration, Tamil, robustness, data augmentation, sequence-to-sequence, romanization
+\end{IEEEkeywords}
+
+\input{sections/introduction}
+\input{sections/related}
+\input{sections/data}
+\input{sections/method}
+\input{sections/experiments}
+\input{sections/results}
+\input{sections/limitations}
+
+\printbibliography
+
+\end{document}

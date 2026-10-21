@@ -1,0 +1,20 @@
+\section{Introduction}
+Most Tamil speakers type on phones using the Latin alphabet.
+Search, autocomplete and display all need the text converted back into Tamil script, which is a transliteration task: sounds are mapped to letters, not meanings to words.
+The Latin alphabet cannot express several Tamil distinctions, including vowel length, doubled consonants and the several n, l and r sounds, and writers spell the same word in different ways.
+Informal typing adds more variation: dropped vowels (\emph{kankl} for \emph{kanakkil}), collapsed long vowels, collapsed doubled consonants, swapped digraphs and stretched letters.
+
+Neural transliteration is well studied on clean data.
+The Dakshina dataset provides romanizations of Tamil words written by native speakers on request~\cite{roark2020dakshina}, and strong systems have been trained on larger corpora~\cite{madhani2023aksharantar}.
+However, the Tamil text in Dakshina is encyclopaedic and was typed carefully, so it does not contain the shorthand found in chat.
+We therefore ask how much character-level models lose under informal typing, which training strategy recovers it, and whether the choice of architecture matters.
+
+The literature also disagrees on architecture.
+On Dakshina Tamil, an LSTM beat a Transformer in one study~\cite{roark2020dakshina}, whereas a Transformer was better in another~\cite{kirov2024context}, and batch size can reverse the ranking~\cite{wu2021applying}.
+None of these comparisons tested noisy input.
+
+\textbf{Contributions.}
+(1)~A paired, seeded robustness benchmark for Tamil with seven noise operators and four severities.
+(2)~A study of four augmentation strategies and a more-data control, evaluated on held-out noise types and on real typing.
+(3)~A parameter-matched, equal-tuning comparison of BiLSTM-attention and Transformer over five seeds with paired significance tests.
+(4)~A reproducibility package: code, configurations, per-run logs and data checksums.
