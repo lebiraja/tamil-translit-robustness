@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leica Run Monitor</title>
+<style>
+:root{color-scheme:dark;--bg:#141413;--surface:#1a1a19;--line:#2c2c2a;--grid:#262624;--text:#f0efec;--text2:#c3c2b7;--muted:#8d8c84;
+--lstm:#3987e5;--tr:#d95926;--s3:#199e70;--s4:#c98500;--good:#0ca30c;--warn:#fab219;--bad:#d03b3b;
+--mono:ui-monospace,"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 var(--sans)}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 20px 0}
+.top{display:flex;gap:24px;align-items:baseline;flex-wrap:wrap}
+h1{font:600 15px var(--mono);letter-spacing:.02em;margin:0}
+.stage{font:12px var(--mono);color:var(--text2)}
+.stage b{color:var(--text)}
+.meters{display:flex;gap:22px;flex-wrap:wrap;margin:10px 0 8px;font:12px var(--mono);color:var(--text2)}
+.meter b{color:var(--text);font-weight:600}
+.bar{display:inline-block;width:54px;height:4px;background:var(--grid);vertical-align:middle;margin-left:6px;border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--text2)}
+nav{display:flex;gap:2px}
+nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);font:13px var(--mono);padding:8px 14px;cursor:pointer}
+nav button.on{color:var(--text);border-bottom-color:var(--text)}
+nav button:focus-visible,select:focus-visible,tr.pick:focus-visible{outline:2px solid var(--lstm);outline-offset:2px}
+main{padding:20px;max-width:1280px}
+section{display:none}section.on{display:block}
+h2{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:26px 0 10px;border-top:1px solid var(--line);padding-top:14px}
+h2:first-child{margin-top:0;border-top:0;padding-top:0}
+.run{display:grid;grid-template-columns:230px 1fr 1fr;gap:18px;padding:14px 0;border-bottom:1px solid var(--line);align-items:start}
+.run .name{font:600 13px var(--mono);word-break:break-all}
+.run .meta{font:12px var(--mono);color:var(--text2);margin-top:6px;line-height:1.7}
+.v{display:inline-flex;gap:6px;align-items:center;font:600 12px var(--mono)}
+.v.good{color:#4cc24c}.v.warn{color:var(--warn)}.v.bad{color:#ec6a6a}.v.idle{color:var(--muted)}
+.ct{font:11px var(--mono);color:var(--muted);margin-bottom:2px}
+svg{display:block;width:100%;overflow:visible}
+svg text{font:10px var(--mono);fill:var(--muted)}
+.tip{position:fixed;pointer-events:none;background:#0d0d0c;border:1px solid var(--line);padding:6px 9px;font:11px var(--mono);color:var(--text);border-radius:4px;display:none;z-index:9;white-space:pre}
+table{border-collapse:collapse;width:100%;font:12px var(--mono)}
+th{font-weight:500;color:var(--muted);text-align:right;padding:6px 10px;border-bottom:1px solid var(--line)}
+td{padding:6px 10px;text-align:right;border-bottom:1px solid var(--grid);color:var(--text2)}
+th:first-child,td:first-child{text-align:left}
+td:first-child{color:var(--text)}
+tr.pick{cursor:pointer}tr.pick:hover td{background:var(--surface)}
+tr.sel td{background:var(--surface);color:var(--text)}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:8px;vertical-align:-1px}
+.combo{display:grid;grid-template-columns:230px 1fr 1fr;gap:18px;padding:14px 0;border-bottom:1px solid var(--line)}
+.prog{height:4px;background:var(--grid);border-radius:2px;margin:8px 0 6px;overflow:hidden}.prog i{display:block;height:100%}
+.legend{display:flex;gap:16px;font:12px var(--mono);color:var(--text2);margin:6px 0 4px;flex-wrap:wrap}
+.log{background:var(--surface);border:1px solid var(--line);padding:12px;font:12px/1.5 var(--mono);color:var(--text2);height:62vh;overflow:auto;white-space:pre}
+select{background:var(--surface);color:var(--text);border:1px solid var(--line);padding:6px 8px;font:12px var(--mono)}
+.note{font:12px var(--mono);color:var(--muted);margin:8px 0}
+.empty{color:var(--muted);font:13px var(--mono);padding:24px 0}
+@media(max-width:860px){.run,.combo{grid-template-columns:1fr}}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){}}
+</style>
+</head>
+<body>
+<header>
+  <div class="top"><h1>LEICA / RUN MONITOR</h1><span class="stage" id="stage">connecting…</span><span class="stage" id="sync"></span></div>
+  <div class="meters" id="meters"></div>
+  <nav id="nav">
+    <button data-t="now" class="on">Now</button><button data-t="tune">Tuning</button><button data-t="res">Results</button>
+    <button data-t="past">Past runs</button><button data-t="logs">Logs</button>
+  </nav>
+</header>
+<main>
+<section id="now" class="on"></section>
+<section id="tune"></section>
+<section id="res"></section>
+<section id="past"></section>
+<section id="logs"></section>
+</main>
+<div class="tip" id="tip"></div>
+<script>
+"use strict";
+const C={lstm:"#3987e5",transformer:"#d95926",other:"#199e70"};
+const col=n=>/transformer|-tr/.test(n)?C.transformer:/lstm/.test(n)?C.lstm:C.other;
+const GATE={lstm:8.95,transformer:9.38}; // our reproduction-gate dev CER (greedy-epoch metric differs slightly from beam)
+const PUB=8.4; // Roark 2020 LSTM dev CER
+let S=null, tab="now", picked=[], logFile=null, follow=true;
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const f2=x=>x==null||isNaN(x)?"–":(+x).toFixed(2);
+const ms=a=>{const v=a.filter(x=>x!=null);if(!v.length)return[NaN,NaN];const m=v.reduce((p,c)=>p+c,0)/v.length;
+  const sd=v.length>1?Math.sqrt(v.reduce((p,c)=>p+(c-m)**2,0)/(v.length-1)):0;return[m,sd]};
+const dur=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return h?`${h}h ${m}m`:`${m}m ${s%60}s`};
+
+/* ---------- charts (plain SVG, one y-axis, direct labels, hover crosshair) ---------- */
+const tip=$("#tip");
+function line(el,series,o={}){
+  const W=el.clientWidth||460,H=o.h||150,m={l:38,r:54,t:8,b:20};
+  const xs=series.flatMap(s=>s.x),ys=series.flatMap(s=>s.y.filter(v=>v!=null)).concat((o.ref||[]).map(r=>r.y));
+  if(!xs.length){el.innerHTML='<div class="empty">no data yet</div>';return}
+  let x0=Math.min(...xs),x1=Math.max(...xs,x0+1),y0=Math.min(...ys),y1=Math.max(...ys);
+  if(o.floor!=null)y0=Math.min(y0,o.floor);const pad=(y1-y0)*.08||.5;y0-=pad;y1+=pad;if(o.min0)y0=Math.max(0,y0);
+  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+  let g="";
+  for(let i=0;i<=3;i++){const v=y0+(y1-y0)*i/3,y=Y(v);g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="var(--grid)"/><text x="${m.l-6}" y="${y+3}" text-anchor="end">${v.toFixed(o.dec??1)}</text>`}
+  g+=`<text x="${m.l}" y="${H-4}">${x0}</text><text x="${W-m.r}" y="${H-4}" text-anchor="end">${x1}</text>`;
+  for(const r of o.ref||[])g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(r.y)}" y2="${Y(r.y)}" stroke="var(--muted)" stroke-dasharray="3 4"/><text x="${W-m.r+4}" y="${Y(r.y)+3}">${r.label}</text>`;
+  for(const s of series){
+    const pts=s.x.map((x,i)=>s.y[i]==null?null:[X(x),Y(s.y[i])]).filter(Boolean);
+    if(!pts.length)continue;
+    g+=`<polyline fill="none" stroke="${s.color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${pts.map(p=>p.join(",")).join(" ")}"/>`;
+    const L=pts[pts.length-1];g+=`<circle cx="${L[0]}" cy="${L[1]}" r="3.5" fill="${s.color}" stroke="var(--bg)" stroke-width="2"/>`;
+    if(series.length<=4&&s.label)g+=`<text x="${L[0]+6}" y="${L[1]+3}" style="fill:var(--text2)">${esc(s.label)}</text>`;
+  }
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" height="${H}" role="img" aria-label="${esc(o.aria||"chart")}">${g}<line class="cx" y1="${m.t}" y2="${H-m.b}" stroke="var(--text2)" stroke-opacity=".5" style="display:none"/><rect x="${m.l}" y="0" width="${W-m.l-m.r}" height="${H}" fill="transparent"/></svg>`;
+  const svg=$("svg",el),cx=$(".cx",svg);
+  svg.addEventListener("mousemove",e=>{const b=svg.getBoundingClientRect(),px=(e.clientX-b.left)/b.width*W,xv=Math.round(x0+(px-m.l)/(W-m.l-m.r)*(x1-x0));
+    if(xv<x0||xv>x1)return;cx.setAttribute("x1",X(xv));cx.setAttribute("x2",X(xv));cx.style.display="";
+    tip.style.display="block";tip.style.left=e.clientX+14+"px";tip.style.top=e.clientY+10+"px";
+    tip.textContent=(o.xl||"epoch")+" "+xv+"\n"+series.map(s=>{const i=s.x.indexOf(xv);return(s.label||"")+" "+(i<0||s.y[i]==null?"–":s.y[i].toFixed(o.dec??2))}).join("\n")});
+  svg.addEventListener("mouseleave",()=>{tip.style.display="none";cx.style.display="none"});
+}
+function strip(el,vals,best,o={}){ // one row of dots: trials in order
+  const W=el.clientWidth||460,H=110,m={l:38,r:10,t:8,b:20},v=vals.filter(x=>x.y!=null);
+  if(!v.length){el.innerHTML='<div class="empty">no trials yet</div>';return}
+  const y0=Math.min(...v.map(a=>a.y))-.3,y1=Math.min(Math.max(...v.map(a=>a.y)),y0+9)+.3,n=Math.max(...v.map(a=>a.x),19);
+  const X=i=>m.l+(i/n)*(W-m.l-m.r),Y=q=>H-m.b-(Math.min(q,y1)-y0)/(y1-y0)*(H-m.t-m.b);
+  let g="";for(let i=0;i<=2;i++){const q=y0+(y1-y0)*i/2;g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(q)}" y2="${Y(q)}" stroke="var(--grid)"/><text x="${m.l-6}" y="${Y(q)+3}" text-anchor="end">${q.toFixed(1)}</text>`}
+  g+=`<text x="${m.l}" y="${H-4}">trial 0</text><text x="${W-m.r}" y="${H-4}" text-anchor="end">19</text>`;
+  g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${Y(PUB)}" y2="${Y(PUB)}" stroke="var(--muted)" stroke-dasharray="3 4"/>`;
+  for(const a of v){const b=a.y===best;g+=`<circle data-i="${a.x}" cx="${X(a.x)}" cy="${Y(a.y)}" r="${b?5:4}" fill="${o.color}" fill-opacity="${b?1:.55}" stroke="var(--bg)" stroke-width="2"/>`}
+  el.innerHTML=`<svg viewBox="0 0 ${W} ${H}" height="${H}">${g}</svg>`;
+  el.querySelectorAll("circle").forEach(c=>{c.addEventListener("mousemove",e=>{const a=v.find(t=>t.x==c.dataset.i);tip.style.display="block";tip.style.left=e.clientX+14+"px";tip.style.top=e.clientY+10+"px";tip.textContent=`trial ${a.x}\ndev CER ${a.y.toFixed(2)}\n${a.hp}`});c.addEventListener("mouseleave",()=>tip.style.display="none")});
+}
+
+/* ---------- verdicts ---------- */
+function verdict(r,pat=6){
+  const c=r.cer.filter(x=>x!=null);if(c.length<3)return["idle","Warming up","–"];
+  const best=Math.min(...c),bi=c.indexOf(best),since=c.length-1-bi,last=c[c.length-1];
+  const lossUp=r.loss.length>3&&r.loss[r.loss.length-1]<r.loss[r.loss.length-4];
+  if(since===0)return["good","Improving",`new best ${best.toFixed(2)}`];
+  if(since>=pat-1)return["warn","About to early-stop",`${since}/${pat} epochs without gain`];
+  if(lossUp&&last>best+.3)return["warn","Overfitting?",`train loss down, dev CER +${(last-best).toFixed(2)} off best`];
+  return["good","Converging",`${since}/${pat} since best`];
+}
+
+/* ---------- tabs ---------- */
+function head(){
+  const g=S.gpu||{},y=S.system,st=S.stage||{};
+  const b=(v,m)=>`<span class="bar"><i style="width:${Math.min(100,100*v/m)}%"></i></span>`;
+  $("#stage").innerHTML=S.done?'<b>ALL DONE</b>':`stage <b>${st.stage||"?"}</b> · tune ${st.tune_trials}/120 · c3 ${st.c3_runs}/30 · c2 ${st.c2_runs}/80`+(S.stuck?' · <b style="color:#ec6a6a">STUCK</b>':"");
+  $("#sync").textContent="updated "+new Date(S.now*1000).toLocaleTimeString();
+  const okk=y.kernel==="6.17.0-22-generic";
+  $("#meters").innerHTML=
+   `<span class="meter">GPU <b>${g.util??"–"}%</b>${b(g.util||0,100)}</span>`+
+   `<span class="meter">temp <b>${g.temp??"–"}°C</b>${b(g.temp||0,95)}</span>`+
+   `<span class="meter">power <b>${g.power?Math.round(g.power):"–"}W</b>/${g.power_limit?Math.round(g.power_limit):"–"}${b(g.power||0,g.power_limit||250)}</span>`+
+   `<span class="meter">VRAM <b>${g.mem_used?(g.mem_used/1024).toFixed(1):"–"}</b>/${g.mem_total?(g.mem_total/1024).toFixed(0):"–"} GB${b(g.mem_used||0,g.mem_total||1)}</span>`+
+   `<span class="meter">load <b>${y.load[0].toFixed(1)}</b></span>`+
+   `<span class="meter">RAM <b>${y.mem_used_gb.toFixed(1)}</b>/${y.mem_total_gb.toFixed(0)} GB${b(y.mem_used_gb,y.mem_total_gb)}</span>`+
+   `<span class="meter">disk free <b>${y.disk_free_gb.toFixed(0)} GB</b></span>`+
+   `<span class="meter">kernel <b style="color:${okk?"#4cc24c":"#ec6a6a"}">${okk?"✓ ":"✗ "}${y.kernel}</b></span>`+
+   `<span class="meter">up <b>${dur(y.uptime_s)}</b></span>`;
+}
+function now(){
+  const act=Object.entries(S.runs).filter(([,r])=>r.active),el=$("#now");
+  let h=`<h2>Running now (${act.length} training job${act.length==1?"":"s"})</h2>`;
+  if(!act.length)h+='<div class="empty">No training job is writing logs right now.</div>';
+  for(const [n,r] of act){
+    const [cls,txt,why]=verdict(r),c=r.cer.filter(x=>x!=null),best=c.length?Math.min(...c):null;
+    h+=`<div class="run" data-run="${esc(n)}"><div><div class="name"><span class="sw" style="background:${col(n)}"></span>${esc(n)}</div>
+     <div class="meta"><span class="v ${cls}">${cls=="good"?"▲":cls=="warn"?"◆":"●"} ${txt}</span><br>${why}<br>epoch ${r.ep[r.ep.length-1]}<br>
+     last dev CER ${f2(c[c.length-1])}<br>best dev CER ${f2(best)}<br>train loss ${f2(r.loss[r.loss.length-1])}<br>log ${esc(r.log)}</div></div>
+     <div><div class="ct">dev CER (greedy) · lower is better · dashed = published 8.4</div><div class="c1"></div></div>
+     <div><div class="ct">train loss</div><div class="c2"></div></div></div>`;
+  }
+  const done=Object.entries(S.runs).filter(([,r])=>!r.active).length;
+  h+=`<div class="note">${done} earlier run${done==1?"":"s"} in the logs, ${S.results.length} result files. See “Past runs”.</div>`;
+  el.innerHTML=h;
+  for(const [n,r] of act){const b=el.querySelector(`[data-run="${CSS.escape(n)}"]`);
+    line($(".c1",b),[{x:r.ep,y:r.cer,color:col(n),label:"dev CER"}],{ref:[{y:PUB,label:"pub 8.4"}],aria:"dev CER over epochs"});
+    line($(".c2",b),[{x:r.ep,y:r.loss,color:col(n),label:"loss"}],{dec:3,min0:true,aria:"train loss over epochs"})}
+}
+function tune(){
+  const rows=S.results.filter(r=>r.block=="tune"&&r.dev),el=$("#tune");
+  const combos={};for(const r of rows){const m=r.name.match(/^(\w+)-(\d+m)-t(\d+)/);if(!m)continue;(combos[m[1]+"-"+m[2]]??=[]).push({t:+m[3],cer:r.dev.cer,hp:r.hp,wall:r.wall_s})}
+  const all=["lstm-1m","lstm-3m","lstm-8m","transformer-1m","transformer-3m","transformer-8m"];
+  let h=`<h2>Hyperparameter search · 20 random trials per model and size · selected on dev CER</h2>
+   <div class="legend"><span><span class="sw" style="background:${C.lstm}"></span>BiLSTM</span><span><span class="sw" style="background:${C.transformer}"></span>Transformer</span><span>dashed line = published 8.4</span></div>`;
+  for(const k of all){
+    const t=(combos[k]||[]).sort((a,b)=>a.t-b.t),best=t.length?Math.min(...t.map(a=>a.cer)):null,b=t.find(a=>a.cer===best);
+    const live=Object.entries(S.runs).find(([n,r])=>r.active&&n.startsWith(k+"-"));
+    h+=`<div class="combo" data-k="${k}"><div><div class="name" style="font:600 13px var(--mono)"><span class="sw" style="background:${col(k)}"></span>${k}</div>
+     <div class="prog"><i style="width:${t.length/20*100}%;background:${col(k)}"></i></div>
+     <div class="meta" style="font:12px var(--mono);color:var(--text2);line-height:1.7">${t.length}/20 trials${live?` · running ${esc(live[0].match(/-t\d+/)[0].slice(1))}`:""}<br>best dev CER <b style="color:var(--text)">${f2(best)}</b>
+     ${b?`<br>lr ${b.hp.lr.toExponential(1)} · bs ${b.hp.batch_size}<br>drop ${b.hp.dropout} · ls ${b.hp.label_smoothing}${b.hp.warmup?` · warm ${b.hp.warmup}`:""}`:""}</div></div>
+     <div><div class="ct">every trial’s dev CER (beam 10) · bigger dot = best</div><div class="s1"></div></div>
+     <div><div class="ct">top trials</div><table><tr><th>trial</th><th>dev CER</th><th>lr</th><th>bs</th><th>drop</th><th>ls</th></tr>
+     ${[...t].sort((a,b)=>a.cer-b.cer).slice(0,5).map(a=>`<tr><td>t${a.t}</td><td>${f2(a.cer)}</td><td>${a.hp.lr.toExponential(1)}</td><td>${a.hp.batch_size}</td><td>${a.hp.dropout}</td><td>${a.hp.label_smoothing}</td></tr>`).join("")||'<tr><td colspan="6" class="empty">no trials yet</td></tr>'}</table></div></div>`;
+  }
+  el.innerHTML=h;
+  for(const k of all){const t=(combos[k]||[]),best=t.length?Math.min(...t.map(a=>a.cer)):null;
+    strip($(`[data-k="${k}"] .s1`),t.map(a=>({x:a.t,y:a.cer,hp:`lr ${a.hp.lr.toExponential(1)} bs ${a.hp.batch_size} drop ${a.hp.dropout}`})),best,{color:col(k)})}
+}
+function group(block){
+  const g={};for(const r of S.results.filter(r=>r.block==block&&r.test))(g[r.name]??=[]).push(r);return g}
+function res(){
+  const el=$("#res");let h="";
+  for(const [blk,title] of [["gate","Reproduction gate (published: BiLSTM dev CER 8.4, Transformer 9.4)"],["c3","C3 · BiLSTM vs Transformer · mean ± sd over seeds"],["c2","C2 · augmentation conditions · mean ± sd over seeds"]]){
+    const g=group(blk),names=Object.keys(g).sort();
+    h+=`<h2>${title}</h2>`;
+    if(!names.length){h+='<div class="empty">not started yet — results appear here as runs finish.</div>';continue}
+    h+=`<table><tr><th>run</th><th>seeds</th><th>params</th><th>dev CER</th><th>test CER</th><th>test top-1</th><th>test top-5</th><th>V-DROP .3</th><th>MIX .3</th><th>AK-Freq</th><th>AK-NEI</th></tr>`;
+    for(const n of names){const r=g[n],a=k=>ms(r.map(x=>k(x)));const f=(v)=>{const[m,s]=v;return isNaN(m)?"–":`${m.toFixed(2)}${r.length>1?` ±${s.toFixed(2)}`:""}`};
+      h+=`<tr><td><span class="sw" style="background:${col(n)}"></span>${esc(n)}</td><td>${r.length}</td><td>${(r[0].params/1e6).toFixed(2)}M</td>
+      <td>${f(a(x=>x.dev.cer))}</td><td>${f(a(x=>x.test.cer))}</td><td>${f(a(x=>x.test.top1))}</td><td>${f(a(x=>x.test.top5))}</td>
+      <td>${f(a(x=>x.noisy["V-DROP.0.3"]))}</td><td>${f(a(x=>x.noisy["MIX.0.3"]))}</td><td>${f(a(x=>x.independent["AK-Freq"]))}</td><td>${f(a(x=>x.independent["AK-NEI"]))}</td></tr>`}
+    h+="</table>";
+  }
+  el.innerHTML=h+'<div class="note">CER = character error rate (lower is better). Noisy columns are CER on the test set after the named noise at severity 0.3.</div>';
+}
+function past(){
+  const rows=[...S.results].filter(r=>r.history&&r.history.length).sort((a,b)=>b.mtime-a.mtime),el=$("#past");
+  let h=`<h2>Finished runs · click rows to compare learning curves (up to 4)</h2><div class="legend" id="pl"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:18px"><div><div class="ct">dev CER (greedy) per epoch</div><div id="pc1"></div></div><div><div class="ct">train loss per epoch</div><div id="pc2"></div></div></div>
+  <h2>All finished runs (${rows.length})</h2><table><tr><th>run</th><th>block</th><th>params</th><th>epochs</th><th>best dev CER</th><th>test CER</th><th>time</th><th>finished</th></tr>`;
+  for(const r of rows){const c=r.history.map(e=>e.dev_cer_greedy).filter(x=>x!=null&&!isNaN(x));
+    h+=`<tr class="pick ${picked.includes(r.file)?"sel":""}" tabindex="0" data-f="${esc(r.file)}"><td><span class="sw" style="background:${col(r.file)}"></span>${esc(r.file)}</td><td>${r.block}</td><td>${(r.params/1e6).toFixed(2)}M</td><td>${r.history.length}</td><td>${f2(c.length?Math.min(...c):null)}</td><td>${f2(r.test?.cer)}</td><td>${r.wall_s?dur(r.wall_s):"–"}</td><td>${new Date(r.mtime*1000).toLocaleString()}</td></tr>`}
+  el.innerHTML=h+"</table>";
+  el.querySelectorAll("tr.pick").forEach(tr=>{const go=()=>{const f=tr.dataset.f;picked=picked.includes(f)?picked.filter(x=>x!==f):[...picked,f].slice(-4);past()};tr.onclick=go;tr.onkeydown=e=>{if(e.key==="Enter")go()}});
+  const pal=[C.lstm,C.transformer,C.other,"#c98500"],ser=picked.map(f=>rows.find(r=>r.file===f)).filter(Boolean);
+  $("#pl").innerHTML=ser.map((r,i)=>`<span><span class="sw" style="background:${pal[i]}"></span>${esc(r.file)}</span>`).join("")||"<span>select a run below</span>";
+  const mk=key=>ser.map((r,i)=>({x:r.history.map(e=>e.epoch),y:r.history.map(e=>e[key]),color:pal[i],label:r.file.split("-").slice(-4).join("-")}));
+  line($("#pc1"),mk("dev_cer_greedy"),{ref:[{y:PUB,label:"pub 8.4"}],h:220});line($("#pc2"),mk("train_loss"),{h:220,dec:3,min0:true});
+}
+async function logs(first){
+  const el=$("#logs");
+  if(first||!$("#lf")){
+    el.innerHTML=`<h2>Raw logs (live)</h2><div style="display:flex;gap:14px;align-items:center;margin-bottom:10px"><select id="lf"></select><label class="note"><input type="checkbox" id="fo" checked> follow</label><span class="note" id="ls"></span></div><div class="log" id="lg"></div>`;
+    $("#fo").onchange=e=>follow=e.target.checked;$("#lf").onchange=e=>{logFile=e.target.value;logs()};
+  }
+  const sel=$("#lf");const names=S.logs.map(l=>l.name);
+  if(sel.options.length!==names.length){sel.innerHTML=S.logs.map(l=>`<option value="${l.name}">${l.active?"● ":"  "}${l.name}</option>`).join("")}
+  if(!logFile||!names.includes(logFile))logFile=(S.logs.find(l=>l.active)||S.logs[0]||{}).name;
+  if(!logFile)return;sel.value=logFile;
+  const t=await (await fetch("/api/tail?file="+encodeURIComponent(logFile)+"&n=400")).text(),lg=$("#lg");
+  lg.textContent=t;if(follow)lg.scrollTop=lg.scrollHeight;
+  const m=S.logs.find(l=>l.name===logFile);$("#ls").textContent=m?`${(m.size/1024).toFixed(0)} KB · ${m.active?"being written":"idle"}`:"";
+}
+const draw={now,tune,res,past,logs};
+function render(){if(!S)return;head();draw[tab](tab==="logs"&&!$("#lf"))}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===tab));render()});
+async function poll(){try{S=await (await fetch("/api/state")).json();render()}catch(e){$("#stage").textContent="no connection — retrying"}}
+poll();setInterval(poll,5000);addEventListener("resize",()=>render());
+</script>
+</body>
+</html>
