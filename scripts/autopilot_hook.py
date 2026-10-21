@@ -18,11 +18,12 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 from autopilot_status import status  # noqa: E402
 
-MAX_WAIT_S, POLL_S = int(os.environ.get("AUTOPILOT_MAX_WAIT", 1800)), int(os.environ.get("AUTOPILOT_POLL", 60))
+MAX_WAIT_S, POLL_S = int(os.environ.get("AUTOPILOT_MAX_WAIT", 5400)), int(os.environ.get("AUTOPILOT_POLL", 60))
 
 
 def signature(s: dict) -> tuple:
-    return (s["tune_trials"], s["best_configs"], s["c3_runs"], s["c2_runs"], s["summary_written"], s["item_dumps"], len(s["running"]))
+    """Wake only on real events (a config finished, a stage advanced, a job started or exited), not on every trial/run."""
+    return (s["best_configs"], s["c3_runs"] // 10, s["c2_runs"] // 20, s["summary_written"], s["item_dumps"] // 20, len(s["running"]))
 
 
 def main() -> None:
