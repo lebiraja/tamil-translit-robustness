@@ -2,6 +2,10 @@
 
 Newest entry on top.
 
+## 2026-10-21 (afternoon) · Live dashboard on Leica port 8383
+- Built and deployed `scripts/dashboard/` (stdlib python server + offline SVG page): live loss/dev-CER curves with a verdict per job, tuning view for all 6 searches, results tables, past-run comparison, live log tail, GPU/CPU/RAM/disk/kernel header. Details: `docs/dashboard.md`. Verified in a browser from the laptop (all tabs render; JSON NaN bug and axis clipping fixed). It is already showing real overfitting in the BiLSTM gate run (train loss to ~0 while dev CER rises).
+- Merging Leica's local commits with ours conflicted once in STATUS.md (both prepended); resolved by keeping both entries. Leica session is progressing on its own (tuning 37/120, analysis tooling written and tested).
+
 ## 2026-10-21 (afternoon) · Autopilot set up for the Leica Claude session
 - Found Lebi's Claude on Leica (pid 19348, interactive, `--dangerously-skip-permissions`, cwd = project). It is not reachable by cross-session messaging from the laptop (not listed as a peer), so it is driven by files instead: `AUTOPILOT.md` (runbook: stages, commands, analysis scripts to write, what it may and may not do, docs duties, finish condition), `scripts/autopilot_status.py` (stage and next action), `scripts/autopilot_hook.py` (Stop hook: waits without tokens until results change, then re-prompts; stops at `logs/AUTOPILOT_DONE`; escape hatch after 3 identical idle wake-ups -> `logs/AUTOPILOT_STUCK`), `docs/autopilot/settings.template.json` (installed on Leica as `.claude/settings.json`).
 - Hook tested on Leica with a 5 s wait: returns the correct block message. Tuning at 26/120 trials when installed; the c3 -> c2 watcher (`scripts_pipeline.sh`) is running.

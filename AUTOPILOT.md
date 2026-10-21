@@ -24,6 +24,8 @@ Always work in the repo root with `.venv/bin/python`. Long jobs: `setsid nohup .
 ## 4. Healthcheck (every wake-up, 5 seconds)
 `uname -r` must be `6.17.0-22-generic` and `nvidia-smi` must show the RTX 5070. If not, stop all work, write the problem in `STATUS.md`, and wait; do not try to fix the kernel or driver.
 
+Also keep the live dashboard up: `curl -s -m 3 localhost:8383/api/state >/dev/null || sh scripts/dashboard/run.sh` (port 8383, see `docs/dashboard.md`). Do not change its charts unless something is broken.
+
 ## 5. Analysis scripts you must write (stage `analysis`)
 Plain numpy/scipy/pandas only (no new downloads; there is no internet beyond the Claude API). Add pytest tests with hand-computed values for the statistics helpers.
 - `scripts/evaluate_ckpt.py`: for every `runs/<name>-s<seed>/best.pt` of c3 and c2, rebuild the model from the stored `kw`/`vocab`, run beam 10 on clean test, all 28 noisy suites and the 4 independent suites, and save per-item results to `results/items/<name>-s<seed>.npz` (arrays: top-1 correct flag, edit distance to closest reference, reference length, per suite). Do not commit these files (add `results/items/` to `.gitignore`).

@@ -38,3 +38,7 @@ Reading a line:  [lstm-3m-t0-s100] ep14 loss 0.82 devCER(greedy) 8.53
 Trial end:       dev CER X hp {...}    Combo end: "best ..." line.
 
 DO NOT reboot Leica or kill jobs without asking Lebi. Never put passwords or tokens in these files.
+
+== Web dashboard (live charts, logs, tuning, results) ==
+open http://10.42.0.226:8383 in a browser on the same network
+restart if needed:  sh ~/work/tamil-translit-robustness/scripts/dashboard/run.sh
