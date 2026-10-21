@@ -2,6 +2,11 @@
 
 Newest entry on top.
 
+## 2026-10-21 (afternoon) · Autopilot set up for the Leica Claude session
+- Found Lebi's Claude on Leica (pid 19348, interactive, `--dangerously-skip-permissions`, cwd = project). It is not reachable by cross-session messaging from the laptop (not listed as a peer), so it is driven by files instead: `AUTOPILOT.md` (runbook: stages, commands, analysis scripts to write, what it may and may not do, docs duties, finish condition), `scripts/autopilot_status.py` (stage and next action), `scripts/autopilot_hook.py` (Stop hook: waits without tokens until results change, then re-prompts; stops at `logs/AUTOPILOT_DONE`; escape hatch after 3 identical idle wake-ups -> `logs/AUTOPILOT_STUCK`), `docs/autopilot/settings.template.json` (installed on Leica as `.claude/settings.json`).
+- Hook tested on Leica with a 5 s wait: returns the correct block message. Tuning at 26/120 trials when installed; the c3 -> c2 watcher (`scripts_pipeline.sh`) is running.
+- The Leica session must be told once to read `AUTOPILOT.md` and load the hook (`/hooks` or restart with `--continue`). Pushes from Leica need `GH_TOKEN` exported in its shell; otherwise the laptop pulls over ssh.
+
 ## 2026-10-21 (later) · Datasets generated, Leica set up, reproduction gate PASSED, tuning running
 - Datasets generated: 28 paired noisy test sets (6,833 inputs each), independent Aksharantar sets (2,607 / 991 / 706), 60,000-word A3 pool, A3 sampled pairs 123,488 (+60,000 greedy control), WhatsApp real-chat set (370 + 43) built from Sonnet-made labels, `wa_verify.tsv` handed to Lebi to check. Datasheet: `docs/datasets/final-dataset.md`.
 - Leica ready: repo cloned (token via command header only, remote URL clean), uv + venv (no sudo), torch 2.11.0+cu128 works on RTX 5070, kernel 6.17.0-22 unchanged, 20 tests pass.
