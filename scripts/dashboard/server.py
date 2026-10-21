@@ -94,6 +94,17 @@ def results() -> list[dict]:
     return out
 
 
+def clean(o):
+    """JSON has no NaN/Infinity: map them to null."""
+    if isinstance(o, float) and (o != o or o in (float("inf"), float("-inf"))):
+        return None
+    if isinstance(o, dict):
+        return {k: clean(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [clean(v) for v in o]
+    return o
+
+
 def state() -> dict:
     now = time.time()
     runs, files = {}, []
@@ -124,8 +135,10 @@ class H(BaseHTTPRequestHandler):
         u = urlparse(self.path)
         if u.path in ("/", "/index.html"):
             return self.send(200, (STATIC / "index.html").read_bytes(), "text/html; charset=utf-8")
+        if u.path == "/favicon.ico":
+            return self.send(204, b"", "image/x-icon")
         if u.path == "/api/state":
-            return self.send(200, json.dumps(state()).encode(), "application/json")
+            return self.send(200, json.dumps(clean(state()), allow_nan=False).encode(), "application/json")
         if u.path == "/api/tail":
             q = parse_qs(u.query)
             name = Path(q.get("file", [""])[0]).name  # basename only: no path traversal
