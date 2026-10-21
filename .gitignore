@@ -13,3 +13,4 @@ whatsapp/
 data/private/
 results/items/
 logs/
+.playwright-mcp/
