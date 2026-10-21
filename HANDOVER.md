@@ -2,7 +2,9 @@
 
 > Version: v2 · Last changed: 2026-10-18
 
-## Current (v2)
+## Current (v2) · addendum 2026-10-21
+GO was given. Code exists in `src/translit/` and `scripts/` (commit `655089c`); noise and metric tests pass; model/training code is unrun. Next: finish torch install, run `pytest`, `python scripts/prepare_data.py all`, reverse model -> `synthesize_a3.py`, reproduction gate (`run_matrix.py gate`), then Leica (clone via token-in-command, never stored). See STATUS top entry.
+
 
 ### Where we are
 Planning, research and dataset survey are complete and fully documented. No project code exists, nothing has been trained, and the environment is not set up. Lebi said "don't start now, I will let you know". Topic #34 (informal romanized Tamil transliteration, Dakshina) is locked; scope C1 + C2 + C3; paper in IEEE format. The repo is private on GitHub (`lebiraja/tamil-translit-robustness`, branch `main`).

@@ -34,3 +34,5 @@ Locked decisions. Change one only by adding a new row that supersedes it, never 
 ## Resolved
 - Aksharantar overlap with Dakshina: resolved 2026-10-18, see D12.
 - Lab system details: resolved by reading the dscs-lab docs, see D7.
+
+| D18 | 2026-10-21 | Lebi gave the go (D14 satisfied) and authorised Leica use and git push/pull. A3 control (CTRL) = same native words romanized greedily, to separate more data from more variation. Credentials given in chat are never stored. | Lebi |

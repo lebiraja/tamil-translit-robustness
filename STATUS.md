@@ -2,6 +2,14 @@
 
 Newest entry on top.
 
+## 2026-10-21 · GO given: Phase 1 started, code written, Leica connected
+- Lebi said go ("make everything ready to train and test", synthesise the dataset, train on Leica). D14 is satisfied; Lebi also authorised using Leica and the GitHub push/pull flow (credentials were given in chat and are used only via commands, never stored).
+- Fetched Dakshina Tamil to `data/dakshina-ta/` (byte ranges); counts match docs (68,218 / 6,827 / 6,864 pairs); `SHA256SUMS` saved.
+- Wrote and pushed (`655089c`): `src/translit/` (noise operators V-DROP, V-LEN, GEM, DIGRAPH, KEY, REPEAT, MIX, RANDOM; loaders and vocab; metrics; BiLSTM+attention and pre-LN Transformer with a parameter-budget helper; batched beam, greedy and sampling decoders; augmentation policies A0/A1/A2; training loop with early stopping and results JSON), `scripts/` (`prepare_data.py`, `train.py`, `run_matrix.py`, `synthesize_a3.py`, `make_human_prompts.py`, `setup_env.sh`), `configs/`, `tests/`, `requirements.txt`.
+- Noise and metric tests pass (17). Loader, model, training and decode code has NOT been run yet: PyTorch (cu128, ~2.5 GB) was still downloading on the laptop (first attempt hit a uv lock and a download timeout).
+- Leica checked: kernel 6.17.0-22-generic, RTX 5070 idle, 237 GB free, Python 3.12.3 with venv, no pip/uv. Nothing installed there yet.
+- Not done yet: synthetic noisy test sets, A3 pool and synthesis, reproduction gate, Leica environment, typing sheets generated.
+
 ## 2026-10-18 · Documentation pass (everything written up in detail)
 - **Done:** `docs/session-log-2026-10-18.md` (full chronological record incl. mistakes), `docs/infrastructure.md`, `docs/experiment-plan.md`, `docs/human-typing-protocol.md`, `docs/paper-outline.md`, `docs/architecture.md`, `docs/docker.md`, `docs/glossary.md`, `docs/README.md`, `docs/datasets/README.md`; rewrote `PROJECT_INTRO.md`, `CHECKLIST.md`, `DECISIONS.md` (D1-D17 plus open items), `HANDOVER.md` (v2), `CLAUDE.md`; added root `README.md`; `FIXES.md` entries F1, F2.
 - **Decisions added:** D11 (Dakshina stays baseline), D12 (dataset usage rules), D13 (reproduction gate), D14 (wait for Lebi's go), D15 (never reboot Leica), D16 (repo and privacy), D17 (secrets).
