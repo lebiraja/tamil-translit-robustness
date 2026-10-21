@@ -1,0 +1,40 @@
+LEICA: HOW TO WATCH THE LIVE LOGS
+Connect first:  ssh airoot      (then run the commands below on Leica)
+Project folder: cd ~/work/tamil-translit-robustness
+
+== Follow one log live (Ctrl+C to stop) ==
+tail -f logs/tune_lstm1mlstm8m.log
+tail -f logs/tune_lstm3mtransformer1m.log
+tail -f logs/tune_transformer3mtransformer8m.log
+
+== Follow all tuning logs at once ==
+tail -f logs/tune_*.log
+
+== One-line progress snapshot (last line of each log) ==
+for f in logs/tune_*.log; do echo "$f: $(tail -n1 $f | cut -c1-100)"; done
+
+== Finished trials and their dev CER ==
+grep -h "dev CER" logs/tune_*.log | cut -c1-120
+ls results/tune | wc -l        # finished trials out of 120
+
+== Best configs written when a combo finishes ==
+ls configs/best_*.yaml
+
+== GPU load and running jobs ==
+watch -n 2 nvidia-smi          # Ctrl+C to quit
+pgrep -fa "scripts/tune.py" | cut -c1-100
+
+== Health check (GPU works only on this kernel) ==
+uname -r                       # must be 6.17.0-22-generic
+
+== From your laptop without logging in ==
+ssh airoot 'tail -f ~/work/tamil-translit-robustness/logs/tune_*.log'
+
+== Later experiment logs (same pattern) ==
+tail -f logs/c3*.log   logs/c2*.log
+
+Reading a line:  [lstm-3m-t0-s100] ep14 loss 0.82 devCER(greedy) 8.53
+  t0 = trial number (of 20), ep = epoch, devCER = dev error rate (lower is better).
+Trial end:       dev CER X hp {...}    Combo end: "best ..." line.
+
+DO NOT reboot Leica or kill jobs without asking Lebi. Never put passwords or tokens in these files.
