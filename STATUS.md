@@ -2,6 +2,15 @@
 
 Newest entry on top.
 
+## 2026-10-21 (later) · Datasets generated, Leica set up, reproduction gate PASSED, tuning running
+- Datasets generated: 28 paired noisy test sets (6,833 inputs each), independent Aksharantar sets (2,607 / 991 / 706), 60,000-word A3 pool, A3 sampled pairs 123,488 (+60,000 greedy control), WhatsApp real-chat set (370 + 43) built from Sonnet-made labels, `wa_verify.tsv` handed to Lebi to check. Datasheet: `docs/datasets/final-dataset.md`.
+- Leica ready: repo cloned (token via command header only, remote URL clean), uv + venv (no sudo), torch 2.11.0+cu128 works on RTX 5070, kernel 6.17.0-22 unchanged, 20 tests pass.
+- **Reproduction gate (seed 0, 3M params):** BiLSTM dev CER 8.95 / top-1 62.8 (Roark 2020: 8.4 / 65.3, gap +0.55 CER); Transformer dev CER 9.38 (Roark 9.4). Within the D13 limit of 1 CER point. Top-1 is 2.5 points under Roark for the LSTM: likely an evaluation-definition difference; documented, not hidden. Test (clean) CER: LSTM 9.24, Transformer 9.86. Results: `results/gate/*.json`.
+- Noisy sanity (LSTM, severity 0.3): V-DROP CER 24.1, KEY 22.0, DIGRAPH 12.5, V-LEN 10.3, GEM 10.3, REPEAT 10.7, MIX 25.2 vs clean 9.24. Independent: AK-Freq 5.95, AK-NEF 25.0, AK-NEI 27.9.
+- Haiku pilot: 34.4% exact match to attested human romanizations (900 variants), 77.2% within one edit: not used as training data.
+- Found and fixed: temperature-1 back-transliteration produced degenerate outputs; added a closeness-to-greedy filter (17,828 of 141,316 samples dropped). Transformer "1M" budget lands at 0.80M (width step 32); acceptable, tighten if time.
+- Running now on Leica: random-search tuning, 20 trials x 6 (arch, size) combos, 3 workers, selection on dev only. Next: C3 (5 seeds), C2 (A0..A4, CTRL, held-out), WA/human evaluation, statistics, paper skeleton.
+
 ## 2026-10-21 · GO given: Phase 1 started, code written, Leica connected
 - Lebi said go ("make everything ready to train and test", synthesise the dataset, train on Leica). D14 is satisfied; Lebi also authorised using Leica and the GitHub push/pull flow (credentials were given in chat and are used only via commands, never stored).
 - Fetched Dakshina Tamil to `data/dakshina-ta/` (byte ranges); counts match docs (68,218 / 6,827 / 6,864 pairs); `SHA256SUMS` saved.
