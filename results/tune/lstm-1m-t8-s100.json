@@ -1,0 +1,194 @@
+{
+ "config": {
+  "name": "lstm-1m-t8",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 1000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 128,
+  "lr": 0.0005915813912209754,
+  "warmup": 800,
+  "dropout": 0.3,
+  "label_smoothing": 0.05,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 64,
+  "hidden": 128,
+  "layers": 2,
+  "dropout": 0.3
+ },
+ "n_params": 984754,
+ "commit": "254a6ca",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 1.5590061838825584,
+   "dev_cer_greedy": 14.296685240748678
+  },
+  {
+   "epoch": 1,
+   "train_loss": 0.7865196784171934,
+   "dev_cer_greedy": 11.283754822117446
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.7061094034228023,
+   "dev_cer_greedy": 10.576510930132876
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.6651920615716305,
+   "dev_cer_greedy": 10.106800971567367
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.6378063233505645,
+   "dev_cer_greedy": 9.740677239605658
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.617720545042459,
+   "dev_cer_greedy": 9.58691264979551
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.6015806715967033,
+   "dev_cer_greedy": 9.345811083528298
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.5878317100803436,
+   "dev_cer_greedy": 9.22079545657493
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.575854822128715,
+   "dev_cer_greedy": 9.072562641758791
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.5659843437372983,
+   "dev_cer_greedy": 8.834717385480847
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.5565389038432385,
+   "dev_cer_greedy": 8.8918653451201
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.5492577973867128,
+   "dev_cer_greedy": 8.820430395571034
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.5421680525535469,
+   "dev_cer_greedy": 8.855831562405129
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.5362127110890227,
+   "dev_cer_greedy": 8.991874274488794
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.530123892887038,
+   "dev_cer_greedy": 8.745579883558953
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.5250114608359332,
+   "dev_cer_greedy": 8.7847129207965
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.5202616295024236,
+   "dev_cer_greedy": 8.693788620209308
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.5162824199659543,
+   "dev_cer_greedy": 8.805828883690198
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.5117415341581195,
+   "dev_cer_greedy": 8.90583424112006
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.5085027303176748,
+   "dev_cer_greedy": 8.843488820630045
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.505006850417586,
+   "dev_cer_greedy": 8.680977212658046
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.5017965823484462,
+   "dev_cer_greedy": 8.561631603386077
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.49902165030341983,
+   "dev_cer_greedy": 8.605971855132509
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.4963879602950566,
+   "dev_cer_greedy": 8.580970069290663
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.4939884579014962,
+   "dev_cer_greedy": 8.818487034788198
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.49137948365047784,
+   "dev_cer_greedy": 8.75256719349942
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.48921722128605927,
+   "dev_cer_greedy": 8.681287280780083
+  },
+  {
+   "epoch": 27,
+   "train_loss": 0.4870838202301726,
+   "dev_cer_greedy": 8.650617901278663
+  }
+ ],
+ "best_dev_crit": 8.561631603386077,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 8.50626852877094,
+  "mrr": 0.722303849544519,
+  "n": 6806.0,
+  "top1": 64.59006758742287,
+  "top5": 83.33823097267117
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 314.16783261299133
+}

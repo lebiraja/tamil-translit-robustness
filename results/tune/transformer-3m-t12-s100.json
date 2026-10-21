@@ -1,0 +1,291 @@
+{
+ "config": {
+  "name": "transformer-3m-t12",
+  "arch": "transformer",
+  "direction": "roman2native",
+  "params": 3000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 64,
+  "lr": 0.0028688196241238345,
+  "warmup": 1600,
+  "dropout": 0.3,
+  "label_smoothing": 0.05,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "d_model": 192,
+  "heads": 4,
+  "enc_layers": 3,
+  "dec_layers": 3,
+  "ff": 768,
+  "dropout": 0.3
+ },
+ "n_params": 3153074,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 2.0704380762867487,
+   "dev_cer_greedy": 45.65310568989535
+  },
+  {
+   "epoch": 1,
+   "train_loss": 1.219695863621283,
+   "dev_cer_greedy": 21.464799799978568
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.932999066544759,
+   "dev_cer_greedy": 15.33048773953887
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.8144655907743682,
+   "dev_cer_greedy": 12.590634710861877
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.7543665604060976,
+   "dev_cer_greedy": 11.697890807779544
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.7182003195631308,
+   "dev_cer_greedy": 11.026378297287161
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.6932647116577276,
+   "dev_cer_greedy": 10.447734538245852
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.6758894417792617,
+   "dev_cer_greedy": 10.324504848820387
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.6600114938615792,
+   "dev_cer_greedy": 10.219134534673977
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.6485560175862894,
+   "dev_cer_greedy": 10.242351722536746
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.6393064034324498,
+   "dev_cer_greedy": 10.153054846141481
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.6296064929194107,
+   "dev_cer_greedy": 9.903023592234744
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.6224980496763292,
+   "dev_cer_greedy": 9.881945312639532
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.6162628543775697,
+   "dev_cer_greedy": 9.888736092011502
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.610945691012914,
+   "dev_cer_greedy": 9.564207894266833
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.605358283426919,
+   "dev_cer_greedy": 9.69620117518887
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.6013368609597506,
+   "dev_cer_greedy": 9.578325087960565
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.5960191357048049,
+   "dev_cer_greedy": 9.424728974299441
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.5931753137536719,
+   "dev_cer_greedy": 9.547963065492668
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.5887449256274787,
+   "dev_cer_greedy": 9.162350419717807
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.5849606326703587,
+   "dev_cer_greedy": 9.178424718699768
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.5830338497674086,
+   "dev_cer_greedy": 9.228104014859266
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.5797380719965927,
+   "dev_cer_greedy": 9.151634220396499
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.5774029022002795,
+   "dev_cer_greedy": 8.976602964815145
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.5742994697819725,
+   "dev_cer_greedy": 9.144490087515628
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.5722434319202551,
+   "dev_cer_greedy": 9.312044577796827
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.5700969380800326,
+   "dev_cer_greedy": 8.883253263800832
+  },
+  {
+   "epoch": 27,
+   "train_loss": 0.567567468669848,
+   "dev_cer_greedy": 8.949492784683526
+  },
+  {
+   "epoch": 28,
+   "train_loss": 0.5662232170357595,
+   "dev_cer_greedy": 9.010537595999285
+  },
+  {
+   "epoch": 29,
+   "train_loss": 0.56415349309728,
+   "dev_cer_greedy": 8.96572663463771
+  },
+  {
+   "epoch": 30,
+   "train_loss": 0.5624338145054594,
+   "dev_cer_greedy": 8.831618802686098
+  },
+  {
+   "epoch": 31,
+   "train_loss": 0.5608925309099152,
+   "dev_cer_greedy": 9.004857836833834
+  },
+  {
+   "epoch": 32,
+   "train_loss": 0.558401540393142,
+   "dev_cer_greedy": 9.009893917205416
+  },
+  {
+   "epoch": 33,
+   "train_loss": 0.5570754869505878,
+   "dev_cer_greedy": 8.99771395913702
+  },
+  {
+   "epoch": 34,
+   "train_loss": 0.5559120596498413,
+   "dev_cer_greedy": 8.979854264894986
+  },
+  {
+   "epoch": 35,
+   "train_loss": 0.5542824473599547,
+   "dev_cer_greedy": 8.819117016716675
+  },
+  {
+   "epoch": 36,
+   "train_loss": 0.5537529810304157,
+   "dev_cer_greedy": 9.010215745106445
+  },
+  {
+   "epoch": 37,
+   "train_loss": 0.5513823103501406,
+   "dev_cer_greedy": 8.842334619231318
+  },
+  {
+   "epoch": 38,
+   "train_loss": 0.5498062785066223,
+   "dev_cer_greedy": 8.742320331475925
+  },
+  {
+   "epoch": 39,
+   "train_loss": 0.5496827248022891,
+   "dev_cer_greedy": 8.965566509501357
+  },
+  {
+   "epoch": 40,
+   "train_loss": 0.5478192199457463,
+   "dev_cer_greedy": 8.695885126446635
+  },
+  {
+   "epoch": 41,
+   "train_loss": 0.5462531899954336,
+   "dev_cer_greedy": 8.751250178596942
+  },
+  {
+   "epoch": 42,
+   "train_loss": 0.5450946487098205,
+   "dev_cer_greedy": 8.911669107404364
+  },
+  {
+   "epoch": 43,
+   "train_loss": 0.5438329989011434,
+   "dev_cer_greedy": 8.792327475353622
+  },
+  {
+   "epoch": 44,
+   "train_loss": 0.5434756920874432,
+   "dev_cer_greedy": 8.778039719959994
+  },
+  {
+   "epoch": 45,
+   "train_loss": 0.5428270564523423,
+   "dev_cer_greedy": 8.824317325379958
+  },
+  {
+   "epoch": 46,
+   "train_loss": 0.5411963840459064,
+   "dev_cer_greedy": 8.76553793399057
+  }
+ ],
+ "best_dev_crit": 8.695885126446635,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 8.670881554507787,
+  "mrr": 0.7311857184836899,
+  "n": 6806.0,
+  "top1": 65.0455480458419,
+  "top5": 84.73405818395533
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 1014.6906561851501
+}

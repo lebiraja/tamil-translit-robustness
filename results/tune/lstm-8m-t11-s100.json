@@ -1,0 +1,104 @@
+{
+ "config": {
+  "name": "lstm-8m-t11",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 8000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 64,
+  "lr": 0.0003599282942289204,
+  "warmup": 800,
+  "dropout": 0.1,
+  "label_smoothing": 0.0,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 184,
+  "hidden": 368,
+  "layers": 2,
+  "dropout": 0.1
+ },
+ "n_params": 8041954,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 0.6121706485070271,
+   "dev_cer_greedy": 11.205172167452494
+  },
+  {
+   "epoch": 1,
+   "train_loss": 0.2516679918017403,
+   "dev_cer_greedy": 10.13876734591824
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.19186033272333267,
+   "dev_cer_greedy": 9.563866266609516
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.15239705929145528,
+   "dev_cer_greedy": 9.438511269064543
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.12258305792022658,
+   "dev_cer_greedy": 9.443868985962782
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.09879058246984376,
+   "dev_cer_greedy": 9.446765955926997
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.07954101793393949,
+   "dev_cer_greedy": 9.557996249665148
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.06543962001940772,
+   "dev_cer_greedy": 9.632314862765407
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.05450637204583316,
+   "dev_cer_greedy": 10.132866633330952
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.04705124180098281,
+   "dev_cer_greedy": 10.004107362894441
+  }
+ ],
+ "best_dev_crit": 9.438511269064543,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 9.288495195913848,
+  "mrr": 0.7034479380938388,
+  "n": 6806.0,
+  "top1": 62.16573611519248,
+  "top5": 82.39788421980606
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 240.5811152458191
+}

@@ -1,0 +1,7 @@
+_dev_cer_beam10: 8.262
+batch_size: 64
+dropout: 0.3
+epochs: 60
+label_smoothing: 0.1
+lr: 0.001279684834694776
+patience: 6

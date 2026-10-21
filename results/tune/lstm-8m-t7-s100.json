@@ -1,0 +1,109 @@
+{
+ "config": {
+  "name": "lstm-8m-t7",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 8000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 128,
+  "lr": 0.0015886747269358954,
+  "warmup": 800,
+  "dropout": 0.1,
+  "label_smoothing": 0.0,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 184,
+  "hidden": 368,
+  "layers": 2,
+  "dropout": 0.1
+ },
+ "n_params": 8041954,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 0.5590037928580217,
+   "dev_cer_greedy": 12.121807465618861
+  },
+  {
+   "epoch": 1,
+   "train_loss": 0.2438329575396195,
+   "dev_cer_greedy": 10.326290786348293
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.18411466699920245,
+   "dev_cer_greedy": 11.324427617244705
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.14369567153849386,
+   "dev_cer_greedy": 10.424331178340536
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.11684071318701286,
+   "dev_cer_greedy": 9.515645092156022
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.09550201224355997,
+   "dev_cer_greedy": 9.63674679429939
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.08048747377535392,
+   "dev_cer_greedy": 9.659446041752236
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.07143088536325386,
+   "dev_cer_greedy": 9.843736047861416
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.06285046395552764,
+   "dev_cer_greedy": 10.020716505339857
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.05600699585409179,
+   "dev_cer_greedy": 10.178239748535505
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.051208519732289126,
+   "dev_cer_greedy": 10.948996356882635
+  }
+ ],
+ "best_dev_crit": 9.515645092156022,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 9.299542791827404,
+  "mrr": 0.7024684102262705,
+  "n": 6806.0,
+  "top1": 62.444901557449306,
+  "top5": 81.48692330296797
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 157.59822058677673
+}

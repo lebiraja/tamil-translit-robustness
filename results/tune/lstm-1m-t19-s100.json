@@ -1,0 +1,204 @@
+{
+ "config": {
+  "name": "lstm-1m-t19",
+  "arch": "lstm",
+  "direction": "roman2native",
+  "params": 1000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 256,
+  "lr": 0.0003373624888874562,
+  "warmup": 800,
+  "dropout": 0.3,
+  "label_smoothing": 0.1,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "emb": 64,
+  "hidden": 128,
+  "layers": 2,
+  "dropout": 0.3
+ },
+ "n_params": 984754,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 2.594112213531177,
+   "dev_cer_greedy": 32.932099867842986
+  },
+  {
+   "epoch": 1,
+   "train_loss": 1.40474959530705,
+   "dev_cer_greedy": 16.693158073330594
+  },
+  {
+   "epoch": 2,
+   "train_loss": 1.172536248781075,
+   "dev_cer_greedy": 12.851835976568081
+  },
+  {
+   "epoch": 3,
+   "train_loss": 1.0899143599734122,
+   "dev_cer_greedy": 12.005286469495642
+  },
+  {
+   "epoch": 4,
+   "train_loss": 1.045460391675106,
+   "dev_cer_greedy": 11.185526503786255
+  },
+  {
+   "epoch": 5,
+   "train_loss": 1.016025607960356,
+   "dev_cer_greedy": 10.912273181883126
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.994814190974584,
+   "dev_cer_greedy": 10.596156593799114
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.9783931216088779,
+   "dev_cer_greedy": 10.385412201743106
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.9649364603355974,
+   "dev_cer_greedy": 10.07822546078011
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.9534521206880071,
+   "dev_cer_greedy": 9.960351478782684
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.9431545837628901,
+   "dev_cer_greedy": 9.821045863694813
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.9346235727634065,
+   "dev_cer_greedy": 9.69228296394192
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.9261872934482179,
+   "dev_cer_greedy": 9.660308615516502
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.9195470421123205,
+   "dev_cer_greedy": 9.606729532790398
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.91316947458483,
+   "dev_cer_greedy": 9.32276039434205
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.9070519488941043,
+   "dev_cer_greedy": 9.347763966280898
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.9008962381602194,
+   "dev_cer_greedy": 9.315616516645235
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.8953498183288201,
+   "dev_cer_greedy": 9.351335905129304
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.8911642233699603,
+   "dev_cer_greedy": 9.403129018431205
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.8863190586063163,
+   "dev_cer_greedy": 9.293852912812087
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.882077855239943,
+   "dev_cer_greedy": 9.031647378196885
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.8777631058283744,
+   "dev_cer_greedy": 9.001285897985426
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.8740319913493084,
+   "dev_cer_greedy": 8.994142020288614
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.8705835624467261,
+   "dev_cer_greedy": 8.840548649807115
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.8671193606477638,
+   "dev_cer_greedy": 8.990891230576889
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.8637402246584766,
+   "dev_cer_greedy": 8.843962638186916
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.8607374912984607,
+   "dev_cer_greedy": 9.092370338619803
+  },
+  {
+   "epoch": 27,
+   "train_loss": 0.8578532691883878,
+   "dev_cer_greedy": 8.947547014805423
+  },
+  {
+   "epoch": 28,
+   "train_loss": 0.8550336910128024,
+   "dev_cer_greedy": 9.012323629219503
+  },
+  {
+   "epoch": 29,
+   "train_loss": 0.8520129133701646,
+   "dev_cer_greedy": 8.98358664785412
+  }
+ ],
+ "best_dev_crit": 8.840548649807115,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 8.742320331475925,
+  "mrr": 0.7160103829953954,
+  "n": 6806.0,
+  "top1": 63.37055539230091,
+  "top5": 83.92594769321187
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 204.17535066604614
+}

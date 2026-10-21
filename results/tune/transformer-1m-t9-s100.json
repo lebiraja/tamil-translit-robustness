@@ -1,0 +1,266 @@
+{
+ "config": {
+  "name": "transformer-1m-t9",
+  "arch": "transformer",
+  "direction": "roman2native",
+  "params": 1000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 128,
+  "lr": 0.001274990640129416,
+  "warmup": 800,
+  "dropout": 0.1,
+  "label_smoothing": 0.05,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "d_model": 96,
+  "heads": 4,
+  "enc_layers": 3,
+  "dec_layers": 3,
+  "ff": 384,
+  "dropout": 0.1
+ },
+ "n_params": 802418,
+ "commit": "d8c6f31",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 2.516310762557328,
+   "dev_cer_greedy": 54.418488355479354
+  },
+  {
+   "epoch": 1,
+   "train_loss": 1.2578706987727066,
+   "dev_cer_greedy": 25.38310412573674
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.9525535976552283,
+   "dev_cer_greedy": 18.246115377746026
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.8400197891702669,
+   "dev_cer_greedy": 15.213430969816038
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.7814668943945666,
+   "dev_cer_greedy": 13.568494373995357
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.7452332045850284,
+   "dev_cer_greedy": 12.825504554384711
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.7198036048978436,
+   "dev_cer_greedy": 12.003714882749014
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.7019425948505166,
+   "dev_cer_greedy": 11.878906947669227
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.6864497186976207,
+   "dev_cer_greedy": 11.610379868912185
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.6737409994041543,
+   "dev_cer_greedy": 11.27998142624971
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.6627163118256991,
+   "dev_cer_greedy": 11.047809547622025
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.654254805549279,
+   "dev_cer_greedy": 11.04641817434945
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.6456872215249048,
+   "dev_cer_greedy": 10.733867943062277
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.6379835065913503,
+   "dev_cer_greedy": 10.549909806933258
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.6312913276046963,
+   "dev_cer_greedy": 10.458823739529567
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.6260284089875056,
+   "dev_cer_greedy": 10.43701891307842
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.6208569727513228,
+   "dev_cer_greedy": 10.242351722536746
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.6150369658441914,
+   "dev_cer_greedy": 10.124841492382703
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.6107309674338743,
+   "dev_cer_greedy": 10.228064222313504
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.6069832495689085,
+   "dev_cer_greedy": 10.094118907720608
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.6024128831454466,
+   "dev_cer_greedy": 9.929812655153322
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.598169294004827,
+   "dev_cer_greedy": 9.87802046684407
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.594928971803815,
+   "dev_cer_greedy": 9.770864215169754
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.59075133721311,
+   "dev_cer_greedy": 9.778007965281374
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.5886972242044883,
+   "dev_cer_greedy": 9.74228921472327
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.5856815939678771,
+   "dev_cer_greedy": 9.68156733877449
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.5826735164832655,
+   "dev_cer_greedy": 9.462235002053902
+  },
+  {
+   "epoch": 27,
+   "train_loss": 0.58030830185864,
+   "dev_cer_greedy": 9.495999428489784
+  },
+  {
+   "epoch": 28,
+   "train_loss": 0.576990514982309,
+   "dev_cer_greedy": 9.556893072100873
+  },
+  {
+   "epoch": 29,
+   "train_loss": 0.5743779045473936,
+   "dev_cer_greedy": 9.609786588088221
+  },
+  {
+   "epoch": 30,
+   "train_loss": 0.5723912987993814,
+   "dev_cer_greedy": 9.472443476086724
+  },
+  {
+   "epoch": 31,
+   "train_loss": 0.5701618791273092,
+   "dev_cer_greedy": 9.506375683108905
+  },
+  {
+   "epoch": 32,
+   "train_loss": 0.567562054632249,
+   "dev_cer_greedy": 9.315616516645235
+  },
+  {
+   "epoch": 33,
+   "train_loss": 0.5660714831766456,
+   "dev_cer_greedy": 9.479925703671952
+  },
+  {
+   "epoch": 34,
+   "train_loss": 0.5638505467488781,
+   "dev_cer_greedy": 9.577982962155984
+  },
+  {
+   "epoch": 35,
+   "train_loss": 0.5624954195851446,
+   "dev_cer_greedy": 9.20115014376797
+  },
+  {
+   "epoch": 36,
+   "train_loss": 0.5606831637594469,
+   "dev_cer_greedy": 9.615659379911415
+  },
+  {
+   "epoch": 37,
+   "train_loss": 0.5587162966516277,
+   "dev_cer_greedy": 9.442588987515851
+  },
+  {
+   "epoch": 38,
+   "train_loss": 0.5567100234485881,
+   "dev_cer_greedy": 9.36936293332857
+  },
+  {
+   "epoch": 39,
+   "train_loss": 0.5550390203645891,
+   "dev_cer_greedy": 9.506885035094927
+  },
+  {
+   "epoch": 40,
+   "train_loss": 0.5533814369267394,
+   "dev_cer_greedy": 9.397603271837552
+  },
+  {
+   "epoch": 41,
+   "train_loss": 0.5520783882663399,
+   "dev_cer_greedy": 9.540137512277882
+  }
+ ],
+ "best_dev_crit": 9.20115014376797,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 9.000803643182428,
+  "mrr": 0.7147223038495445,
+  "n": 6806.0,
+  "top1": 62.97384660593594,
+  "top5": 83.79371143109022
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 380.94299244880676
+}
