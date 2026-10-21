@@ -89,7 +89,7 @@ const dur=s=>{s=Math.round(s);const h=Math.floor(s/3600),m=Math.floor(s%3600/60)
 /* ---------- charts (plain SVG, one y-axis, direct labels, hover crosshair) ---------- */
 const tip=$("#tip");
 function line(el,series,o={}){
-  const W=el.clientWidth||460,H=o.h||150,m={l:38,r:54,t:8,b:20};
+  const W=el.clientWidth||460,H=o.h||150,m={l:38,r:o.rm||54,t:8,b:20};
   const xs=series.flatMap(s=>s.x),ys=series.flatMap(s=>s.y.filter(v=>v!=null)).concat((o.ref||[]).map(r=>r.y));
   if(!xs.length){el.innerHTML='<div class="empty">no data yet</div>';return}
   let x0=Math.min(...xs),x1=Math.max(...xs,x0+1),y0=Math.min(...ys),y1=Math.max(...ys);
@@ -223,8 +223,8 @@ function past(){
   el.querySelectorAll("tr.pick").forEach(tr=>{const go=()=>{const f=tr.dataset.f;picked=picked.includes(f)?picked.filter(x=>x!==f):[...picked,f].slice(-4);past()};tr.onclick=go;tr.onkeydown=e=>{if(e.key==="Enter")go()}});
   const pal=[C.lstm,C.transformer,C.other,"#c98500"],ser=picked.map(f=>rows.find(r=>r.file===f)).filter(Boolean);
   $("#pl").innerHTML=ser.map((r,i)=>`<span><span class="sw" style="background:${pal[i]}"></span>${esc(r.file)}</span>`).join("")||"<span>select a run below</span>";
-  const mk=key=>ser.map((r,i)=>({x:r.history.map(e=>e.epoch),y:r.history.map(e=>e[key]),color:pal[i],label:r.file.split("-").slice(-4).join("-")}));
-  line($("#pc1"),mk("dev_cer_greedy"),{ref:[{y:PUB,label:"pub 8.4"}],h:220,clip:14});line($("#pc2"),mk("train_loss"),{h:220,dec:3,min0:true});
+  const mk=key=>ser.map((r,i)=>({x:r.history.map(e=>e.epoch),y:r.history.map(e=>e[key]),color:pal[i],label:r.file.split("-").slice(-3).join("-")}));
+  line($("#pc1"),mk("dev_cer_greedy"),{ref:[{y:PUB,label:"pub 8.4"}],h:220,clip:14,rm:96});line($("#pc2"),mk("train_loss"),{h:220,dec:3,min0:true,rm:96});
 }
 async function logs(first){
   const el=$("#logs");
