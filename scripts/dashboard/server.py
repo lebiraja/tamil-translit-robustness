@@ -94,6 +94,105 @@ def results() -> list[dict]:
     return out
 
 
+# ---------- Plan tab: checklist and time estimate (everything derived from files on disk) ----------
+ARCHS = (("lstm", "BiLSTM"), ("transformer", "Transformer"))
+SIZES = ("1m", "3m", "8m")
+C2_CONDS = ("A0", "A1", "A2", "A3", "A4", "CTRL", "A2-noGEM", "A2-noVDROP")
+C2_COST = {"A3": 2.8, "A4": 2.8, "CTRL": 1.9}  # extra training pairs make an epoch longer
+FALLBACK_MIN = {("lstm", "1m"): 7, ("lstm", "3m"): 9, ("lstm", "8m"): 14, ("transformer", "1m"): 20, ("transformer", "3m"): 25,
+                ("transformer", "8m"): 45}  # per final run, only used until a real run of that kind has finished
+TUNE_FALLBACK_MIN = {"lstm": 4, "transformer": 11}
+EVAL_MIN, AGG_MIN, DOCS_MIN, PARALLEL = 4.3, 5, 45, 2
+
+
+def plan(rows: list[dict], st: dict) -> dict:
+    now = time.time()
+    ok = [r for r in rows if "error" not in r]
+
+    def n_of(prefix: str) -> int:
+        return sum(1 for r in ok if r["block"] == prefix[0] and r["name"] == prefix[1])
+
+    def walls(block: str, name: str) -> list[float]:
+        return [r["wall_s"] / 60 for r in ok if r["block"] == block and r["name"] == name and r.get("wall_s")]
+
+    tune_t = [r["mtime"] - r["wall_s"] for r in ok if r["block"] == "tune" and r.get("wall_s")]
+    start = min(tune_t) if tune_t else now
+    done_f = LOGS / "AUTOPILOT_DONE"
+    finished = done_f.exists()
+    end = done_f.stat().st_mtime if finished else None
+
+    def avg(xs: list[float], fb: float) -> float:
+        return sum(xs) / len(xs) if xs else fb
+
+    groups, est = [], {}
+    # --- tuning
+    items, rem_tune = [], 0.0
+    for a, label in ARCHS:
+        for sz in SIZES:
+            name = f"{a}-{sz}"
+            n = min(20, sum(1 for r in ok if r["block"] == "tune" and r["name"].startswith(name + "-t")))
+            fb = TUNE_FALLBACK_MIN[a] * (1.5 if sz == "8m" and a == "transformer" else 1)
+            per = avg([r["wall_s"] / 60 for r in ok if r["block"] == "tune" and r["name"].startswith(name + "-t") and r.get("wall_s")], fb)
+            rem_tune = max(rem_tune, (20 - n) * per)
+            items.append(dict(label=f"{label} {sz.upper()} tuned", progress=[n, 20], done=(ROOT / f"configs/best_{a}_{sz}.yaml").exists()))
+    groups.append(dict(title="Hyperparameter tuning (20 trials each, dev CER only)", items=items))
+    # --- C3
+    items, rem3, rem3_big = [], 0.0, 0.0
+    for a, label in ARCHS:
+        for sz in SIZES:
+            name = f"c3-{a}-{sz}"
+            n = min(5, n_of(("c3", name)))
+            per = avg(walls("c3", name), FALLBACK_MIN[(a, sz)])
+            if a == "transformer" and sz == "8m":
+                rem3_big += (5 - n) * per
+            else:
+                rem3 += (5 - n) * per
+            items.append(dict(label=f"{label} {sz.upper()} trained, 5 seeds", progress=[n, 5], done=n >= 5))
+    groups.append(dict(title="C3: architecture comparison (clean training)", items=items))
+    # --- C2
+    items, rem2 = [], 0.0
+    for a, label in ARCHS:
+        base = avg([w for sz in ("3m",) for w in walls("c3", f"c3-{a}-{sz}")], FALLBACK_MIN[(a, "3m")])
+        for cond in C2_CONDS:
+            n = min(5, n_of(("c2", f"c2-{a}-{cond}")))
+            rem2 += (5 - n) * base * C2_COST.get(cond, 1.0)
+            items.append(dict(label=f"{label} {cond}", progress=[n, 5], done=n >= 5))
+    groups.append(dict(title="C2: augmentation conditions (3M parameters)", items=items))
+    # --- analysis
+    n_items = len(list((ROOT / "results/items").glob("*.npz"))) if (ROOT / "results/items").exists() else 0
+    res_md = ROOT / "docs/results.md"
+    summary = ROOT / "results/summary/summary.json"
+    last_run = max([r["mtime"] for r in ok if r["block"] in ("c3", "c2")] or [0])
+    handover = ROOT / "HANDOVER.md"
+    items = [
+        dict(label="Per-item evaluation of every trained model", progress=[n_items, 110], done=n_items >= 110),
+        dict(label="Aggregation: tables, bootstrap, Kruskal-Wallis / Dunn", done=summary.exists()),
+        dict(label="docs/results.md written", done=res_md.exists() and res_md.stat().st_size > 1500),
+        dict(label="HANDOVER.md rewritten after the last run", done=last_run > 0 and handover.stat().st_mtime > last_run and summary.exists()),
+        dict(label="logs/AUTOPILOT_DONE written", done=finished),
+    ]
+    groups.append(dict(title="Analysis and wrap-up", items=items))
+    setup = [
+        dict(label="Reproduction gate passed (BiLSTM and Transformer)", done=len([r for r in ok if r["block"] == "gate"]) >= 2),
+        dict(label="28 noisy test suites built", done=len(list((ROOT / "data/synth/noisy_test").glob("test.*.tsv"))) >= 28),
+        dict(label="A3 sampled back-transliteration pool", done=(ROOT / "data/synth/a3_sampled.tsv").exists()),
+        dict(label="Resume, retry and supervisor in place", done=(ROOT / "scripts/supervisor.py").exists()),
+        dict(label="Analysis scripts written and tested", done=(ROOT / "scripts/aggregate.py").exists() and (ROOT / "scripts/evaluate_ckpt.py").exists()),
+    ]
+    groups.insert(0, dict(title="Set-up (done before the long runs)", items=setup))
+    # --- time estimate (rough: assumes no crashes and that the final write-up happens when Claude is online)
+    c3_end = max(rem3 / PARALLEL, rem_tune) + rem3_big / PARALLEL
+    c2_end = c3_end + rem2 / PARALLEL
+    eval_serial = EVAL_MIN * max(0, 110 - n_items)
+    eval_end = max(c2_end + 2 * EVAL_MIN, eval_serial)
+    total_min = 0.0 if finished else eval_end + AGG_MIN + DOCS_MIN
+    est = dict(tuning=rem_tune, c3=c3_end, c2=c2_end - c3_end, evaluation=max(0.0, eval_end - c2_end), aggregation=AGG_MIN, writeup=DOCS_MIN)
+    all_items = [i for g in groups for i in g["items"]]
+    return dict(start=start, end=end, finished=finished, now=now, eta_min=total_min, eta_at=None if finished else now + total_min * 60,
+                stage_est_min=est, done_items=sum(1 for i in all_items if i["done"]), total_items=len(all_items), groups=groups,
+                note="Estimate from measured run times; assumes no crashes and that Claude is online for the write-up. Stages overlap, so the parts do not add up to the total.")
+
+
 def clean(o):
     """JSON has no NaN/Infinity: map them to null."""
     if isinstance(o, float) and (o != o or o in (float("inf"), float("-inf"))):
@@ -119,7 +218,8 @@ def state() -> dict:
             runs[name] = dict(r, log=p.name, active=active and parsed["last"] == name, mtime=st.st_mtime,
                               ckpt=dict(path=f"runs/{name}/best.pt", mb=cks.st_size / 1e6, mtime=cks.st_mtime) if cks else None)
     status = json.loads(sh(["python3", str(ROOT / "scripts/autopilot_status.py"), "--json"]) or "{}")
-    return dict(now=now, gpu=gpu(), system=system(), stage=status, runs=runs, results=results(), logs=files,
+    res = results()
+    return dict(now=now, gpu=gpu(), system=system(), stage=status, runs=runs, results=res, logs=files, plan=plan(res, status),
                 done=(LOGS / "AUTOPILOT_DONE").exists(), stuck=(LOGS / "AUTOPILOT_STUCK").exists())
 
 

@@ -53,6 +53,21 @@ select{background:var(--surface);color:var(--text);border:1px solid var(--line);
 .empty{color:var(--muted);font:13px var(--mono);padding:24px 0}
 @media(max-width:860px){.run,.combo{grid-template-columns:1fr}}
 @media(prefers-color-scheme:light){:root:not([data-theme=dark]){}}
+
+.clocks{display:flex;gap:40px;flex-wrap:wrap;margin:4px 0 6px}
+.clock .big{font:600 40px/1.1 var(--mono);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.clock .lab{font:11px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.clock .sub{font:12px var(--mono);color:var(--text2);margin-top:4px}
+.pbar{height:8px;background:var(--grid);border-radius:4px;overflow:hidden;margin:14px 0 4px}.pbar i{display:block;height:100%;background:var(--s3)}
+.cl{list-style:none;margin:0;padding:0}
+.cl li{display:grid;grid-template-columns:22px 1fr 170px 56px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font:13px var(--sans)}
+.cl .bx{width:16px;height:16px;border:1.5px solid var(--muted);border-radius:4px;display:inline-grid;place-items:center;font:700 12px/1 var(--mono);color:var(--bg)}
+.cl li.ok .bx{background:var(--good);border-color:var(--good)}.cl li.ok .tx{color:var(--text2)}
+.cl li.part .bx{border-color:var(--warn)}
+.cl .mini{height:4px;background:var(--grid);border-radius:2px;overflow:hidden}.cl .mini i{display:block;height:100%;background:var(--lstm)}
+.cl li.ok .mini i{background:var(--good)}
+.cl .num{font:12px var(--mono);color:var(--text2);text-align:right}
+@media(max-width:700px){.cl li{grid-template-columns:22px 1fr 80px 48px}.clock .big{font-size:30px}}
 </style>
 </head>
 <body>
@@ -60,12 +75,13 @@ select{background:var(--surface);color:var(--text);border:1px solid var(--line);
   <div class="top"><h1>LEICA / RUN MONITOR</h1><span class="stage" id="stage">connecting…</span><span class="stage" id="sync"></span></div>
   <div class="meters" id="meters"></div>
   <nav id="nav">
-    <button data-t="now" class="on">Now</button><button data-t="runs">Runs</button><button data-t="tune">Tuning</button><button data-t="noise">Noise</button><button data-t="res">Results</button>
+    <button data-t="now" class="on">Now</button><button data-t="plan">Plan</button><button data-t="runs">Runs</button><button data-t="tune">Tuning</button><button data-t="noise">Noise</button><button data-t="res">Results</button>
     <button data-t="past">Compare</button><button data-t="logs">Logs</button>
   </nav>
 </header>
 <main>
 <section id="now" class="on"></section>
+<section id="plan"></section>
 <section id="runs"></section>
 <section id="tune"></section>
 <section id="noise"></section>
@@ -304,7 +320,43 @@ async function logs(first){
   lg.textContent=t;if(follow)lg.scrollTop=lg.scrollHeight;
   const m=S.logs.find(l=>l.name===logFile);$("#ls").textContent=m?`${(m.size/1024).toFixed(0)} KB · ${m.active?"being written":"idle"}`:"";
 }
-const draw={now,runs,tune,noise,res,past,logs};
+
+/* ---------- plan: checklist and live timer ---------- */
+let clockOff=0;
+const hms=t=>{t=Math.max(0,Math.floor(t));const d=Math.floor(t/86400),h=Math.floor(t%86400/3600),m=Math.floor(t%3600/60),x=t%60,p=n=>String(n).padStart(2,"0");return(d?d+"d ":"")+p(h)+":"+p(m)+":"+p(x)};
+function tickClock(){
+  const P=S&&S.plan;if(!P||!$("#el"))return;
+  const now=Date.now()/1000+clockOff;
+  $("#el").textContent=hms((P.end||now)-P.start);
+  if(P.finished){$("#cd").textContent="DONE";return}
+  const left=P.eta_at-now;
+  $("#cd").textContent=left>0?"≈ "+hms(left):"any moment (estimate passed)";
+}
+function plan(){
+  const P=S.plan,el=$("#plan");clockOff=S.now-Date.now()/1000;
+  const pct=Math.round(100*P.done_items/P.total_items);
+  const fin=P.eta_at?new Date(P.eta_at*1000):null,E=P.stage_est_min;
+  const stg=[["Tuning (slowest search left)",E.tuning],["C3 finishes after",E.c3],["C2 runs",E.c2],["Evaluation tail",E.evaluation],["Aggregation",E.aggregation],["Write-up (needs Claude online)",E.writeup]];
+  let h=`<h2>Project clock</h2><div class="clocks">
+   <div class="clock"><div class="lab">${P.finished?"total time taken":"time since the long runs started"}</div><div class="big" id="el">–</div><div class="sub">started ${new Date(P.start*1000).toLocaleString()}</div></div>
+   <div class="clock"><div class="lab">${P.finished?"finished":"estimated time left"}</div><div class="big" id="cd">–</div><div class="sub">${P.finished?"all stages complete":(fin?"expected about "+fin.toLocaleString([], {weekday:"short",hour:"2-digit",minute:"2-digit"}):"")}</div></div>
+   <div class="clock"><div class="lab">checklist</div><div class="big">${P.done_items}<span style="color:var(--muted)">/${P.total_items}</span></div><div class="sub">${pct}% of items complete</div></div></div>
+   <div class="pbar"><i style="width:${pct}%"></i></div>
+   <div class="note">${esc(P.note)}</div>`;
+  if(!P.finished)h+=`<div class="note" style="margin-top:6px">stage estimates: ${stg.map(([a,b])=>`${a} ${dur(b*60)}`).join(" · ")}</div>`;
+  for(const g of P.groups){
+    const d=g.items.filter(i=>i.done).length;
+    h+=`<h2>${esc(g.title)} <span style="color:var(--text2)">${d}/${g.items.length}</span></h2><ul class="cl">`;
+    for(const i of g.items){
+      const pr=i.progress,part=!i.done&&pr&&pr[0]>0,w=pr?Math.round(100*pr[0]/pr[1]):(i.done?100:0);
+      h+=`<li class="${i.done?"ok":part?"part":""}"><span class="bx">${i.done?"✓":""}</span><span class="tx">${esc(i.label)}</span><span class="mini"><i style="width:${w}%"></i></span><span class="num">${pr?pr[0]+"/"+pr[1]:(i.done?"done":"–")}</span></li>`;
+    }
+    h+="</ul>";
+  }
+  el.innerHTML=h;tickClock();
+}
+setInterval(tickClock,1000);
+const draw={now,plan,runs,tune,noise,res,past,logs};
 function render(){if(!S)return;head();draw[tab](tab==="logs"&&!$("#lf"))}
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
   document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id===tab));render()});
