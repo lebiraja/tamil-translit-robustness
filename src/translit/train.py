@@ -45,6 +45,7 @@ class Config(BaseModel):
     noisy_suite: str | None = "data/synth/noisy_test"  # dir of test.<OP>.<p>.tsv, evaluated at the end
     independent_suite: str | None = "data/synth/independent"  # Aksharantar non-Dakshina sets
     beam: int = 10
+    eval_test: bool = True  # False for tuning runs: selection must use dev only
     out_dir: str = "results/runs"
     ckpt_dir: str = "runs"
 
@@ -171,8 +172,9 @@ def run(cfg: Config) -> dict:
     }
     if cfg.direction == "roman2native":
         result["dev"], _ = evaluate(model, vocab, dev_in, dev_ref, beam=cfg.beam, device=dev)
-        ti, tr = eval_sets(rows["test"])
-        result["test"], _ = evaluate(model, vocab, ti, tr, beam=cfg.beam, device=dev)
+        if cfg.eval_test:
+            ti, tr = eval_sets(rows["test"])
+            result["test"], _ = evaluate(model, vocab, ti, tr, beam=cfg.beam, device=dev)
         suite = ROOT / cfg.noisy_suite if cfg.noisy_suite else None
         result["noisy"] = {}
         if suite and suite.exists():

@@ -34,6 +34,16 @@ C2 = {  # name -> overrides
 }
 
 
+def tuned(arch: str, size_name: str) -> dict:
+    """Best config from scripts/tune.py if present, else the defaults in ARCH."""
+    f = ROOT / "configs" / f"best_{arch}_{size_name}.yaml"
+    if f.exists():
+        import yaml
+
+        return {k: v for k, v in yaml.safe_load(f.read_text()).items() if not k.startswith('_')}
+    return ARCH[arch]
+
+
 def plan(block: str, seeds: list[int], size: int) -> list[Config]:
     out: list[Config] = []
     if block == "gate":
@@ -43,9 +53,10 @@ def plan(block: str, seeds: list[int], size: int) -> list[Config]:
         for a, kw in ARCH.items():
             for sn, sp in SIZES.items():
                 for s in seeds:
-                    out.append(Config(name=f"c3-{a}-{sn}", arch=a, params=sp, seed=s, out_dir="results/c3", **kw))
+                    out.append(Config(name=f"c3-{a}-{sn}", arch=a, params=sp, seed=s, out_dir="results/c3", **tuned(a, sn)))
     elif block == "c2":
-        for a, kw in ARCH.items():
+        for a in ARCH:
+            kw = tuned(a, "3m")
             for cond, ov in C2.items():
                 for s in seeds:
                     out.append(Config(name=f"c2-{a}-{cond}", arch=a, params=size, seed=s, out_dir="results/c2", **(kw | ov)))
