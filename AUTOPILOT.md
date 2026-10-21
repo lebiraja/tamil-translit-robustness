@@ -60,3 +60,9 @@ When all of: c3 30/30, c2 80/80, `results/summary/summary.json` written, `docs/r
 
 ## Needs Lebi / laptop (leave for them, do not attempt)
 - Verify `wa_verify.tsv` (real-chat words) and decide the human typists; evaluate those sets on the checkpoints; paper figures and compile; revoke the exposed GitHub and Hugging Face tokens and rotate the lab passwords.
+
+## 8. Self-survival layer (added 2026-10-21, approved by Lebi)
+- `scripts/supervisor.py` (started by user cron `@reboot` and every 10 min under a flock; no sudo) relaunches missing tuning combos, C3, C2, `evaluate_ckpt.py` and finally `aggregate.py`, within a cap of 3 GPU jobs. It refuses to launch if `uname -r` is not 6.17.0-22-generic or the GPU is above 85 C, and logs health every 30 min to `logs/supervisor.log`. It replaces `scripts_pipeline.sh` (removed).
+- Training saves `last.pt` every epoch (weights, optimizer, scheduler, early-stopping state, RNG) and resumes from it; `tests/test_resume.py` shows an interrupted-then-resumed run reproduces the uninterrupted loss curve.
+- `src/translit/retry.py` retries a crashed run up to 3 times and logs tracebacks to `logs/failed_runs.txt`. Check that file on every wake-up.
+- Because of this you do not need to relaunch workers by hand any more; check `logs/supervisor.log` instead. The health check is every 1.5 h (Lebi's request).
