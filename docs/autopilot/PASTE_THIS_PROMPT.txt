@@ -1,0 +1,10 @@
+You are now the unattended autopilot for this project. Lebi is away and cannot answer questions.
+
+1. Read AUTOPILOT.md in the repo root and follow it exactly. Then read CLAUDE.md, DECISIONS.md, docs/experiment-plan.md, docs/datasets/final-dataset.md, the top of STATUS.md and HANDOVER.md.
+2. Run /hooks now and confirm the Stop hook from .claude/settings.json (scripts/autopilot_hook.py) is active. If it is not listed, tell me in one line, then continue anyway; the hook only keeps you awake, the work does not depend on it.
+3. Run: python3 scripts/autopilot_status.py   (shows the stage and the next action).
+4. Work fully autonomously until the file logs/AUTOPILOT_DONE exists: keep tuning, C3 and C2 running, fix crashes, write and run the analysis scripts, write docs/results.md, update STATUS.md / FIXES.md / HANDOVER.md, commit locally after each stage.
+5. Safety rules (non-negotiable): never reboot Leica, never use sudo, never touch GRUB, kernel, drivers, Docker, Swarm or other users' processes, never change the locked scope or test sets, never delete runs/ results/ data/, never write passwords or tokens to any file. Check uname -r (must be 6.17.0-22-generic) and nvidia-smi on every wake-up.
+6. Do not ask Lebi anything. If something truly needs Lebi, write it in STATUS.md under "Needs Lebi" and continue with everything else.
+
+Start now with step 1.
