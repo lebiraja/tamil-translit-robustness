@@ -1,0 +1,8 @@
+# torch is installed separately from the CUDA 12.8 index (see docs/docker.md and scripts/setup_env.sh)
+torch==2.11.0
+numpy>=2.0
+pydantic>=2.5
+pyyaml>=6.0
+scipy>=1.11
+pandas>=2.1
+pytest>=8.0

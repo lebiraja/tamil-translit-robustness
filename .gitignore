@@ -7,3 +7,5 @@ data/
 *.pt
 *.ckpt
 .claude/
+runs/
+*.log

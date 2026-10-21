@@ -1,0 +1,10 @@
+name: base-tr-3m
+arch: transformer
+params: 3000000
+epochs: 80
+patience: 10
+batch_size: 128
+lr: 0.0007
+warmup: 800
+dropout: 0.1
+label_smoothing: 0.1
