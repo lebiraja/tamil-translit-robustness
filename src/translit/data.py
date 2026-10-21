@@ -8,8 +8,12 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
-import torch
-from torch.utils.data import Dataset
+try:  # torch is only needed for batching; data prep scripts run without it
+    import torch
+    from torch.utils.data import Dataset
+except ImportError:  # pragma: no cover
+    torch = None
+    Dataset = object
 
 PAD, SOS, EOS, UNK = "<pad>", "<s>", "</s>", "<unk>"
 ROOT = Path(__file__).resolve().parents[2]
@@ -97,7 +101,7 @@ class PairDataset(Dataset):
         return self.vocab.enc_src(r), self.vocab.enc_tgt(n)
 
 
-def collate(batch: list[tuple[list[int], list[int]]]) -> tuple[torch.Tensor, torch.Tensor]:
+def collate(batch: list[tuple[list[int], list[int]]]):
     sl, tl = max(len(s) for s, _ in batch), max(len(t) for _, t in batch)
     src = torch.zeros(len(batch), sl, dtype=torch.long)
     tgt = torch.zeros(len(batch), tl, dtype=torch.long)
