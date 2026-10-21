@@ -93,8 +93,8 @@ function line(el,series,o={}){
   const xs=series.flatMap(s=>s.x),ys=series.flatMap(s=>s.y.filter(v=>v!=null)).concat((o.ref||[]).map(r=>r.y));
   if(!xs.length){el.innerHTML='<div class="empty">no data yet</div>';return}
   let x0=Math.min(...xs),x1=Math.max(...xs,x0+1),y0=Math.min(...ys),y1=Math.max(...ys);
-  if(o.floor!=null)y0=Math.min(y0,o.floor);const pad=(y1-y0)*.08||.5;y0-=pad;y1+=pad;if(o.min0)y0=Math.max(0,y0);
-  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b);
+  if(o.floor!=null)y0=Math.min(y0,o.floor);if(o.clip!=null)y1=Math.min(y1,o.clip);const pad=(y1-y0)*.08||.5;y0-=pad;y1+=pad;if(o.min0)y0=Math.max(0,y0);
+  const X=v=>m.l+(v-x0)/(x1-x0)*(W-m.l-m.r),Y=v=>Math.max(m.t,Math.min(H-m.b,H-m.b-(v-y0)/(y1-y0)*(H-m.t-m.b)));
   let g="";
   for(let i=0;i<=3;i++){const v=y0+(y1-y0)*i/3,y=Y(v);g+=`<line x1="${m.l}" x2="${W-m.r}" y1="${y}" y2="${y}" stroke="var(--grid)"/><text x="${m.l-6}" y="${y+3}" text-anchor="end">${v.toFixed(o.dec??1)}</text>`}
   g+=`<text x="${m.l}" y="${H-4}">${x0}</text><text x="${W-m.r}" y="${H-4}" text-anchor="end">${x1}</text>`;
@@ -172,7 +172,7 @@ function now(){
   h+=`<div class="note">${done} earlier run${done==1?"":"s"} in the logs, ${S.results.length} result files. See “Past runs”.</div>`;
   el.innerHTML=h;
   for(const [n,r] of act){const b=el.querySelector(`[data-run="${CSS.escape(n)}"]`);
-    line($(".c1",b),[{x:r.ep,y:r.cer,color:col(n),label:"dev CER"}],{ref:[{y:PUB,label:"pub 8.4"}],aria:"dev CER over epochs"});
+    line($(".c1",b),[{x:r.ep,y:r.cer,color:col(n),label:"dev CER"}],{ref:[{y:PUB,label:"pub 8.4"}],clip:(best??10)*1.6+1,aria:"dev CER over epochs"});
     line($(".c2",b),[{x:r.ep,y:r.loss,color:col(n),label:"loss"}],{dec:3,min0:true,aria:"train loss over epochs"})}
 }
 function tune(){
@@ -224,7 +224,7 @@ function past(){
   const pal=[C.lstm,C.transformer,C.other,"#c98500"],ser=picked.map(f=>rows.find(r=>r.file===f)).filter(Boolean);
   $("#pl").innerHTML=ser.map((r,i)=>`<span><span class="sw" style="background:${pal[i]}"></span>${esc(r.file)}</span>`).join("")||"<span>select a run below</span>";
   const mk=key=>ser.map((r,i)=>({x:r.history.map(e=>e.epoch),y:r.history.map(e=>e[key]),color:pal[i],label:r.file.split("-").slice(-4).join("-")}));
-  line($("#pc1"),mk("dev_cer_greedy"),{ref:[{y:PUB,label:"pub 8.4"}],h:220});line($("#pc2"),mk("train_loss"),{h:220,dec:3,min0:true});
+  line($("#pc1"),mk("dev_cer_greedy"),{ref:[{y:PUB,label:"pub 8.4"}],h:220,clip:14});line($("#pc2"),mk("train_loss"),{h:220,dec:3,min0:true});
 }
 async function logs(first){
   const el=$("#logs");
