@@ -2,6 +2,10 @@
 
 Newest entry on top.
 
+## 2026-10-22 · v2 uploaded to its own private Hugging Face repo
+- `lebiraja/tamil-tanglish-translit-v2` (private): `model.pt` (12.6 MB, the single fine-tuned file), `config.json` (architecture, vocab, metrics), model card, `SHA256SUMS`, `example.py` and the five small source files needed to run it (`translit/`); tested standalone from a clean folder before upload. Separate from the earlier private repo `lebiraja/tamil-translit-robustness-models` (all 113 experiment checkpoints).
+- The token Lebi pasted was used only as an environment variable for the upload; it is in no file. Token type is fine-grained; rotate it with the others.
+
 ## 2026-10-22 (evening) · Final model v2, typing demo with English filter, IEEE paper draft
 - **Final model:** full fine-tune of the best A4 Transformer on 2.41M pairs per epoch (D19), 5 epochs, 20 min on Leica (13.7k pairs/s). All 3,153,844 weights trainable and changed (mean abs change 0.024); single 12.6 MB file `models/v2-ft-transformer-3m.pt`. Gates: dev CER 8.56 vs 8.47 (+0.10, pass), AK-all 10.76 vs 10.95 (pass, small), MIX 0.3 17.77 vs 21.80 (pass, but all six operators were trained so this is not held-out), KEY 15.40 vs 23.04. Preliminary real chat (370 words, unverified model labels): CER 24.9 vs 25.4, top-1 39.7 vs 40.5, top-5 71.1 vs 68.6: tied. Observation: colloquial forms (poren, enna) are the failures; real chat sits near CER 25, like heavy synthetic noise. Details: `results/final/v2-ft-s0.json`, `docs/model-card.md`.
 - **Demo:** `app/` (FastAPI + one page) shows top-5 per word, click to swap, copy; English words kept as typed (D21); `docs/demo.md`. Runs on the laptop CPU at http://localhost:8000.
