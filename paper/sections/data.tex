@@ -17,7 +17,7 @@ Seven operators perturb the romanized input only (\Cref{tab:ops}).
 Each of the 6{,}833 test inputs is perturbed at severity $p\in\{0.1,0.2,0.3,0.5\}$ with a random seed derived from the word, operator and severity.
 The 28 sets are therefore exactly reproducible, and each noisy item stays paired with its clean form and references.
 Operators and rates are motivated by the typing phenomena in the literature~\cite{wolfsonkin2019latin,herath2024tamzhi,belinkov2018synthetic}.
-The digraph operator swaps in both directions (th$\leftrightarrow$t, dh$\leftrightarrow$d, sh$\leftrightarrow$s, ch$\leftrightarrow$c,s) and maps zh to l or z only one way, because real chat text shows vowel dropping, vowel-length collapse and stretching much more often than Dakshina but no excess of dropped h.
+The digraph operator swaps in both directions (th$\leftrightarrow$t, dh$\leftrightarrow$d, sh$\leftrightarrow$s, ch$\leftrightarrow$c,s) and maps zh to l or z only one way, because in our own measurement on public code-mixed Tamil comments~\cite{chakravarthi2020tamilmix} (heuristic, unverified by hand) vowel dropping, vowel-length collapse and stretching occur several times more often than in Dakshina, while dropped h does not.
 \Cref{tab:ops} reports realised strength: nominal $p$ is a per-position probability, so we report the share of words changed; the character edit rate at $p{=}0.3$ is 12.7\% for V-DROP, 7.4\% for KEY and 15.8\% for MIX (see the repository manifest for all sets).
 
 \begin{table}[t]

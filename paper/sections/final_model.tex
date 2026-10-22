@@ -12,6 +12,13 @@ Robustness improves strongly: mixed-noise CER at $p{=}0.3$ falls from 21.80 to 1
 These noise gains are \emph{not} held-out evidence: the fine-tuning mixture contains all six operators, including KEY and REPEAT that A2 lacked, and the noisy test sets are built from the same operators, so the gain measures what the model learned to ignore and not generalisation to unseen error types (\Cref{sec:rq3}).
 The 2.1M mined pairs give a much smaller clean-accuracy gain than adding data did in the controlled experiments, which suggests that the mined romanizations resemble the existing data (formal text, careful spelling) and that a 3M-parameter model has little room left on them.
 
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_v2}
+\caption{Fine-tuned model (v2) against its A4 parent (v1) on each noise type at $p{=}0.3$ (left) and on mixed noise at all severities (right). The largest gains are on keyboard slips and mixed noise; all six operators were in the fine-tuning mixture, so this is not held-out evidence.}
+\label{fig:v2}
+\end{figure}
+
 \begin{table}[t]
 \caption{Deployment model against the A4 Transformer it was fine-tuned from (test CER in \%, beam 10, single run each).}
 \label{tab:v2}

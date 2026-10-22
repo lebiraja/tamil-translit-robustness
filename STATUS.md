@@ -2,6 +2,10 @@
 
 Newest entry on top.
 
+## 2026-10-22 · Paper updated with the v2 model, final draft built
+- `paper/` now includes the deployment-model section (v2 table and a v1-vs-v2 figure), the privacy statement for the real-chat words, consistency fixes (introduction, noise-rate source), a cleaned reference list and Times text via newtx under XeLaTeX. 9 pages, 6 figures, 6 tables, exit 0, no undefined references. PDF: `paper/main.pdf`.
+- Still open before submission: co-authors, venue page limit, verified real-chat labels and RQ2 results, venue details for a few arXiv-only references.
+
 ## 2026-10-22 · v2 uploaded to its own private Hugging Face repo
 - `lebiraja/tamil-tanglish-translit-v2` (private): `model.pt` (12.6 MB, the single fine-tuned file), `config.json` (architecture, vocab, metrics), model card, `SHA256SUMS`, `example.py` and the five small source files needed to run it (`translit/`); tested standalone from a clean folder before upload. Separate from the earlier private repo `lebiraja/tamil-translit-robustness-models` (all 113 experiment checkpoints).
 - The token Lebi pasted was used only as an environment variable for the upload; it is in no file. Token type is fine-grained; rotate it with the others.
