@@ -8,12 +8,13 @@ from dataclasses import dataclass, field
 from . import noise
 
 PHON_OPS = ("V-DROP", "V-LEN", "GEM", "DIGRAPH")
+ALL_OPS = PHON_OPS + ("KEY", "REPEAT")
 TRAIN_SEVERITIES = (0.1, 0.2, 0.3, 0.5)
 
 
 @dataclass
 class Policy:
-    """clean_frac: share of items left clean. kind: none | random | phon (A0, A1, A2). held_out removes operators."""
+    """clean_frac: share of items left clean. kind: none | random | phon | all (A0, A1, A2, all six operators). held_out removes operators."""
 
     kind: str = "none"
     clean_frac: float = 0.4
@@ -21,7 +22,7 @@ class Policy:
     ops: tuple[str, ...] = field(init=False, default=())
 
     def __post_init__(self) -> None:
-        self.ops = tuple(o for o in PHON_OPS if o not in self.held_out)
+        self.ops = tuple(o for o in (ALL_OPS if self.kind == "all" else PHON_OPS) if o not in self.held_out)
 
     def noisy(self, roman: str, rng: random.Random) -> str:
         if self.kind == "none" or rng.random() < self.clean_frac:

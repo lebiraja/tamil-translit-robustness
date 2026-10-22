@@ -196,7 +196,7 @@ function now(){
 }
 
 const RS={blk:"all",arch:"all",state:"all",q:"",n:12,open:null};
-const blockOf=n=>/^gate-/.test(n)?"gate":/^c3-/.test(n)?"c3":/^c2-/.test(n)?"c2":/^reverse-/.test(n)?"reverse":"tune";
+const blockOf=n=>/^v2-/.test(n)?"final":/^gate-/.test(n)?"gate":/^c3-/.test(n)?"c3":/^c2-/.test(n)?"c2":/^reverse-/.test(n)?"reverse":"tune";
 function ckptInfo(r){ // a checkpoint is saved whenever dev CER sets a new best (train.py); derive the save epochs from the log
   const c=r.cer.some(x=>x!=null)?r.cer:r.loss,saves=[];let b=1e9;
   c.forEach((v,i)=>{if(v!=null&&v<b-1e-4){b=v;saves.push(i)}});
@@ -210,7 +210,7 @@ function runs(){
   const shown=list.slice(0,RS.n);
   const opt=(k,vs)=>`<select data-k="${k}">${vs.map(v=>`<option ${RS[k]==v?"selected":""}>${v}</option>`).join("")}</select>`;
   let h=`<h2>Every training run · loss and dev CER per epoch · rings = checkpoint saved (best.pt overwritten on each new best)</h2>
-   <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:6px">${opt("blk",["all","tune","gate","c3","c2","reverse"])}${opt("arch",["all","lstm","transformer"])}${opt("state",["all","running","finished"])}
+   <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:6px">${opt("blk",["all","final","tune","gate","c3","c2","reverse"])}${opt("arch",["all","lstm","transformer"])}${opt("state",["all","running","finished"])}
    <input id="rq" placeholder="search run name" value="${esc(RS.q)}" style="background:var(--surface);color:var(--text);border:1px solid var(--line);padding:6px 8px;font:12px var(--mono)">
    <span class="note">${list.length} runs match · showing ${shown.length}</span></div>`;
   for(const {n,r} of shown){
