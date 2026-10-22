@@ -2,6 +2,9 @@
 
 Newest entry on top.
 
+## 2026-10-22 · Paper v1 and v2 released
+- Affiliation corrected to "Division of Data Science and Cybersecurity, Karunya Institute of Technology and Sciences, India". `paper/releases/paper-v2.pdf` is the final (with the deployment model); `paper/releases/paper-v1.pdf` is the earlier complete draft without it. Git tags `paper-v1` (fef4072) and `paper-v2`. Both build clean (9 pages).
+
 ## 2026-10-22 · Paper updated with the v2 model, final draft built
 - `paper/` now includes the deployment-model section (v2 table and a v1-vs-v2 figure), the privacy statement for the real-chat words, consistency fixes (introduction, noise-rate source), a cleaned reference list and Times text via newtx under XeLaTeX. 9 pages, 6 figures, 6 tables, exit 0, no undefined references. PDF: `paper/main.pdf`.
 - Still open before submission: co-authors, venue page limit, verified real-chat labels and RQ2 results, venue details for a few arXiv-only references.
