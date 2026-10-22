@@ -1,10 +1,30 @@
 # HANDOVER
 
-> Version: v2 · Last changed: 2026-10-18
+> Version: v3 · Last changed: 2026-10-22
 
-## Current (v2) · addendum 2026-10-21
+## Current (v3)
+All experiments are finished and analysed on Leica; the paper is next. Read `docs/results.md` first (tables, answers to RQ1/3/4, limitations), then `STATUS.md` top entry and `FIXES.md` F3.
+
+### State
+- Tuning 120/120, C3 30/30, C2 80/80 done; per-item evaluation and aggregation done (`results/summary/`). Every number in `docs/results.md` comes from `results/summary/*` which come from `results/c3`, `results/c2` run JSONs (config, seed, commit, data checksums inside).
+- Not done: RQ2 (human-typed set and private WhatsApp set, evaluate on the laptop; checkpoints are in `runs/<name>-s<seed>/best.pt` on Leica, about 1.8 GB, never push them), the IEEE paper in `paper/`, push to GitHub (local commits are ahead of origin; no token stored).
+- Open decision for Lebi: retrain the 32 C2 runs that overlapped with duplicate processes (FIXES F3)? Evidence suggests not needed; one run was already retrained.
+
+### How the unattended layer works (on Leica)
+`scripts/supervisor.py` (user cron: @reboot and every 10 min, flock) relaunches tuning, C3, C2, parallel evaluators and aggregation; training saves `last.pt` per epoch and resumes; `run_matrix.py` locks per run; `evaluate_ckpt.py` locks per model and logs mismatches to `logs/eval_mismatch.txt`. Dashboard on port 8383 (Plan tab = checklist and clock), cron-restarted. After `logs/AUTOPILOT_DONE` the supervisor exits. See `AUTOPILOT.md` section 8.
+
+### Gotchas
+- Dakshina is formal text; say "informal romanized Tamil" (D5). RQ2 is unanswered until the human/WhatsApp sets are scored.
+- Leica: never reboot (kernel 6.17.0-22 only), no sudo, no GRUB/Docker/Swarm.
+- `quarantine/` holds the broken checkpoint run's JSON and note (not deleted); `runs/` and `results/items/` are gitignored.
+- A GitHub token and a sudo password were pasted in chat on 2026-10-21/22: rotate both. Nothing is stored in files.
+- The Word2Vec CBOW/Skip-gram assignment is separate and was pending.
+- Use they/them or Lebi for Lebi.
+
+---
+## Previous versions
+### v2, 2026-10-18 (Current until 2026-10-22) · addendum 2026-10-21
 GO was given. Code exists in `src/translit/` and `scripts/` (commit `655089c`); noise and metric tests pass; model/training code is unrun. Next: finish torch install, run `pytest`, `python scripts/prepare_data.py all`, reverse model -> `synthesize_a3.py`, reproduction gate (`run_matrix.py gate`), then Leica (clone via token-in-command, never stored). See STATUS top entry.
-
 
 ### Where we are
 Planning, research and dataset survey are complete and fully documented. No project code exists, nothing has been trained, and the environment is not set up. Lebi said "don't start now, I will let you know". Topic #34 (informal romanized Tamil transliteration, Dakshina) is locked; scope C1 + C2 + C3; paper in IEEE format. The repo is private on GitHub (`lebiraja/tamil-translit-robustness`, branch `main`).
@@ -51,7 +71,6 @@ Planning, research and dataset survey are complete and fully documented. No proj
 ### Commits so far
 `090d4f2` planning and literature, `ec69268` dataset survey, `7522579` GPU fix, plus the documentation expansion commit (see `git log`).
 
----
-## Previous versions
+
 ### v1, 2026-10-18 (earlier the same day)
 Planning complete, no code yet. IA3 deep learning project, topic #34, team of 3 (Lebi + 2), deadline about 2026-11-01 (to confirm). Research and decisions done; Phase 1 setup next. Next steps then: ask Lebi the open items, build the environment for RTX 5070 (sm_120), fetch Tamil files from Dakshina, start the human typing set. Gotchas then: frame as informal romanized Tamil; Aksharantar dev/test mix-up; Dakshina quirks; cite only refs.bib; the Word2Vec assignment is separate.

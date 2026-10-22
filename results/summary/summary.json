@@ -29,7 +29,7 @@
   "transformer-A2-noVDROP": 9.544,
   "transformer-A3": 8.654,
   "transformer-A4": 9.13,
-  "transformer-CTRL": 8.592
+  "transformer-CTRL": 8.673
  },
  "inputs": [
   {
@@ -458,7 +458,7 @@
   },
   {
    "file": "c2-transformer-CTRL-s1.json",
-   "commit": "9a729b9"
+   "commit": "e61f9d3"
   },
   {
    "file": "c2-transformer-CTRL-s2.json",

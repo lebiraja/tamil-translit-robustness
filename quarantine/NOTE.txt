@@ -1,0 +1,2 @@
+2026-10-22T12:54:02+05:30 quarantined c2-transformer-CTRL-s1: stored best.pt did not reproduce its logged result (items CER 8.4298 vs JSON 8.4949; worst suite diff 0.34); trained by 3 simultaneous processes. Retraining cleanly.
+2026-10-22T13:17:00+05:30 CTRL-s1 retrained cleanly: items CER 8.899 == JSON 8.899
