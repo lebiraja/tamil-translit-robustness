@@ -22,7 +22,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 PY = str(ROOT / ".venv/bin/python")
 KERNEL_OK = "6.17.0-22-generic"
-MAX_GPU_JOBS, MAX_TEMP, POLL_S, HEALTH_S = 3, 85, 300, 1800
+MAX_GPU_JOBS, MAX_TEMP, POLL_S, HEALTH_S = 4, 85, 300, 1800
+MAX_EVAL_BUSY, MAX_EVAL_IDLE = 2, 3  # parallel evaluators (per-model locks); fewer while training runs, RAM is 15 GB
 TUNE = [(a, s) for a in ("lstm", "transformer") for s in ("1m", "3m", "8m")]
 SEED_SPLITS = ["0,1,2", "3,4"]
 N = {"c3": 30, "c2": 80}
@@ -104,13 +105,18 @@ def step(dry: bool) -> None:
         if block == "c2" and count("results/c3") < N["c3"]:
             continue
         for seeds in SEED_SPLITS:
-            if room() and pending(block, seeds) and not running(f"run_matrix.py {block} --seeds {seeds}"):
+            if room() and pending(block, seeds) and not running(f"scripts/run_matrix.py {block} --seeds {seeds}"):
                 launch(["scripts/run_matrix.py", block, "--seeds", seeds], f"{block}_{seeds.replace(',', '')}.log", dry)
                 slots -= 1
     done_runs = count("results/c3") + count("results/c2")
-    if room() and count("results/items", "*.npz") < done_runs and not running("scripts/evaluate_ckpt.py"):
-        launch(["scripts/evaluate_ckpt.py"], "evaluate.log", dry)
+    todo = done_runs - count("results/items", "*.npz")
+    max_eval = MAX_EVAL_BUSY if running(r"scripts/(tune|run_matrix)\.py") else MAX_EVAL_IDLE
+    while room() and todo > running("scripts/evaluate_ckpt.py") and running("scripts/evaluate_ckpt.py") < max_eval:
+        launch(["scripts/evaluate_ckpt.py", "--check"], f"evaluate_{running('scripts/evaluate_ckpt.py') + 1}.log", dry)
         slots -= 1
+        if dry:
+            break
+        time.sleep(3)  # let the new process appear before counting again
     all_done = count("results/c3") >= N["c3"] and count("results/c2") >= N["c2"]
     if (all_done and count("results/items", "*.npz") >= done_runs and not running("scripts/evaluate_ckpt.py")
             and not (ROOT / "results/summary/summary.json").exists() and not running("scripts/aggregate.py")):

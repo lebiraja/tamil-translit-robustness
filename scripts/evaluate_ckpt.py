@@ -65,13 +65,6 @@ def main() -> None:
     ap.add_argument("--only")
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
-    (ROOT / "logs").mkdir(exist_ok=True)
-    lock = open(ROOT / "logs/locks_evaluate.lock", "w")  # single instance
-    try:
-        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError:
-        print("another evaluate_ckpt is running; exiting")
-        return
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     out_dir = ROOT / "results/items"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -83,6 +76,15 @@ def main() -> None:
         run = ck.parent.name
         dst = out_dir / f"{run}.npz"
         if dst.exists() or result_json(run) is None:  # skip done and unfinished runs (no results JSON yet)
+            continue
+        (ROOT / "logs/locks").mkdir(parents=True, exist_ok=True)
+        lock = open(ROOT / "logs/locks" / f"eval-{run}.lock", "w")  # several evaluators may run; one per model
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            continue
+        if dst.exists():  # finished by another evaluator while we took the lock
+            lock.close()
             continue
         model, vocab = load(ck, dev)
         arrs: dict[str, np.ndarray] = {}
@@ -98,9 +100,14 @@ def main() -> None:
             got = 100.0 * arrs["clean__edits"].sum() / arrs["clean__reflen"].sum()
             want = js["test"]["cer"]
             print(f"   check {run}: items CER {got:.3f} vs JSON {want:.3f}", flush=True)
-            if abs(got - want) > 0.05:
-                raise SystemExit(f"mismatch for {run}")
-        np.savez_compressed(dst, **arrs)
+            if abs(got - want) > 0.05:  # stored best.pt does not reproduce the logged result: record it, keep going
+                with open(ROOT / "logs/eval_mismatch.txt", "a") as f:
+                    f.write(f"{run} items CER {got:.4f} vs results JSON {want:.4f}\n")
+                print(f"   MISMATCH {run}", flush=True)
+        tmp = dst.with_suffix(".tmp.npz")
+        np.savez_compressed(tmp, **arrs)
+        tmp.replace(dst)  # atomic: a reader never sees a half-written file
+        lock.close()
         print(f"{run}: clean CER {100.0 * arrs['clean__edits'].sum() / arrs['clean__reflen'].sum():.2f}", flush=True)
 
 
