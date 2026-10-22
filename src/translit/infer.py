@@ -12,6 +12,25 @@ from .decode import beam_search
 from .models import build
 
 WORD = re.compile(r"[A-Za-z]+")
+# Tamil chat words that look like (frequent) English words or are too short to judge: never treated as English.
+TAMIL_COLLIDE = set("""da di pa ma la na nu ku ra ya po va ji ne un en ka kaa tha thala oru anna akka dei illa illai enna inga anga
+avan ava ivan iva vera sema semma padam ponga vanga romba nalla mattum thaan dhan kitta mela pola mari machan macha bro""".split()) - {"bro"}
+SHORT_EN = set("ok hi no is to so me my we he it in on at by of or if as up us an do go be am".split())
+
+try:  # optional dependency; without it nothing is flagged as English
+    from wordfreq import zipf_frequency
+except ImportError:  # pragma: no cover
+    zipf_frequency = None
+
+
+def is_english(w: str, thr: float = 4.0) -> bool:
+    """Heuristic: a frequent English word that is not a known Tamil chat word. Not a language ID model."""
+    w = w.lower()
+    if zipf_frequency is None or w in TAMIL_COLLIDE:
+        return False
+    if len(w) <= 2:
+        return w in SHORT_EN
+    return zipf_frequency(w, "en") >= thr
 
 
 class Transliterator:
@@ -47,7 +66,7 @@ class Transliterator:
         for m, c in zip(ws, cands, strict=True):
             if m.start() > pos:
                 parts.append({"literal": text[pos : m.start()]})
-            parts.append({"src": m.group(), "cands": c})
+            parts.append({"src": m.group(), "cands": c, "english": is_english(m.group())})
             pos = m.end()
         if pos < len(text):
             parts.append({"literal": text[pos:]})
