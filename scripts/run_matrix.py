@@ -10,6 +10,7 @@ Block c2 needs data/synth/a3_sampled.tsv and a3_greedy.tsv (scripts/synthesize_a
 from __future__ import annotations
 
 import argparse
+import fcntl
 import sys
 from pathlib import Path
 
@@ -83,7 +84,17 @@ def main() -> None:
         print(f"[{i}/{len(cfgs)}] {c.name} seed {c.seed} {'(done)' if done.exists() else ''}", flush=True)
         if a.dry or done.exists():
             continue
+        (ROOT / "logs/locks").mkdir(parents=True, exist_ok=True)
+        lock = open(ROOT / "logs/locks" / f"{c.name}-s{c.seed}.lock", "w")  # one process per run, whatever launched us
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            print(f"   {c.name} seed {c.seed} is being trained by another process; skipping", flush=True)
+            continue
+        if done.exists():  # finished by another process while we waited our turn
+            continue
         r = with_retries(lambda c=c: run(c), f"{c.name}-s{c.seed}")
+        lock.close()
         if r is None:
             continue
         print(f"   dev CER {r['dev']['cer']:.2f} top1 {r['dev']['top1']:.1f} | test CER {r['test']['cer']:.2f} top1 {r['test']['top1']:.1f}")
