@@ -110,3 +110,11 @@ Each run writes `results/<block>/<run-id>.json` with: config, seed, git commit, 
 | Blackwell PyTorch issues | Smoke test first; fall back to the laptop GPU for development |
 | Leica kernel/GPU breakage on reboot | Never reboot; check `uname -r` and `nvidia-smi` before jobs; pin kernel with Lebi's permission |
 | Time | Scope is C1+C2+C3; C4 only if time remains; reproduction gate prevents wasted runs |
+
+
+## Deviations and facts recorded after the runs (2026-10-22)
+- Hyperparameter search: 20 random trials per (architecture, size), dev CER only, seed 100; C2 uses the tuned 3M configuration for both architectures.
+- Parameter counts are approximate matches (Transformer 1M = 0.80M, BiLSTM 1M = 0.98M; Transformer 8M = 8.70M, BiLSTM 8M = 8.04M).
+- C2 early-stops on clean dev CER for every condition (noise-trained models are not stopped on noisy dev).
+- Incident F3: 33 C2 runs overlapped with duplicate worker processes; one failed the checkpoint-vs-log check and was retrained. See `docs/results.md` section 5.
+- Not run here: human-typed set, WhatsApp set (RQ2); C4 (rerank/lexicon) was out of scope for these runs.
