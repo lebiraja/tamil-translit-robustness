@@ -1,0 +1,201 @@
+{
+ "config": {
+  "name": "transformer-8m-t12",
+  "arch": "transformer",
+  "direction": "roman2native",
+  "params": 8000000,
+  "model_kw": null,
+  "seed": 100,
+  "epochs": 60,
+  "patience": 6,
+  "batch_size": 512,
+  "lr": 0.0012603193075024022,
+  "warmup": 400,
+  "dropout": 0.05,
+  "label_smoothing": 0.0,
+  "clip": 1.0,
+  "bf16": false,
+  "augment": "none",
+  "held_out": [],
+  "clean_frac": 0.4,
+  "extra_pairs": [],
+  "noisy_suite": null,
+  "independent_suite": null,
+  "beam": 10,
+  "eval_test": false,
+  "out_dir": "results/tune",
+  "ckpt_dir": "runs"
+ },
+ "model_kw": {
+  "d_model": 320,
+  "heads": 4,
+  "enc_layers": 3,
+  "dec_layers": 3,
+  "ff": 1280,
+  "dropout": 0.05
+ },
+ "n_params": 8695730,
+ "commit": "bda8d65",
+ "torch": "2.11.0+cu128",
+ "gpu": "NVIDIA GeForce RTX 5070",
+ "history": [
+  {
+   "epoch": 0,
+   "train_loss": 2.760703461959147,
+   "dev_cer_greedy": 95.29600857219394
+  },
+  {
+   "epoch": 1,
+   "train_loss": 1.3100881536730593,
+   "dev_cer_greedy": 46.36733819117017
+  },
+  {
+   "epoch": 2,
+   "train_loss": 0.8059198503992783,
+   "dev_cer_greedy": 32.143239864261474
+  },
+  {
+   "epoch": 3,
+   "train_loss": 0.576629433168746,
+   "dev_cer_greedy": 22.637971066261834
+  },
+  {
+   "epoch": 4,
+   "train_loss": 0.4463566196597749,
+   "dev_cer_greedy": 19.508840864440078
+  },
+  {
+   "epoch": 5,
+   "train_loss": 0.37055196370632953,
+   "dev_cer_greedy": 16.36542239685658
+  },
+  {
+   "epoch": 6,
+   "train_loss": 0.31965704904410214,
+   "dev_cer_greedy": 15.714744963566224
+  },
+  {
+   "epoch": 7,
+   "train_loss": 0.2841586249827877,
+   "dev_cer_greedy": 14.128047147066702
+  },
+  {
+   "epoch": 8,
+   "train_loss": 0.2526066896879368,
+   "dev_cer_greedy": 13.470262546883372
+  },
+  {
+   "epoch": 9,
+   "train_loss": 0.23076518814250743,
+   "dev_cer_greedy": 13.22260916153228
+  },
+  {
+   "epoch": 10,
+   "train_loss": 0.20996111361364767,
+   "dev_cer_greedy": 12.371410201457351
+  },
+  {
+   "epoch": 11,
+   "train_loss": 0.19302598457142248,
+   "dev_cer_greedy": 12.315825192434769
+  },
+  {
+   "epoch": 12,
+   "train_loss": 0.17909642612552465,
+   "dev_cer_greedy": 12.389269895699385
+  },
+  {
+   "epoch": 13,
+   "train_loss": 0.16688053264352024,
+   "dev_cer_greedy": 12.064008001000126
+  },
+  {
+   "epoch": 14,
+   "train_loss": 0.15654832091508047,
+   "dev_cer_greedy": 11.881417983748548
+  },
+  {
+   "epoch": 15,
+   "train_loss": 0.14675208561764833,
+   "dev_cer_greedy": 11.324427617244705
+  },
+  {
+   "epoch": 16,
+   "train_loss": 0.1393199555866147,
+   "dev_cer_greedy": 11.334940619698187
+  },
+  {
+   "epoch": 17,
+   "train_loss": 0.13125373175919097,
+   "dev_cer_greedy": 11.412140803314701
+  },
+  {
+   "epoch": 18,
+   "train_loss": 0.12572300730899433,
+   "dev_cer_greedy": 12.110226095653106
+  },
+  {
+   "epoch": 19,
+   "train_loss": 0.11918750342140343,
+   "dev_cer_greedy": 11.545879915705255
+  },
+  {
+   "epoch": 20,
+   "train_loss": 0.11409147752037659,
+   "dev_cer_greedy": 11.211915562381684
+  },
+  {
+   "epoch": 21,
+   "train_loss": 0.10865711631520016,
+   "dev_cer_greedy": 11.401221559452798
+  },
+  {
+   "epoch": 22,
+   "train_loss": 0.10436805904089833,
+   "dev_cer_greedy": 11.05872267466781
+  },
+  {
+   "epoch": 23,
+   "train_loss": 0.09971429464520605,
+   "dev_cer_greedy": 11.563738972032718
+  },
+  {
+   "epoch": 24,
+   "train_loss": 0.09647786057475248,
+   "dev_cer_greedy": 11.281767363777615
+  },
+  {
+   "epoch": 25,
+   "train_loss": 0.0926020403094641,
+   "dev_cer_greedy": 11.144051148337322
+  },
+  {
+   "epoch": 26,
+   "train_loss": 0.08899238886040081,
+   "dev_cer_greedy": 11.340500767939423
+  },
+  {
+   "epoch": 27,
+   "train_loss": 0.08604599613075,
+   "dev_cer_greedy": 11.449441011536951
+  },
+  {
+   "epoch": 28,
+   "train_loss": 0.08348738183038468,
+   "dev_cer_greedy": 11.322641711611958
+  }
+ ],
+ "best_dev_crit": 11.05872267466781,
+ "metric_definition": "CER corpus-level vs closest of all attested references; top-k any reference; src/translit/metrics.py",
+ "data_sha256": [],
+ "dev": {
+  "cer": 10.687241034433491,
+  "mrr": 0.6674796747967479,
+  "n": 6806.0,
+  "top1": 58.301498677637376,
+  "top5": 79.25359976491332
+ },
+ "noisy": {},
+ "independent": {},
+ "wall_s": 852.9833784103394
+}
