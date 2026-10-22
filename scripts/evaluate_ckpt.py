@@ -12,6 +12,7 @@ reference), S__reflen. Item order is the fixed order of each suite file, so arra
 from __future__ import annotations
 
 import argparse
+import fcntl
 import json
 import sys
 from pathlib import Path
@@ -64,6 +65,13 @@ def main() -> None:
     ap.add_argument("--only")
     ap.add_argument("--check", action="store_true")
     a = ap.parse_args()
+    (ROOT / "logs").mkdir(exist_ok=True)
+    lock = open(ROOT / "logs/locks_evaluate.lock", "w")  # single instance
+    try:
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except OSError:
+        print("another evaluate_ckpt is running; exiting")
+        return
     dev = "cuda" if torch.cuda.is_available() else "cpu"
     out_dir = ROOT / "results/items"
     out_dir.mkdir(parents=True, exist_ok=True)
