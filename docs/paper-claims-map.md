@@ -19,6 +19,7 @@ Every quantitative statement in `paper/` and where it comes from. All numbers ar
 | Kruskal-Wallis / Dunn | eta^2 0.88-0.93 | `stats.json` | 5.4 |
 | Data pool filtering | 137,748 candidates, 46,652 stem overlap, 60,000 kept; 141,316 samples, 17,828 dropped, 123,488 kept | `data/synth/native_pool.stats.json`, `logs_archive/` | Data |
 | Incident disclosure | 33 of 72 runs overlapped; 1 of 110 mismatched (8.43 vs 8.49) | `FIXES.md` F3, `logs_archive/eval_mismatch.txt` | Limitations |
-| Final model v2 (Section Deployment model) | see `results/final/v2-ft-s0.json` | same | Table `tab_v2` |
+| Final model v2 (Deployment model) | dev 8.56, test 8.93, top-1 65.27, AK-all 10.76, MIX0.3 17.77, KEY0.3 15.40 vs parent 8.47 / 9.02 / 63.88 / 10.95 / 21.80 / 23.04 | `results/final/v2-ft-s0.json`, `results/c2/c2-transformer-A4-s1.json` | Table `tab_v2`, Fig. `fig_v2` |
+| Preliminary real chat (370 words, model labels, unverified) | CER 25.4 (v1) vs 24.9 (v2); top-1 40.5 vs 39.7; top-5 68.6 vs 71.1 | computed on the laptop from `data/private/wa_test/WA-TA.tsv` (private, not in repo) | Deployment model, Limitations |
 
 Rules: no number is written into the paper by hand; a number not in this table must be added here with its source before it is added to the paper. Literature numbers (Roark 8.4/9.4, Kirov 8.2, Baiju 7.4->22.7, Azam ~20% top-1, Aksharantar 56.0->67.7) come from `research/KNOWLEDGE_BASE.md`, which quotes the PDFs in `research/papers/`.

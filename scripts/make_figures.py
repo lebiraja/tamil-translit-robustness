@@ -157,7 +157,36 @@ def tuning() -> None:
     save(fig, "fig_tuning")
 
 
+def deployment() -> None:
+    v1 = json.loads((ROOT / "results/c2/c2-transformer-A4-s1.json").read_text())
+    v2 = json.loads((ROOT / "results/final/v2-ft-s0.json").read_text())
+    fig, axes = plt.subplots(1, 2, figsize=(7.1, 2.5), gridspec_kw={"width_ratios": [1.5, 1]})
+    ax = axes[0]
+    ops = ["MIX", "V-DROP", "KEY", "DIGRAPH", "REPEAT", "V-LEN", "GEM"]
+    y = list(range(len(ops)))[::-1]
+    for j, (m, name, col, mk, fill) in enumerate(((v1, "A4 parent (v1)", "#8d8c84", "o", "none"), (v2, "fine-tuned (v2)", VIOLET, "o", VIOLET))):
+        ax.scatter([m["noisy"][f"{o}.0.3"]["cer"] for o in ops], [yy + (0.12 if j else -0.12) for yy in y], s=22, facecolors=fill, edgecolors=col, linewidths=1.2, label=name, zorder=3)
+    for o, yy in zip(ops, y):
+        ax.plot([v2["noisy"][f"{o}.0.3"]["cer"], v1["noisy"][f"{o}.0.3"]["cer"]], [yy + 0.12, yy - 0.12], color="#bdb9ae", lw=0.8, zorder=1)
+    ax.axvline(v2["test"]["cer"], color=VIOLET, lw=0.7, ls=":")
+    ax.text(v2["test"]["cer"] + 0.2, len(ops) - 0.45, "clean (v2)", fontsize=6, color=VIOLET)
+    ax.set_yticks(y, ops)
+    ax.set_xlabel("test CER (%) at $p{=}0.3$")
+    ax.legend(frameon=False, loc="lower right")
+    ax.set_title("each noise type")
+    ax = axes[1]
+    sev = [0.0, 0.1, 0.3, 0.5]
+    for m, name, col, mk, fill in ((v1, "A4 parent (v1)", "#8d8c84", "o", "none"), (v2, "fine-tuned (v2)", VIOLET, "o", VIOLET)):
+        ax.plot(sev, [m["test"]["cer"]] + [m["noisy"][f"MIX.{p}"]["cer"] for p in ("0.1", "0.3", "0.5")], color=col, marker=mk, mfc=fill, label=name)
+    ax.set_xlabel("MIX severity $p$")
+    ax.set_ylabel("test CER (%)")
+    ax.set_xticks(sev)
+    ax.set_title("mixed noise")
+    save(fig, "fig_v2")
+
+
 if __name__ == "__main__":
+    deployment()
     noise_curves()
     architectures()
     augmentation()
