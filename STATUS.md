@@ -2,6 +2,9 @@
 
 Newest entry on top.
 
+## 2026-10-22 · Paper v3 (layout)
+- Author block rebuilt in IEEE style (name with division and college under each, two authors per row). v3 layout: abstract alone in the left column, Introduction at the top of the right column. v1, v2 and v3 PDFs are in `paper/releases/`; tags `paper-v1.1`, `paper-v2.1`, `paper-v3`. 9 pages, clean build.
+
 ## 2026-10-22 · Co-authors added to paper v1 and v2
 - Authors: Lebi Raja, KRM Lohith, Allen John Isac, KP Shohil (same division and college). Both PDFs rebuilt clean (9 pages); tags `paper-v1.1` and `paper-v2.1`.
 
