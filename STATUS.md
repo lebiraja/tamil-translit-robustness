@@ -2,6 +2,13 @@
 
 Newest entry on top.
 
+## 2026-10-22 (evening) · Final model v2, typing demo with English filter, IEEE paper draft
+- **Final model:** full fine-tune of the best A4 Transformer on 2.41M pairs per epoch (D19), 5 epochs, 20 min on Leica (13.7k pairs/s). All 3,153,844 weights trainable and changed (mean abs change 0.024); single 12.6 MB file `models/v2-ft-transformer-3m.pt`. Gates: dev CER 8.56 vs 8.47 (+0.10, pass), AK-all 10.76 vs 10.95 (pass, small), MIX 0.3 17.77 vs 21.80 (pass, but all six operators were trained so this is not held-out), KEY 15.40 vs 23.04. Preliminary real chat (370 words, unverified model labels): CER 24.9 vs 25.4, top-1 39.7 vs 40.5, top-5 71.1 vs 68.6: tied. Observation: colloquial forms (poren, enna) are the failures; real chat sits near CER 25, like heavy synthetic noise. Details: `results/final/v2-ft-s0.json`, `docs/model-card.md`.
+- **Demo:** `app/` (FastAPI + one page) shows top-5 per word, click to swap, copy; English words kept as typed (D21); `docs/demo.md`. Runs on the laptop CPU at http://localhost:8000.
+- **Paper draft:** `paper/` IEEEtran, XeLaTeX, 9 pages, builds clean (exit 0, no undefined references, no overfull boxes). Figures (5) and tables (6) generated from `results/` by `scripts/make_figures.py` / `scripts/make_tables.py`; claim-to-evidence map `docs/paper-claims-map.md`; reproducibility guide `docs/reproducibility.md`; model card.
+- Dashboard (Leica :8383) follows the fine-tune log (Logs tab, Runs tab block "final").
+- Open: verify `data/private/wa_verify.tsv` (real-chat gate and RQ2); who types the human set; co-authors; venue page limit; upload v2 to the private Hugging Face repo (not done); revoke the GitHub and HF tokens and rotate passwords (token files `~/work/git.txt`, `~/work/hug.txt` still on Leica).
+
 ## 2026-10-22 · Pushed: code and docs to GitHub, checkpoints to a private Hugging Face repo
 - GitHub `lebiraja/tamil-translit-robustness` main updated (code, docs, results JSON/CSV, summary tables). A laptop session had already pushed an older draft of docs/results.md and the summary files; rebased onto it and kept the final versions (post CTRL-s1 retrain).
 - Hugging Face: private model repo `lebiraja/tamil-translit-robustness-models`: 113 checkpoints (110 C3/C2 best.pt, 2 gate models, the reverse model), 1.52 GB, plus README model card and MANIFEST.json with sha256 and logged scores. Script: `scripts/push_to_hf.py` (token only from the HF_TOKEN environment variable; pinned `huggingface_hub==0.34.4`).

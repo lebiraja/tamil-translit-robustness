@@ -1,3 +1,26 @@
 \section{Deployment Model}
 \label{sec:final}
-% filled in after the fine-tuning run finishes
+The experiments above compare many small models; for use we also want a single model.
+We take the best seed of the A4 Transformer (3.15M parameters) and fine-tune \emph{all} of its weights, with no adapters and no frozen layers, so the result is the same architecture in one 12.6\,MB file.
+The training mixture has 2.41M pairs per epoch: Dakshina train repeated three times, the 123{,}488 back-transliterated pairs and 2.08M Aksharantar pairs, from which we dropped IndicCorp-mined rows below the authors' quality score of $-0.10$ (1.15M of 3.23M rows) and every word of the Dakshina and independent test sets.
+Noise from all six operators is applied online to half of the items.
+We use Adam with learning rate $10^{-4}$ (cosine decay, 500 warmup steps), batch size 512, label smoothing 0.1, five epochs (20 minutes on one GPU) and keep the epoch with the best mean of clean and mixed-noise development CER.
+
+\Cref{tab:v2} compares the result with the A4 model it started from.
+Clean accuracy is unchanged within noise (test CER 8.93 against 9.02, top-1 +1.4 points, top-5 $-0.2$) and the independent Aksharantar sets improve slightly (AK-all 10.76 against 10.95, every subset lower).
+Robustness improves strongly: mixed-noise CER at $p{=}0.3$ falls from 21.80 to 17.77 and keyboard-slip CER from 23.04 to 15.40.
+These noise gains are \emph{not} held-out evidence: the fine-tuning mixture contains all six operators, including KEY and REPEAT that A2 lacked, and the noisy test sets are built from the same operators, so the gain measures what the model learned to ignore and not generalisation to unseen error types (\Cref{sec:rq3}).
+The 2.1M mined pairs give a much smaller clean-accuracy gain than adding data did in the controlled experiments, which suggests that the mined romanizations resemble the existing data (formal text, careful spelling) and that a 3M-parameter model has little room left on them.
+
+\begin{table}[t]
+\caption{Deployment model against the A4 Transformer it was fine-tuned from (test CER in \%, beam 10, single run each).}
+\label{tab:v2}
+\centering\scriptsize
+\resizebox{\columnwidth}{!}{\input{tables/tab_v2}}
+\end{table}
+
+\textbf{Preliminary real-chat check.}
+We also scored both models on 370 words taken from the author's private chat exports, labelled with Tamil spellings by a language model; \emph{these labels are not yet verified by a person}, so the numbers are only indicative.
+CER is 25.4 for the A4 model and 24.9 for the fine-tuned model (top-1 40.5\% and 39.7\%, top-5 68.6\% and 71.1\%): the two are indistinguishable, and both are far above the clean 9 and close to our heavy synthetic noise ($p{=}0.3$ mixed noise: 18--24).
+Colloquial spellings such as \emph{poren} (\tamil{போறேன்}) are the typical failures, because mined and Wikipedia-style data use literary forms.
+This gap is the main open problem and the reason we regard real-typing evaluation as the next step.

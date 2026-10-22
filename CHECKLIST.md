@@ -1,66 +1,36 @@
-# CHECKLIST
+# CHECKLIST (updated 2026-10-22)
 
-Soft internal target about 2026-11-01 (Lebi: deadline does not matter, D8). Phases are ordered by dependency. Nothing in Phase 1 onward starts until Lebi says go (D14).
+## Phase 0: planning and research: DONE (2026-10-18)
+32 papers read, knowledge base, novelty scope (C1+C2+C3), 28 datasets surveyed, leakage audit, documentation set, private repo.
 
-## Phase 0: planning and research (DONE 2026-10-18)
-- [x] Read the Excel (35 topics, 8 claimed) and Lebi's GitHub projects
-- [x] Topic #34 chosen and locked (D1)
-- [x] 32 papers downloaded and read, 32 notes, `KNOWLEDGE_BASE.md`, `refs.bib` (32 entries)
-- [x] `NOVELTY_CANDIDATES.md` (8 candidates), scope locked to C1+C2+C3 (D2)
-- [x] Dakshina verified (`research/DATASET.md`), quirks and baselines recorded
-- [x] About 28 further datasets downloaded to `data/` (965 MB), two dataset docs, scripts, leakage audit
-- [x] Aksharantar overlap resolved; independent test file `tam_test.no_dakshina.tsv` (4,335 rows)
-- [x] Lab server docs read (`/home/lebi/workspace/networks/dscs-lab/`), `docs/infrastructure.md`
-- [x] Private GitHub repo created and pushed (`lebiraja/tamil-translit-robustness`)
-- [x] Documentation set written (this pass): session log, experiment plan, typing protocol, paper outline, architecture, docker, glossary, dataset index
+## Phase 1: setup: DONE (2026-10-21)
+- [x] venv with CUDA 12.8 PyTorch on Leica (RTX 5070), CPU torch on the laptop
+- [x] Dakshina Tamil fetched and verified (68,218 / 6,827 / 6,864 pairs, sha256)
+- [x] Repo skeleton, tests (30 pass), dashboard on Leica :8383
 
-## Phase 1: setup (after Lebi says go)
-- [ ] Answer the open items in `DECISIONS.md` (who types; Leica kernel pin; Leica free)
-- [ ] Laptop venv or Docker, CUDA 12.8+ PyTorch, pinned `requirements.txt`
-- [ ] GPU smoke test on the laptop (RTX 4050), later on Leica (RTX 5070, `uname -r` = 6.17.0-22-generic)
-- [x] Fetch Dakshina Tamil by byte range into `data/dakshina-ta/`; counts verified; sha256 recorded (2026-10-21)
-- [ ] Data cleaning rule for the roughly 0.35% suspect pairs, logged; test set not silently cleaned
-- [x] Repo skeleton: `src/translit/`, `configs/`, `scripts/`, `results/`, `tests/`, `paper/`
-- [ ] Verify the NVIDIA container toolkit on Leica (or choose a venv there)
+## Phase 2: human-typed set: PENDING (Lebi)
+- [x] Protocol, sampling and typing-sheet script (`scripts/make_human_prompts.py`)
+- [ ] Decide typists, collect about 1,500 words, quality checks, datasheet
+- [x] Real-chat word set built from private exports (413 words, model-labelled)
+- [ ] Lebi verifies `data/private/wa_verify.tsv`
 
-## Phase 2: human-typed set (parallel with Phase 3)
-- [ ] Confirm typists and design (`docs/human-typing-protocol.md`)
-- [ ] Sample about 1,500 Dakshina test words with a recorded seed (stratified by length)
-- [ ] Prepare the prompt sheet / form (Tamil script only, no autocorrect)
-- [ ] Collect; store `data/human-typed/typist_<id>.tsv` plus `manifest.json`
-- [ ] Quality checks (duplicates, pasted entries, 5% spot check), per-typist pattern rates
-- [ ] Consent noted; datasheet `docs/datasets/human-typed-set.md`
+## Phase 3: code: DONE
+- [x] Loaders, metrics, noise operators (all with tests), BiLSTM and Transformer, trainer with resume and retry, beam search, evaluator, statistics, aggregation, fine-tuning
 
-## Phase 3: code
-- [ ] Loaders (Dakshina, Aksharantar filtered, human set), NFC and lowercase handling, vocab from train only, with tests
-- [ ] Metrics: CER, top-k, MRR, multi-reference handling, with hand-computed tests
-- [x] Noise operators V-DROP (code and tests done; realised rates to be measured), V-LEN, GEM, DIGRAPH (symmetric), KEY, REPEAT, MIX with determinism, pairing and never-empty tests
-- [ ] BiLSTM+attention model; pre-LN Transformer; parameter-budget helper (1M / 3M / 8M)
-- [ ] Training loop (seeds, early stopping on dev, optional bf16), beam search, results JSON writer
-- [ ] CPU end-to-end smoke test (tiny model, 100 pairs)
+## Phase 4: experiments: DONE except RQ2
+- [x] Reproduction gate (BiLSTM dev CER 8.39 to 8.43 vs published 8.4)
+- [x] Tuning 120 trials; C3 30 runs; C1 28 noisy suites; independent sets; C2 80 runs; statistics
+- [x] Final model: full fine-tune (v2), gates 1 to 3 passed
+- [ ] RQ2 and gate 4: real-chat and human sets on the models
+- [ ] Optional C4 (LM/lexicon reranking), error analysis of colloquial forms
 
-## Phase 4: experiments (mostly on Leica)
-- [ ] **Reproduction gate (D13):** match Roark/Kirov dev CER within about 1 point; document the evaluation definition
-- [ ] Hyperparameter search, equal budget per architecture and size
-- [ ] C3 final models, 5 seeds each; statistics
-- [ ] C1 paired noisy test sets (4 severities x operators), degradation curves
-- [ ] Human-set evaluation; synthetic-vs-human correlation (RQ2)
-- [ ] Independent Aksharantar evaluation (AK-Freq, AK-NEI, AK-NEF separately)
-- [ ] C2 augmentation matrix (A0 to A4 + control), held-out noise types
-- [ ] Hand-check about 300 real-comment tokens to validate noise rates
-- [ ] (Optional) C4 reranking; (optional) IndicXlit reference run
-- [ ] Error analysis (confusions under V-DROP and GEM, oracle top-k ceilings)
+## Phase 5: paper: DRAFT DONE (9 pages)
+- [x] IEEEtran skeleton, all sections written from logged numbers, 5 figures, 6 tables, references cleaned, builds clean
+- [x] Claim-to-evidence map, reproducibility guide, model card
+- [ ] Co-authors, page limit, venue entries for arXiv-only references, add RQ2 results, proofread, final PDF
 
-## Phase 5: paper
-- [ ] IEEEtran skeleton in `paper/`, `refs.bib` wired in, clean compile
-- [ ] Figures and tables generated from `results/` (see `docs/paper-outline.md`)
-- [ ] Related work, data, method, experiments, analysis, limitations and ethics, conclusion
-- [ ] Every number traced to a logged run; published numbers cited with split and source
-- [ ] Proofread; final PDF
-
-## Phase 6: submit and housekeeping
-- [ ] Final PDF, code and anything staff requires (confirm format with staff when convenient)
-- [ ] Word2Vec CBOW/Skip-gram assignment (separate, posted 2026-10-16)
-- [ ] Remove the Excel (other students' names) from the repo if it is ever made public
-- [ ] Revoke the Hugging Face token pasted in chat; rotate the two lab-session passwords
-- [ ] Update STATUS, HANDOVER, FIXES and docs for any change
+## Phase 6: deliverables and housekeeping
+- [x] Typing demo (`app/`), English filter
+- [ ] Upload v2 to the private Hugging Face repo (optional)
+- [ ] Word2Vec CBOW/Skip-gram assignment (separate course task)
+- [ ] Revoke GitHub and HF tokens, rotate lab passwords, delete `~/work/git.txt` and `hug.txt`, remove Leica cron jobs, remove the Excel from the repo before any public release

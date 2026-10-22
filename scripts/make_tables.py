@@ -94,7 +94,22 @@ def tab_stats() -> None:
     write("tab_stats", "\n".join(lines).replace("suite", "suite"))
 
 
+def tab_v2() -> None:
+    v1 = json.loads((ROOT / "results/c2/c2-transformer-A4-s1.json").read_text())
+    v2 = json.loads((ROOT / "results/final/v2-ft-s0.json").read_text())
+    rows = [("Dev CER", v1["dev"]["cer"], v2["dev"]["cer"]), ("Test CER", v1["test"]["cer"], v2["test"]["cer"]),
+            ("Test top-1 (\\%)", v1["test"]["top1"], v2["test"]["top1"]), ("Test top-5 (\\%)", v1["test"]["top5"], v2["test"]["top5"]),
+            ("AK-all CER", v1["independent"]["AK-all"]["cer"], v2["independent"]["AK-all"]["cer"])]
+    rows += [(f"{k.replace('.0.', ' $p{=}0.')}$ CER", v1["noisy"][k]["cer"], v2["noisy"][k]["cer"]) for k in ("MIX.0.1", "MIX.0.3", "MIX.0.5", "V-DROP.0.3", "KEY.0.3", "REPEAT.0.3")]
+    lines = ["\\begin{tabular}{lccc}", "\\toprule", "Test suite & v1 (A4) & v2 (fine-tuned) & $\\Delta$ \\\\", "\\midrule"]
+    for n, a, b in rows:
+        lines.append(f"{n} & {a:.2f} & {b:.2f} & {b - a:+.2f} \\\\")
+    lines += ["\\bottomrule", "\\end{tabular}"]
+    write("tab_v2", "\n".join(lines))
+
+
 if __name__ == "__main__":
+    tab_v2()
     tab_c3()
     tab_c2()
     tab_ops()
