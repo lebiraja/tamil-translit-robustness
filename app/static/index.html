@@ -93,7 +93,7 @@ $("#copy").onclick=async()=>{const t=parts.map((p,i)=>p.literal!==undefined?p.li
   try{await navigator.clipboard.writeText(t);$("#copy").textContent="Copied";setTimeout(()=>$("#copy").textContent="Copy Tamil",1200)}catch{prompt("Copy:",t)}};
 $("#clear").onclick=()=>{$("#in").value="";convert();$("#in").focus()};
 document.querySelectorAll(".try button").forEach(b=>b.onclick=()=>{$("#in").value=b.textContent;convert();$("#in").focus()});
-fetch("/api/info").then(r=>r.json()).then(i=>{$("#info").innerHTML=`<b>${i.name}</b> · dev CER ${i.dev_cer}% · test CER ${i.test_cer}%<br>${i.note}. Each word is converted on its own; English words are kept as typed (frequent-word list; click one to convert it anyway). Some typed forms are genuinely ambiguous: check the alternatives.`});
+fetch("/api/info").then(r=>r.json()).then(i=>{$("#info").innerHTML=`<b>${i.name}</b> · test CER ${i.test_cer}% clean, ${i.mix_cer}% under mixed typing noise<br>${i.note}. Each word is converted on its own; English words are kept as typed (frequent-word list; click one to convert it anyway). Some typed forms are genuinely ambiguous: check the alternatives.`});
 </script>
 </body>
 </html>

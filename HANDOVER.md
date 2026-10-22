@@ -1,8 +1,32 @@
 # HANDOVER
 
-> Version: v3 · Last changed: 2026-10-22
+> Version: v4 · Last changed: 2026-10-22 (evening)
 
-## Current (v3)
+## Current (v4)
+### Where we are
+Research, experiments, final model, typing demo and a full IEEE paper draft all exist. 110 models were trained and analysed (`docs/results.md`); the final model is a full fine-tune of the best A4 Transformer (`models/v2-ft-transformer-3m.pt`, 12.6 MB, one file; `docs/model-card.md`); the demo runs with `.venv/bin/python app/server.py` (`docs/demo.md`); the paper is in `paper/` (9 pages, builds clean; `paper/README.md`).
+
+### Read first
+1. `STATUS.md` top entries, `DECISIONS.md` (D19 to D22 are new), `docs/results.md`, `docs/model-card.md`.
+2. `docs/paper-claims-map.md` (every paper number and its source) and `docs/reproducibility.md`.
+3. `paper/sections/*.tex` for what the paper claims; `FIXES.md` F3 for the duplicate-worker incident.
+
+### What is left
+1. **Lebi:** verify `data/private/wa_verify.tsv` (413 real-chat words); decide who types the human set (`docs/human-typing-protocol.md`, `scripts/make_human_prompts.py`).
+2. **Then:** evaluate the verified chat set and the human set on v1/v2 and the 110 checkpoints (checkpoints in `runs/` on Leica or the private Hugging Face repo) to answer RQ2, add a Results subsection and update Limitations and the abstract; re-decide gate 4 (D20).
+3. Paper: add co-authors in `main.tex`, check the venue page limit, add missing venues to a few arXiv-only references, proofread, optional ablation on how colloquial forms fail.
+4. Optional: upload v2 to the private Hugging Face repo; improve colloquial-form accuracy (chat-style training data, self-training on DravidianCodeMix), lexicon/LM reranking (C4).
+5. Housekeeping: revoke the GitHub and Hugging Face tokens and rotate the two passwords (pasted in chat); delete `~/work/git.txt` and `~/work/hug.txt` on Leica; remove the supervisor/dashboard cron jobs on Leica when finished; remove the Excel from the repo before any public release.
+
+### Gotchas
+- v2's noise numbers are not held-out (trained on all six operators). Real chat sits near CER 25 (preliminary, unverified labels).
+- Build the paper with XeLaTeX + biber (Tamil font path `/usr/share/fonts/noto/` is set in `main.tex`; change it on another machine).
+- Never reboot Leica (kernel 6.17.0-22 pin); Leica is reachable at 10.42.0.226 via `ssh airoot` when on the same network; dashboard at :8383.
+- Leica pushes cannot reach GitHub without a token: pull over ssh (`git fetch ssh://airoot/home/lebiraja/work/tamil-translit-robustness main`).
+
+---
+### Previous version: v3 (2026-10-22 morning, written by the Leica session)
+
 All experiments are finished and analysed on Leica; the paper is next. Read `docs/results.md` first (tables, answers to RQ1/3/4, limitations), then `STATUS.md` top entry and `FIXES.md` F3.
 
 ### State

@@ -2,7 +2,7 @@
 
 How robust is character-level neural transliteration of romanized Tamil ("Tanglish") to informal typing? A paired noise benchmark, a human-typed test set, an augmentation study and a matched-budget BiLSTM vs Transformer comparison, written up as an IEEE conference paper.
 
-**Status (2026-10-18):** planning, literature review (32 papers) and dataset survey (28 datasets) are complete and documented. No code, training or environment setup yet; waiting for Lebi's go.
+**Status (2026-10-22):** 110 models trained and analysed, final model fine-tuned (`models/v2-ft-transformer-3m.pt`, 12.6 MB), typing demo built (`app/`), IEEE paper draft written (`paper/`, 9 pages). Open: real-typing evaluation (RQ2), co-authors, proofreading.
 
 ## Start here
 | File | Purpose |
@@ -15,6 +15,9 @@ How robust is character-level neural transliteration of romanized Tamil ("Tangli
 | `CHECKLIST.md` | Phased task list |
 | `CLAUDE.md` | Rules for working in this repo |
 | `docs/` | Session log, experiment plan, human-typing protocol, paper outline, architecture, docker, infrastructure, glossary, dataset docs |
+| `paper/` | IEEE paper (XeLaTeX), figures and tables generated from `results/` |
+| `app/`, `models/` | Typing demo and the final model (weights gitignored) |
+| `results/`, `logs_archive/` | Run JSONs, summaries, statistics; Leica logs |
 | `research/` | 32 papers with notes, knowledge base, novelty candidates, `refs.bib`, Dakshina report |
 
 ## Data

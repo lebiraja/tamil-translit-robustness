@@ -1,4 +1,4 @@
-"""Tanglish -> Tamil typing demo. Run: python app/server.py [--ckpt models/v1-a4-transformer-3m.pt] [--port 8000]"""
+"""Tanglish -> Tamil typing demo. Run: python app/server.py [--ckpt models/v2-ft-transformer-3m.pt] [--port 8000]"""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ from translit.infer import Transliterator  # noqa: E402
 
 app = FastAPI(title="Tanglish to Tamil")
 T: Transliterator | None = None
-INFO = {"name": "v1 · A4 Transformer 3M", "dev_cer": 8.47, "test_cer": 9.02, "note": "Tamil-style noise + back-transliteration pairs"}
+INFO = {"name": "v2 · fine-tuned Transformer 3M", "dev_cer": 8.56, "test_cer": 8.93, "mix_cer": 17.77, "note": "A4 model fully fine-tuned on Dakshina, back-transliteration pairs and 2.1M Aksharantar pairs with typing noise; real-chat check pending"}
 
 
 class Req(BaseModel):
@@ -50,7 +50,7 @@ def index() -> FileResponse:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ckpt", default=str(ROOT / "models/v1-a4-transformer-3m.pt"))
+    ap.add_argument("--ckpt", default=str(ROOT / "models/v2-ft-transformer-3m.pt"))
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--host", default="127.0.0.1")
     a = ap.parse_args()
