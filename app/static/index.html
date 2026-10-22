@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tanglish to Tamil</title>
+<style>
+:root{color-scheme:dark;--bg:#12110f;--ink:#f1ece2;--ink2:#b9b2a3;--mut:#7d7769;--line:#2a2823;--acc:#e8b04a;--sel:#1d1b17;
+--ta:"Noto Sans Tamil","Latha","Nirmala UI","Lohit Tamil","Tamil Sangam MN",sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--serif:Georgia,"Times New Roman",serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+main{max-width:860px;margin:0 auto;padding:44px 20px 80px}
+h1{font:400 clamp(30px,6vw,46px)/1.08 var(--serif);margin:0 0 6px;letter-spacing:-.01em}
+h1 em{color:var(--acc);font-style:normal}
+.sub{color:var(--ink2);margin:0 0 30px;max-width:56ch}
+label{display:block;font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:0 0 8px}
+textarea{width:100%;min-height:120px;resize:vertical;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--ink);font:22px/1.5 var(--mono);padding:6px 0 14px;outline:none}
+textarea:focus{border-bottom-color:var(--acc)}
+textarea::placeholder{color:#4a463d}
+.out{margin-top:34px;min-height:130px;border-bottom:1px solid var(--line);padding-bottom:18px;font:34px/1.9 var(--ta);overflow-wrap:anywhere}
+.out .lit{color:var(--ink2);white-space:pre-wrap}
+.w{position:relative;display:inline-block;cursor:pointer;border-radius:4px;padding:0 3px;margin:0 -3px}
+.w:hover,.w.open{background:var(--sel)}
+.w:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.w .alt{position:absolute;left:0;top:100%;z-index:5;white-space:nowrap;width:max-content;background:#0d0c0a;border:1px solid var(--line);border-radius:6px;padding:6px;min-width:190px;box-shadow:0 12px 30px #0009;font-size:24px;line-height:1.4}
+.alt button{white-space:nowrap;display:flex;justify-content:space-between;align-items:baseline;gap:18px;width:100%;background:none;border:0;color:var(--ink);padding:4px 8px;border-radius:4px;cursor:pointer;font:inherit;text-align:left}
+.alt button:hover{background:var(--sel)}
+.alt small{font:11px var(--mono);color:var(--mut)}
+.alt button.cur{color:var(--acc)}
+.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:16px;font:12px var(--mono);color:var(--mut)}
+.btn{background:var(--acc);color:#1a1409;border:0;border-radius:4px;padding:8px 16px;font:600 13px var(--mono);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+.try{margin-top:34px}
+.try button{background:none;border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:5px 12px;margin:0 8px 8px 0;font:13px var(--mono);cursor:pointer}
+.try button:hover{border-color:var(--acc);color:var(--ink)}
+footer{margin-top:54px;font:12px/1.7 var(--mono);color:var(--mut)}
+footer b{color:var(--ink2);font-weight:500}
+@media(max-width:560px){.out{font-size:28px}textarea{font-size:18px}}
+</style>
+</head>
+<body>
+<main>
+  <h1>Type Tanglish.<br>Get <em>தமிழ்</em>.</h1>
+  <p class="sub">A character-level transformer trained on real romanizations and noisy typing. Click any word to see the other candidates.</p>
+
+  <label for="in">Tanglish</label>
+  <textarea id="in" autofocus spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="vanakkam, eppadi irukkinga?"></textarea>
+
+  <div class="out" id="out" aria-live="polite"></div>
+  <div class="row"><button class="btn" id="copy">Copy Tamil</button><button class="btn ghost" id="clear">Clear</button><span id="ms"></span></div>
+
+  <div class="try"><label>Try</label>
+    <button>vanakkam nanba</button><button>naan inniki office poren</button><button>enna panra</button><button>nalla irukken</button><button>kankl</button><button>romba nandri</button>
+  </div>
+
+  <footer id="info"></footer>
+</main>
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+let parts=[],chosen=[],timer=null,seq=0;
+function render(){
+  const out=$("#out");out.textContent="";
+  parts.forEach((p,i)=>{
+    if(p.literal!==undefined){const s=document.createElement("span");s.className="lit";s.textContent=p.literal;out.append(s);return}
+    const w=document.createElement("span");w.className="w";w.tabIndex=0;w.textContent=p.cands[chosen[i]||0];w.title=p.src;
+    const open=()=>{closeAll();w.classList.add("open");const a=document.createElement("div");a.className="alt";
+      p.cands.forEach((c,k)=>{const b=document.createElement("button");b.className=k===(chosen[i]||0)?"cur":"";
+        b.innerHTML="";const t=document.createElement("span");t.textContent=c;const r=document.createElement("small");r.textContent="#"+(k+1);b.append(t,r);
+        b.onclick=e=>{e.stopPropagation();chosen[i]=k;render()};a.append(b)});
+      w.append(a)};
+    w.onclick=e=>{if(!w.classList.contains("open"))open();else closeAll();e.stopPropagation()};
+    w.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();w.click()}if(e.key==="Escape")closeAll()};
+    out.append(w);
+  });
+}
+function closeAll(){document.querySelectorAll(".w.open").forEach(w=>{w.classList.remove("open");w.querySelector(".alt")?.remove()})}
+document.addEventListener("click",closeAll);
+async function convert(){
+  const text=$("#in").value,my=++seq;
+  if(!text.trim()){parts=[];chosen=[];render();$("#ms").textContent="";return}
+  try{const r=await fetch("/api/transliterate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text,n_best:5})});
+    const d=await r.json();if(my!==seq)return;parts=d.parts;chosen=[];render();$("#ms").textContent=d.ms+" ms"}
+  catch(e){$("#ms").textContent="server not reachable"}
+}
+$("#in").addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(convert,160)});
+$("#copy").onclick=async()=>{const t=parts.map((p,i)=>p.literal!==undefined?p.literal:p.cands[chosen[i]||0]).join("");
+  try{await navigator.clipboard.writeText(t);$("#copy").textContent="Copied";setTimeout(()=>$("#copy").textContent="Copy Tamil",1200)}catch{prompt("Copy:",t)}};
+$("#clear").onclick=()=>{$("#in").value="";convert();$("#in").focus()};
+document.querySelectorAll(".try button").forEach(b=>b.onclick=()=>{$("#in").value=b.textContent;convert();$("#in").focus()});
+fetch("/api/info").then(r=>r.json()).then(i=>{$("#info").innerHTML=`<b>${i.name}</b> · dev CER ${i.dev_cer}% · test CER ${i.test_cer}%<br>${i.note}. Each word is converted on its own; English words are not detected, so type only Tanglish. Some typed forms are genuinely ambiguous: check the alternatives.`});
+</script>
+</body>
+</html>
