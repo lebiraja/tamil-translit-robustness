@@ -1,0 +1,11 @@
+\section{Conclusion}
+We built a paired, seeded robustness benchmark for Latin-to-Tamil transliteration and used 110 trained models to answer three questions.
+Typing noise hurts mainly through dropped vowels and key slips; Tamil-aware noise training removes most of the vowel-drop damage but not damage from operators it does not model; extra romanized words matter at least as much as spelling variety, and the combination of Tamil-phonological noise with back-transliterated data is the best overall at no clean cost; and the BiLSTM and the Transformer are close, with the Transformer slightly better under heavy noise.
+Our implementation reproduces the published Dakshina baselines.
+
+\textbf{Future work.}
+The next step is to evaluate on real typing: a verified real-chat word set and a team-typed set, which will show whether synthetic noise predicts real degradation.
+Other directions are lexicon and language-model reranking on noisy input, sampling spelling variants from real typing rather than from a Dakshina-trained model, byte-level pretrained models, and sentence-level context.
+
+\textbf{Reproducibility.}
+Code, configurations, per-run logs, result summaries and the scripts that generate every table and figure are in the project repository (\texttt{github.com/lebiraja/tamil-translit-robustness}, private until release); the Dakshina and Aksharantar data are available from their original sources under their own licences, and the derived noisy test sets are regenerated deterministically by the repository scripts.

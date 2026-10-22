@@ -1,18 +1,22 @@
 \documentclass[conference]{IEEEtran}
 
-\usepackage[T1]{fontenc}
+\usepackage{fontspec}
+\newfontfamily\tamilfont[Script=Tamil]{Noto Sans Tamil}
+\newcommand{\tamil}[1]{{\tamilfont #1}}
 \usepackage{graphicx}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{cleveref}
-\usepackage[backend=biber,style=ieee]{biblatex}
+\usepackage{microtype}
+\usepackage[backend=biber,style=ieee,maxbibnames=3,minbibnames=1]{biblatex}
 \addbibresource{refs.bib}
 
 \begin{document}
 
 \title{How Robust Is Character-Level Transliteration to Informal Typing?\\
-A Paired Noise Benchmark for Romanized Tamil}
+A Paired Noise Benchmark and Augmentation Study for Romanized Tamil}
 
+% Add the two co-authors (names, affiliation) before submission.
 \author{\IEEEauthorblockN{Lebi Raja}
 \IEEEauthorblockA{Department of AI \& Data Science\\
 Karunya Institute of Technology and Sciences, India}}
@@ -20,14 +24,15 @@ Karunya Institute of Technology and Sciences, India}}
 \maketitle
 
 \begin{abstract}
-Tamil speakers routinely type Tamil in Latin letters (``Tanglish'') and software must convert it back to Tamil script.
-Published transliteration models are trained and tested on carefully romanized text, so their behaviour on hurried, informal typing is largely unmeasured.
-We study this gap for word-level Latin-to-Tamil transliteration with character-level sequence-to-sequence models.
-We contribute (i)~a paired robustness benchmark that applies seven Tamil-specific noise operators at four severities to the Dakshina test lexicon, so every noisy input is tied to its clean form and gold answer, together with a real-chat word set and a team-typed set;
-(ii)~an augmentation study comparing random character noise, Tamil-phonological noise and sampled back-transliteration against a more-data control;
-and (iii)~a parameter-matched comparison of a BiLSTM with attention and a small pre-LN Transformer, with five seeds and equal tuning budget.
-Our implementation reproduces the published Dakshina baselines within one CER point.
-Results of the benchmark and the augmentation study are reported in Section~\ref{sec:results}.
+Tamil speakers routinely type Tamil in Latin letters (``Tanglish'') and software must convert it back to Tamil script, yet published transliteration models are trained and tested on carefully romanized text.
+We measure what happens under informal typing for word-level Latin-to-Tamil transliteration with character-level sequence-to-sequence models.
+We release a seeded, paired benchmark of seven Tamil-specific noise operators at four severities (28 noisy copies of the Dakshina test lexicon, each item tied to its clean form and references) and train 110 models: a BiLSTM with attention and a pre-LN Transformer at about 1M, 3M and 8M parameters with five seeds each, and eight training conditions with five seeds each for both architectures.
+Our implementation reproduces the published Dakshina development CER of 8.4.
+Vowel dropping and keyboard slips are the damaging operators: at $p{=}0.3$ they raise test CER from about 9 to 22--24, while vowel-length, doubled-consonant and letter-stretching noise cost only 1--2 points.
+Training with Tamil-phonological noise cuts vowel-drop CER from 24.0 to 17.7 for the BiLSTM, but does not transfer to an operator left out of training (25.0), and costs about 0.8 clean CER.
+Adding sampled back-transliterations (A4) gives the lowest mixed-noise CER (21.8 against 25.5) at no clean cost, although the clean gain of back-transliteration alone is explained by extra words, not by spelling variety.
+At matched size the two architectures tie on clean text, and the Transformer loses 0.3--1.3 CER less under heavy mixed noise.
+Real chat typing is not yet evaluated.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -40,7 +45,10 @@ transliteration, Tamil, robustness, data augmentation, sequence-to-sequence, rom
 \input{sections/method}
 \input{sections/experiments}
 \input{sections/results}
+\input{sections/final_model}
+\input{sections/discussion}
 \input{sections/limitations}
+\input{sections/conclusion}
 
 \printbibliography
 

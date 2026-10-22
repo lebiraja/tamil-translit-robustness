@@ -1,0 +1,13 @@
+\begin{tabular}{llrcccc}
+\toprule
+Model & Size & Params & Dev CER & Test CER & Top-1 (\%) & Top-5 (\%) \\
+\midrule
+BiLSTM & 1M & 0.98M & 8.39\,{\scriptsize$\pm$0.11} & 8.90\,{\scriptsize$\pm$0.24} & 63.6\,{\scriptsize$\pm$0.5} & 82.5\,{\scriptsize$\pm$0.4} \\
+BiLSTM & 3M & 2.99M & 8.41\,{\scriptsize$\pm$0.12} & 9.00\,{\scriptsize$\pm$0.20} & 63.3\,{\scriptsize$\pm$0.2} & 82.3\,{\scriptsize$\pm$0.4} \\
+BiLSTM & 8M & 8.04M & 8.43\,{\scriptsize$\pm$0.06} & \textbf{8.77\,{\scriptsize$\pm$0.07}} & 63.4\,{\scriptsize$\pm$0.2} & 83.0\,{\scriptsize$\pm$0.4} \\
+\midrule
+Transformer & 1M & 0.80M & 9.06\,{\scriptsize$\pm$0.13} & 9.71\,{\scriptsize$\pm$0.12} & 60.2\,{\scriptsize$\pm$0.9} & 82.8\,{\scriptsize$\pm$0.2} \\
+Transformer & 3M & 3.15M & 8.49\,{\scriptsize$\pm$0.03} & 9.01\,{\scriptsize$\pm$0.17} & 63.1\,{\scriptsize$\pm$0.7} & 83.4\,{\scriptsize$\pm$0.4} \\
+Transformer & 8M & 8.70M & 8.76\,{\scriptsize$\pm$0.32} & 9.40\,{\scriptsize$\pm$0.40} & 61.4\,{\scriptsize$\pm$2.0} & 83.3\,{\scriptsize$\pm$0.4} \\
+\bottomrule
+\end{tabular}

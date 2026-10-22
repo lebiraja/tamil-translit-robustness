@@ -1,8 +1,19 @@
 \section{Experimental Setup}
-All models are trained with PyTorch 2.11 (CUDA 12.8) on an RTX 5070 (12\,GB).
-Hyperparameters are chosen by 20 random-search trials per architecture and size using development CER only; test data are never used for selection.
+\label{sec:setup}
+All models are implemented in PyTorch 2.11 (CUDA 12.8) and trained on a single RTX 5070 (12\,GB) shared by up to three jobs.
+A final run trains for 7 to 32 minutes depending on the model, and the whole study (120 tuning trials, 30 comparison runs and 80 augmentation runs) took about one day of wall time.
+Every run writes a JSON file with its configuration, seed, code commit, data checksums and all metrics, and every number in this paper is generated from those files by scripts in the repository.
+The 110 final checkpoints were re-scored per item for the paired statistics; a stored model that did not reproduce its logged score would be flagged, and exactly one of 110 did (\Cref{sec:limits}).
 
 \textbf{Reproduction check.}
-Before any new experiment we verify that our implementation matches published results.
-With one seed and 3M parameters, our BiLSTM reaches development CER 8.95 and top-1 62.8\% against 8.4 and 65.3\% reported by Roark et al.~\cite{roark2020dakshina}, and our Transformer reaches CER 9.38 against 9.4.
-Both CERs are within one point of the published values; the 2.5-point top-1 gap for the BiLSTM may come from differences in how references are counted and is not hidden.
+Before any new experiment we verified our implementation against published numbers.
+The five-seed mean development CER of our tuned BiLSTM is 8.39--8.43, matching Roark et al.'s 8.4~\cite{roark2020dakshina}, and the tuned 3M Transformer reaches 8.49, between their 9.4 and Kirov et al.'s 8.2~\cite{kirov2024context}.
+The untuned reproduction-gate runs (one seed, greedy) gave 8.95 and 9.38.
+Our top-1 accuracy (63.3\%) is below the published 65.3\% for the BiLSTM; we attribute this to differences in how multiple references and attestation counts are scored and do not hide it.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{figures/fig_tuning}
+\caption{Random-search tuning: development CER of 20 trials for each architecture and size. Bars mark the selected trial. Transformers are more sensitive to hyperparameters than BiLSTMs.}
+\label{fig:tuning}
+\end{figure}

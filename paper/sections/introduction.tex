@@ -1,20 +1,29 @@
 \section{Introduction}
 Most Tamil speakers type on phones using the Latin alphabet.
-Search, autocomplete and display all need the text converted back into Tamil script, which is a transliteration task: sounds are mapped to letters, not meanings to words.
-The Latin alphabet cannot express several Tamil distinctions, including vowel length, doubled consonants and the several n, l and r sounds, and writers spell the same word in different ways.
-Informal typing adds more variation: dropped vowels (\emph{kankl} for \emph{kanakkil}), collapsed long vowels, collapsed doubled consonants, swapped digraphs and stretched letters.
+A message such as \emph{vanakkam, eppadi irukkinga?} (\tamil{வணக்கம், எப்படி இருக்கிறீர்கள்?}) must be converted to Tamil script for search, autocomplete or display.
+This is transliteration: sounds are mapped to letters, not meanings to words.
+The Latin alphabet cannot express several Tamil distinctions (vowel length, doubled consonants, and the several n, l and r sounds), so writers spell the same word in many ways; Dakshina annotators produced 2.7 romanizations per word on average~\cite{roark2020dakshina}.
+Fast typing adds more variation: dropped vowels (\emph{kankl} for \emph{kanakkil}), shortened long vowels, collapsed double letters, swapped digraphs, stretched letters (\emph{semmaaa}) and key slips~\cite{wolfsonkin2019latin,herath2024tamzhi}.
 
 Neural transliteration is well studied on clean data.
-The Dakshina dataset provides romanizations of Tamil words written by native speakers on request~\cite{roark2020dakshina}, and strong systems have been trained on larger corpora~\cite{madhani2023aksharantar}.
-However, the Tamil text in Dakshina is encyclopaedic and was typed carefully, so it does not contain the shorthand found in chat.
-We therefore ask how much character-level models lose under informal typing, which training strategy recovers it, and whether the choice of architecture matters.
+Small character-level BiLSTM and Transformer models reach about 8--9\% character error rate (CER) on the Dakshina Tamil lexicon~\cite{roark2020dakshina,kirov2024context}, and large mined corpora lift accuracy further~\cite{madhani2023aksharantar}.
+The Tamil text in these corpora, however, is formal (Wikipedia or mined web text) and was romanized word by word with care.
+Evidence from sister languages and from small noisy test sets suggests that clean-trained systems degrade sharply on informal input: Malayalam CER rises from 7.4 to 22.7 when vowels are dropped~\cite{baiju2024malayalam}, and every system, including large language models, falls to about 20\% top-1 on 100 hand-noised Tamil words~\cite{azam2025beyond}.
+What is missing is a \emph{controlled} measurement for Tamil: paired clean and noisy versions of the same test words, per-phenomenon breakdowns, severity levels, and a comparison of training remedies and architectures under the same noise.
 
-The literature also disagrees on architecture.
-On Dakshina Tamil, an LSTM beat a Transformer in one study~\cite{roark2020dakshina}, whereas a Transformer was better in another~\cite{kirov2024context}, and batch size can reverse the ranking~\cite{wu2021applying}.
-None of these comparisons tested noisy input.
+The architecture question is also open.
+On Dakshina Tamil an LSTM was better than a Transformer in one study~\cite{roark2020dakshina} and worse in another~\cite{kirov2024context}; Transformers depend on batch size~\cite{wu2021applying} and often win only with more parameters~\cite{moran2020effective}.
+No comparison has tested noisy input.
 
 \textbf{Contributions.}
-(1)~A paired, seeded robustness benchmark for Tamil with seven noise operators and four severities.
-(2)~A study of four augmentation strategies and a more-data control, evaluated on held-out noise types and on real typing.
-(3)~A parameter-matched, equal-tuning comparison of BiLSTM-attention and Transformer over five seeds with paired significance tests.
-(4)~A reproducibility package: code, configurations, per-run logs and data checksums.
+(1)~A paired, seeded robustness benchmark for Tamil: seven noise operators at four severities applied to the 6{,}833 distinct Dakshina test inputs, with the realised edit rate of every set reported.
+(2)~An augmentation study with six training conditions and two held-out-operator variants, tested on every noise type, on independent Aksharantar sets and against a more-data control that separates ``more words'' from ``more spelling variety''.
+(3)~A parameter-matched, equal-tuning (20 random-search trials) comparison of BiLSTM-attention and Transformer at three sizes with five seeds, paired bootstrap and Kruskal--Wallis tests.
+(4)~A reproducibility package with code, configurations, per-run logs and data checksums, and a deployed single-file model with a typing demo.
+
+\textbf{Findings in brief.}
+Vowel dropping and keyboard slips cause most of the damage (\Cref{sec:rq1}).
+Tamil-aware noise training removes most of the vowel-drop damage but only for the operators it models (\Cref{sec:rq3}).
+Extra romanized words help clean accuracy as much as sampled spelling variants do, and the variants add a small robustness gain.
+The two architectures are close, with the Transformer slightly more robust to heavy mixed noise (\Cref{sec:rq4}).
+We do not yet evaluate real chat typing, so the link between synthetic and real noise remains open (\Cref{sec:limits}).

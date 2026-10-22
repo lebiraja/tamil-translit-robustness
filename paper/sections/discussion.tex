@@ -1,0 +1,24 @@
+\section{Discussion}
+\textbf{What the noise tells us about Tamil.}
+Vowel omission and key slips destroy the information the model needs.
+Dropped vowels make the input genuinely ambiguous (a string like \emph{kankl} fits several Tamil words), so part of the remaining error is irreducible without context or a lexicon; top-5 accuracy and language-model reranking are therefore natural next steps rather than larger models.
+By contrast, vowel-length and doubled-letter errors cost only 1 to 2 CER points, possibly because the Dakshina training data already contain many romanizations that collapse these distinctions~\cite{roark2020dakshina,wolfsonkin2019latin}; we did not test this.
+It suggests that a Tamil-aware noise model should concentrate on vowel omission and keyboard errors.
+
+\textbf{Data, not capacity.}
+Increasing the BiLSTM from 1M to 8M parameters changes clean test CER by at most 0.25, while adding 60{,}000 pool words (A3 and CTRL) lowers it by 0.3 to 0.5 and the independent-set CER by about 1 to 1.5.
+On this task the limiting factor is the amount and variety of romanized data.
+This is consistent with the large gain that Aksharantar reports from mined data~\cite{madhani2023aksharantar}, and it motivates the larger-data fine-tuning described in \Cref{sec:final}.
+
+\textbf{Back-transliteration: words or variants?}
+Previous work on romanized language identification found that sampled spelling variants beat larger models~\cite{benton2025romanizedlid}.
+Our control isolates the factors for transliteration: the clean-accuracy gain comes from extra \emph{words}, while spelling variants add a smaller robustness gain on mixed noise.
+Because the variants come from a model trained on Dakshina, they reproduce Dakshina-style variation and not chat-style variation, so a larger effect may need variants that reflect real typing.
+
+\textbf{Operator-specific robustness.}
+Training on V-DROP gives a large gain on V-DROP and none on a held-out operator, as Belinkov and Bisk found for natural language noise~\cite{belinkov2018synthetic}.
+Practical systems therefore need noise operators that cover the phenomena users produce, and the benchmark we release is a way to check coverage rather than a replacement for real data.
+
+\textbf{Architectures.}
+The conflict between Roark et al.\ and Kirov et al.\ is largely a matter of tuning and seeds: with 20 tuned trials per cell and five seeds the BiLSTM and the Transformer tie at 3M parameters, and the Transformer leads only under heavy noise.
+Our tuning showed that Transformers are the more sensitive of the two to hyperparameters (\Cref{fig:tuning}), which supports the view that untuned comparisons can go either way~\cite{wu2021applying,moran2020effective}.

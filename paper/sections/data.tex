@@ -1,43 +1,35 @@
-\section{Data}
+\section{Data and Benchmark}
 \label{sec:data}
 \textbf{Training and clean evaluation.}
-We use the Dakshina Tamil romanization lexicon: 25{,}000 training words (68{,}218 pairs), 2{,}500 development words (6{,}827 pairs) and 2{,}500 test words (6{,}864 pairs)~\cite{roark2020dakshina}.
-Splits are word-disjoint.
-Inputs are lowercased Latin; outputs are NFC-normalized Tamil code points.
-A romanization with several attested native forms is scored against all of them.
+We use the Dakshina Tamil romanization lexicon: 25{,}000 training words (68{,}218 romanization pairs), 2{,}500 development words (6{,}827 pairs) and 2{,}500 test words (6{,}864 pairs), which are word-disjoint~\cite{roark2020dakshina}.
+Inputs are lowercase Latin and outputs are NFC-normalised Tamil.
+A romanization attested for several native forms is scored against all of them.
+The development set is used only for early stopping and tuning.
+The test lexicon holds 6{,}833 distinct romanized inputs.
 
-\textbf{Independent test.}
-Aksharantar's Tamil test file contains every Dakshina test pair.
-We keep only rows whose word occurs in no Dakshina split, giving three subsets: AK-Freq (2{,}607 inputs), AK-NEI (991) and AK-NEF (706).
+\textbf{Independent test sets.}
+Aksharantar's Tamil test file contains every Dakshina test pair~\cite{madhani2023aksharantar}.
+We keep only rows whose native word occurs in no Dakshina split, which gives three subsets by source: AK-Freq (2{,}607 distinct inputs, frequent web words), AK-NEI (991) and AK-NEF (706), plus their union AK-all.
+We also found that Aksharantar's training file shares stems with Dakshina test words, so we never train on it in the controlled experiments.
 
-\textbf{Synthetic noisy test sets.}
-Seven operators act on the romanized input only (\Cref{tab:ops}).
-Each of 6{,}833 distinct test inputs is perturbed at severity $p\in\{0.1,0.2,0.3,0.5\}$ with a seed derived from the word, operator and severity, so sets are exactly reproducible and each noisy item stays paired with its clean form and references.
-We report the realised character-edit rate of every set rather than the nominal $p$.
+\textbf{Paired noisy test sets.}
+Seven operators perturb the romanized input only (\Cref{tab:ops}).
+Each of the 6{,}833 test inputs is perturbed at severity $p\in\{0.1,0.2,0.3,0.5\}$ with a random seed derived from the word, operator and severity.
+The 28 sets are therefore exactly reproducible, and each noisy item stays paired with its clean form and references.
+Operators and rates are motivated by the typing phenomena in the literature~\cite{wolfsonkin2019latin,herath2024tamzhi,belinkov2018synthetic}.
+The digraph operator swaps in both directions (th$\leftrightarrow$t, dh$\leftrightarrow$d, sh$\leftrightarrow$s, ch$\leftrightarrow$c,s) and maps zh to l or z only one way, because real chat text shows vowel dropping, vowel-length collapse and stretching much more often than Dakshina but no excess of dropped h.
+\Cref{tab:ops} reports realised strength: nominal $p$ is a per-position probability, so we report the share of words changed; the character edit rate at $p{=}0.3$ is 12.7\% for V-DROP, 7.4\% for KEY and 15.8\% for MIX (see the repository manifest for all sets).
 
 \begin{table}[t]
-\caption{Noise operators. $p$ is the per-position probability (REPEAT: per word; KEY: scaled by 0.25).}
+\caption{Noise operators and the share of test words they change (\%) at three severities.}
 \label{tab:ops}
-\centering
-\begin{tabular}{ll}
-\toprule
-Operator & Effect \\
-\midrule
-V-DROP & delete non-initial vowels \\
-V-LEN & collapse doubled vowels \\
-GEM & collapse doubled consonants \\
-DIGRAPH & th/t, dh/d, sh/s, ch/c/s swaps; zh$\to$l/z \\
-KEY & adjacent QWERTY key substitution \\
-REPEAT & stretch one vowel by 1--3 letters \\
-MIX & random combination of the above \\
-\bottomrule
-\end{tabular}
+\centering\footnotesize
+\resizebox{\columnwidth}{!}{\input{tables/tab_ops}}
 \end{table}
 
-\textbf{Real-typing sets.}
-A word set drawn from the authors' own private chat exports (words only, no messages) was labelled with Tamil spellings by a language model and is being verified by the authors; and a team-typed set of about 1{,}500 Dakshina test words is collected under a fixed protocol.
-\emph{Both sets are in preparation; their sizes and verification status are reported in Section~\ref{sec:results} once final.}
-
 \textbf{Synthetic training data.}
-For the augmentation study (\Cref{sec:method}) we build 60{,}000 additional Tamil words from the IndicXlit unigram list, removing every Dakshina word, every independent-test word and any word sharing a five-code-point stem prefix with a held-out word.
-A Tamil-to-Latin BiLSTM trained on Dakshina romanizes them, giving 123{,}488 quality-filtered sampled pairs and a 60{,}000-pair greedy control.
+For the augmentation study we construct a pool of 60{,}000 further Tamil words from the IndicXlit unigram list.
+We remove every Dakshina word, every independent-test word and any word sharing a five-code-point prefix with a held-out word (46{,}652 of 137{,}748 candidates were removed for stem overlap alone).
+A Tamil-to-Latin BiLSTM trained on Dakshina romanizes each pool word three times by sampling at temperature 1; a closeness filter against the model's greedy output drops 17{,}828 degenerate samples and leaves 123{,}488 pairs.
+A control set romanizes the same 60{,}000 words once, greedily (60{,}000 pairs).
+These romanizations are machine-made, so they carry the errors of the model that made them.
