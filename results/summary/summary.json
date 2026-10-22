@@ -1,0 +1,476 @@
+{
+ "n_runs": {
+  "c3": 30,
+  "c2": 80
+ },
+ "n_item_dumps": 111,
+ "diverged_runs": [],
+ "c3_test_cer": {
+  "lstm-1m": 8.903,
+  "lstm-3m": 9.001,
+  "lstm-8m": 8.765,
+  "transformer-1m": 9.71,
+  "transformer-3m": 9.014,
+  "transformer-8m": 9.395
+ },
+ "c2_test_cer": {
+  "lstm-A0": 9.001,
+  "lstm-A1": 9.902,
+  "lstm-A2": 9.831,
+  "lstm-A2-noGEM": 9.798,
+  "lstm-A2-noVDROP": 9.452,
+  "lstm-A3": 8.666,
+  "lstm-A4": 9.349,
+  "lstm-CTRL": 8.64,
+  "transformer-A0": 9.163,
+  "transformer-A1": 9.944,
+  "transformer-A2": 9.958,
+  "transformer-A2-noGEM": 9.992,
+  "transformer-A2-noVDROP": 9.544,
+  "transformer-A3": 8.654,
+  "transformer-A4": 9.13,
+  "transformer-CTRL": 8.592
+ },
+ "inputs": [
+  {
+   "file": "c3-lstm-1m-s0.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-1m-s1.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-1m-s2.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-1m-s3.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-1m-s4.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-3m-s0.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-3m-s1.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-3m-s2.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-3m-s3.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-3m-s4.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-8m-s0.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-8m-s1.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-8m-s2.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-8m-s3.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-lstm-8m-s4.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-transformer-1m-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-1m-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-1m-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-1m-s3.json",
+   "commit": "9b3ac39"
+  },
+  {
+   "file": "c3-transformer-1m-s4.json",
+   "commit": "296346a"
+  },
+  {
+   "file": "c3-transformer-3m-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-3m-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-3m-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-3m-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-3m-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-8m-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-8m-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-8m-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-8m-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c3-transformer-8m-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A0-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A0-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A0-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A0-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A0-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A1-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A1-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A1-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A1-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A1-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noGEM-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noGEM-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noGEM-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noGEM-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noGEM-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noVDROP-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noVDROP-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noVDROP-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noVDROP-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-noVDROP-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A2-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A3-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A3-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A3-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A3-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A3-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A4-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A4-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A4-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A4-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-A4-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-CTRL-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-CTRL-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-CTRL-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-CTRL-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-lstm-CTRL-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A0-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A0-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A0-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A0-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A0-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A1-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A1-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A1-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A1-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A1-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-noGEM-s0.json",
+   "commit": "9a729b9"
+  },
+  {
+   "file": "c2-transformer-A2-noGEM-s1.json",
+   "commit": "82766d8"
+  },
+  {
+   "file": "c2-transformer-A2-noGEM-s2.json",
+   "commit": "82766d8"
+  },
+  {
+   "file": "c2-transformer-A2-noGEM-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-noGEM-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-noVDROP-s0.json",
+   "commit": "82766d8"
+  },
+  {
+   "file": "c2-transformer-A2-noVDROP-s1.json",
+   "commit": "82766d8"
+  },
+  {
+   "file": "c2-transformer-A2-noVDROP-s2.json",
+   "commit": "82766d8"
+  },
+  {
+   "file": "c2-transformer-A2-noVDROP-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-noVDROP-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A2-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A3-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A3-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A3-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A3-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A3-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A4-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A4-s1.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A4-s2.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A4-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-A4-s4.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-CTRL-s0.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-CTRL-s1.json",
+   "commit": "9a729b9"
+  },
+  {
+   "file": "c2-transformer-CTRL-s2.json",
+   "commit": "82766d8"
+  },
+  {
+   "file": "c2-transformer-CTRL-s3.json",
+   "commit": "bda8d65"
+  },
+  {
+   "file": "c2-transformer-CTRL-s4.json",
+   "commit": "bda8d65"
+  }
+ ]
+}
