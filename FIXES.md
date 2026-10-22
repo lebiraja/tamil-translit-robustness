@@ -2,6 +2,11 @@
 
 Prepend an entry for each real bug or documentation error fixed: symptom, root cause, fix with `file:line`, verification. Newest on top. No code exists yet, so these are documentation and process fixes.
 
+## F3 · 2026-10-22 · Supervisor launched duplicate workers; evaluation starved
+- **Symptom:** three `run_matrix.py c2 --seeds 0,1,2` processes trained the same run at once (identical loss lines in the log); the per-item evaluation sat at 31/110 for hours; one run crashed with `FileNotFoundError: last.tmp -> last.pt` (two processes sharing one checkpoint folder).
+- **Root cause:** `scripts/supervisor.py` checked for a running worker with the pattern `run_matrix.py <block> --seeds <s>` while `running()` anchors the match as `<python> <pattern>`, so it never matched `python scripts/run_matrix.py ...`. The supervisor believed no worker existed and launched another each cycle (about 17:06 onward); duplicates filled the 3 GPU slots, so evaluation never got one.
+- **Fix:** pattern now starts with `scripts/` (supervisor.py, `running(f"scripts/run_matrix.py ...")`); `run_matrix.py` takes a per-run flock (`logs/locks/<run>.lock`) so two processes never train one run; `evaluate_ckpt.py` takes a per-model lock, saves atomically and logs score mismatches to `logs/eval_mismatch.txt`. Commits 9a729b9, 9f01dd5.
+- **Impact:** 33 of the 72 C2 runs finished by 09:20 (seeds 0-2, finished after 23:56) overlapped with a duplicate. A clean BiLSTM rerun (c2-lstm-A2-noGEM-s0) reproduced the stored result exactly (test CER 10.0306, dev 9.2760, 18 epochs). Transformer check and the per-model mismatch log decide whether anything must be rerun; see STATUS.
 ## F2 · 2026-10-18 · Leftover "laptop RTX 5070" in D10
 - **Symptom:** `DECISIONS.md` row D10 still said the laptop was an RTX 5070 after F1 had been applied elsewhere.
 - **Root cause:** F1 corrected D7, `CLAUDE.md` and `HANDOVER.md` but D10 was missed.

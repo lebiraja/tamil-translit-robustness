@@ -2,6 +2,11 @@
 
 Newest entry on top.
 
+## 2026-10-22 · Overnight: C3 done, C2 74/80, duplicate-worker incident fixed, parallel evaluation
+- Tuning 120/120, C3 30/30 (including Transformer-8M after two GPU out-of-memory retries), C2 74/80 at 10:00. Evaluation had stalled at 31/110; now 2 parallel evaluators with per-model locks (3 once training ends). Details of the supervisor bug and the contamination check: FIXES F3.
+- Open question for the paper: 33 C2 runs overlapped with a duplicate process. BiLSTM check matched exactly. Transformer clean rerun (c2-transformer-A0-s0) was still running; `logs/eval_mismatch.txt` lists any stored model that does not reproduce its logged score. Disclose the incident in docs/results.md either way.
+- Needs Lebi: nothing. GitHub push still pending (no token stored); rotate the token and sudo password pasted in chat.
+
 ## 2026-10-21 · Dashboard: new Plan tab (checklist and live timer)
 - Requested by Lebi. `scripts/dashboard/server.py` gets `plan()` (checklist of 38 items derived from files on disk: set-up, tuning per combo, C3 per arch/size, C2 per arch/condition, analysis and wrap-up; start time = first tuning trial; timer stops when `logs/AUTOPILOT_DONE` exists) and the page gets a Plan tab with a ticking elapsed clock, a countdown to the estimated finish and per-item progress bars.
 - Time-left estimate is rough (measured run times, assumes no crashes and Claude online for the write-up). First reading: about 24 h left at 13/38 items. Checked by headless Firefox screenshot. Server restarted on port 8383 (`sh scripts/dashboard/run.sh`).
