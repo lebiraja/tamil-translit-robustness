@@ -1,0 +1,14 @@
+2026-10-22T09:46:08 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 70, 4651 MiB | c2 tune 120/120 best 6/6 c3 30/30 c2 73/80 items 35 | failed_runs.txt yes
+2026-10-22T09:46:12 LAUNCH scripts/evaluate_ckpt.py --check -> logs/evaluate_2.log
+2026-10-22T10:16:16 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 72, 6200 MiB | c2 tune 120/120 best 6/6 c3 30/30 c2 75/80 items 47 | failed_runs.txt yes
+2026-10-22T10:46:16 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 67, 7421 MiB | c2 tune 120/120 best 6/6 c3 30/30 c2 79/80 items 63 | failed_runs.txt yes
+2026-10-22T10:51:24 LAUNCH scripts/evaluate_ckpt.py --check -> logs/evaluate_3.log
+2026-10-22T11:16:44 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 76, 10436 MiB | analysis tune 120/120 best 6/6 c3 30/30 c2 80/80 items 77 | failed_runs.txt yes
+2026-10-22T11:47:09 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 75, 10080 MiB | analysis tune 120/120 best 6/6 c3 30/30 c2 80/80 items 88 | failed_runs.txt yes
+2026-10-22T12:17:34 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 76, 11360 MiB | analysis tune 120/120 best 6/6 c3 30/30 c2 80/80 items 98 | failed_runs.txt yes
+2026-10-22T12:47:59 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 75, 7697 MiB | analysis tune 120/120 best 6/6 c3 30/30 c2 80/80 items 109 | failed_runs.txt yes
+2026-10-22T12:53:06 LAUNCH scripts/aggregate.py -> logs/aggregate.log
+2026-10-22T12:58:09 LAUNCH scripts/run_matrix.py c2 --seeds 0,1,2 -> logs/c2_012.log
+2026-10-22T13:18:21 HEALTH kernel 6.17.0-22-generic gpu NVIDIA GeForce RTX 5070, 46, 317 MiB | wrap-up tune 120/120 best 6/6 c3 30/30 c2 80/80 items 111 | failed_runs.txt yes
+2026-10-22T13:23:24 AUTOPILOT_DONE exists; supervisor exits
+2026-10-22T13:30:02 AUTOPILOT_DONE exists; supervisor exits
