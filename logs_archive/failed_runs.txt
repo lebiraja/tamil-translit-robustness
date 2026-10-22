@@ -1,0 +1,124 @@
+2026-10-21T21:42:19 c3-transformer-8m-s0 try 1/3
+Traceback (most recent call last):
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/retry.py", line 20, in with_retries
+    return fn()
+           ^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/scripts/run_matrix.py", line 86, in <lambda>
+    r = with_retries(lambda c=c: run(c), f"{c.name}-s{c.seed}")
+                                 ^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/train.py", line 210, in run
+    result["noisy"][f.stem[5:]], _ = evaluate(model, vocab, noisy, refs, beam=cfg.beam, device=dev)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/evaluate.py", line 40, in evaluate
+    nbest = translate(model, vocab, inputs, beam=beam, device=device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/evaluate.py", line 28, in translate
+    for i, fin in zip(idx, beam_search(model, src, beam, n_best=n_best), strict=True):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/decode.py", line 27, in beam_search
+    logp, state = model.step(state, tok)  # [B*K, V]
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/models.py", line 110, in step
+    logits = self._decode(prefix, state["mem"], state["pad"])[:, -1]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/models.py", line 96, in _decode
+    dec = self.tr.decoder(self._embed(self.tgt_emb, tgt_in), mem, tgt_mask=causal, tgt_key_padding_mask=tgt_in == 0,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/transformer.py", line 644, in forward
+    output = mod(
+             ^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/transformer.py", line 1142, in forward
+    x = x + self._ff_block(self.norm3(x))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/transformer.py", line 1198, in _ff_block
+    x = self.linear2(self.dropout(self.activation(self.linear1(x))))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/functional.py", line 1723, in relu
+    result = torch.relu(input)
+             ^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 588.00 MiB. GPU 0 has a total capacity of 11.49 GiB of which 608.38 MiB is free. Process 262013 has 4.84 GiB memory in use. Process 262076 has 3.62 GiB memory in use. Including non-PyTorch memory, this process has 2.13 GiB memory in use. Of the allocated memory 1.35 GiB is allocated by PyTorch, and 599.52 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+2026-10-21T21:54:33 c3-transformer-8m-s0 try 2/3
+Traceback (most recent call last):
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/retry.py", line 20, in with_retries
+    return fn()
+           ^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/scripts/run_matrix.py", line 86, in <lambda>
+    r = with_retries(lambda c=c: run(c), f"{c.name}-s{c.seed}")
+                                 ^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/train.py", line 210, in run
+    result["noisy"][f.stem[5:]], _ = evaluate(model, vocab, noisy, refs, beam=cfg.beam, device=dev)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/evaluate.py", line 40, in evaluate
+    nbest = translate(model, vocab, inputs, beam=beam, device=device)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/evaluate.py", line 28, in translate
+    for i, fin in zip(idx, beam_search(model, src, beam, n_best=n_best), strict=True):
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/utils/_contextlib.py", line 124, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/decode.py", line 27, in beam_search
+    logp, state = model.step(state, tok)  # [B*K, V]
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/models.py", line 110, in step
+    logits = self._decode(prefix, state["mem"], state["pad"])[:, -1]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/models.py", line 96, in _decode
+    dec = self.tr.decoder(self._embed(self.tgt_emb, tgt_in), mem, tgt_mask=causal, tgt_key_padding_mask=tgt_in == 0,
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/transformer.py", line 644, in forward
+    output = mod(
+             ^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1779, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1790, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/transformer.py", line 1142, in forward
+    x = x + self._ff_block(self.norm3(x))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/modules/transformer.py", line 1198, in _ff_block
+    x = self.linear2(self.dropout(self.activation(self.linear1(x))))
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/.venv/lib/python3.12/site-packages/torch/nn/functional.py", line 1723, in relu
+    result = torch.relu(input)
+             ^^^^^^^^^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 600.00 MiB. GPU 0 has a total capacity of 11.49 GiB of which 598.38 MiB is free. Process 262013 has 4.84 GiB memory in use. Process 262076 has 3.62 GiB memory in use. Including non-PyTorch memory, this process has 2.14 GiB memory in use. Of the allocated memory 1.37 GiB is allocated by PyTorch, and 584.50 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)
+
+2026-10-22T04:14:01 c2-transformer-A1-s1 try 1/3
+Traceback (most recent call last):
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/retry.py", line 20, in with_retries
+    return fn()
+           ^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/scripts/run_matrix.py", line 86, in <lambda>
+    r = with_retries(lambda c=c: run(c), f"{c.name}-s{c.seed}")
+                                 ^^^^^^
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/train.py", line 189, in run
+    save_last(last, model, opt, sched, ep, best, bad, hist, dev)
+  File "/home/lebiraja/work/tamil-translit-robustness/src/translit/train.py", line 68, in save_last
+    os.replace(tmp, path)
+FileNotFoundError: [Errno 2] No such file or directory: '/home/lebiraja/work/tamil-translit-robustness/runs/c2-transformer-A1-s1/last.tmp' -> '/home/lebiraja/work/tamil-translit-robustness/runs/c2-transformer-A1-s1/last.pt'
+
