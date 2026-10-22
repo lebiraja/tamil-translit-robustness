@@ -11,4 +11,4 @@ Done means: exit code 0, `main.pdf` exists, no `Citation ... undefined` / `Refer
 
 `refs.bib` is a copy of `research/refs.bib`; only papers that were downloaded and read are in it. Claim-to-evidence map: `docs/paper-claims-map.md`.
 
-Open items before submission: add the two co-authors in `main.tex`; evaluate the real-chat and team-typed sets (RQ2) and add them to Results; page-limit check; proofread.
+Open items before submission: evaluate the real-chat and team-typed sets (RQ2) and add them to Results; page-limit check; proofread.
