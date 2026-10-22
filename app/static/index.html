@@ -25,6 +25,7 @@ textarea::placeholder{color:#4a463d}
 .w .alt{position:absolute;left:0;top:100%;z-index:5;white-space:nowrap;width:max-content;background:#0d0c0a;border:1px solid var(--line);border-radius:6px;padding:6px;min-width:190px;box-shadow:0 12px 30px #0009;font-size:24px;line-height:1.4}
 .alt button{white-space:nowrap;display:flex;justify-content:space-between;align-items:baseline;gap:18px;width:100%;background:none;border:0;color:var(--ink);padding:4px 8px;border-radius:4px;cursor:pointer;font:inherit;text-align:left}
 .alt button:hover{background:var(--sel)}
+.w.en{font:600 22px var(--mono);color:var(--ink2);border:1px dashed var(--line);padding:0 8px;margin:0 2px;vertical-align:middle}
 .alt small{font:11px var(--mono);color:var(--mut)}
 .alt button.cur{color:var(--acc)}
 .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:16px;font:12px var(--mono);color:var(--mut)}
@@ -47,7 +48,7 @@ footer b{color:var(--ink2);font-weight:500}
   <textarea id="in" autofocus spellcheck="false" autocapitalize="off" autocomplete="off" placeholder="vanakkam, eppadi irukkinga?"></textarea>
 
   <div class="out" id="out" aria-live="polite"></div>
-  <div class="row"><button class="btn" id="copy">Copy Tamil</button><button class="btn ghost" id="clear">Clear</button><span id="ms"></span></div>
+  <div class="row"><button class="btn" id="copy">Copy Tamil</button><button class="btn ghost" id="clear">Clear</button><label style="margin:0;display:inline-flex;gap:6px;align-items:center;text-transform:none;letter-spacing:0;font-size:12px;cursor:pointer"><input type="checkbox" id="keepen" checked> keep English words</label><span id="ms"></span></div>
 
   <div class="try"><label>Try</label>
     <button>vanakkam nanba</button><button>naan inniki office poren</button><button>enna panra</button><button>nalla irukken</button><button>kankl</button><button>romba nandri</button>
@@ -58,11 +59,14 @@ footer b{color:var(--ink2);font-weight:500}
 <script>
 "use strict";
 const $=s=>document.querySelector(s);
-let parts=[],chosen=[],timer=null,seq=0;
+let parts=[],chosen=[],forced=[],timer=null,seq=0;
 function render(){
   const out=$("#out");out.textContent="";
   parts.forEach((p,i)=>{
     if(p.literal!==undefined){const s=document.createElement("span");s.className="lit";s.textContent=p.literal;out.append(s);return}
+    const keep=$("#keepen").checked&&p.english&&!forced[i];
+    if(keep){const e=document.createElement("span");e.className="w en";e.tabIndex=0;e.textContent=p.src;e.title="English word kept as typed. Click to convert to Tamil anyway.";
+      e.onclick=ev=>{ev.stopPropagation();forced[i]=true;render()};e.onkeydown=ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();e.click()}};out.append(e);return}
     const w=document.createElement("span");w.className="w";w.tabIndex=0;w.textContent=p.cands[chosen[i]||0];w.title=p.src;
     const open=()=>{closeAll();w.classList.add("open");const a=document.createElement("div");a.className="alt";
       p.cands.forEach((c,k)=>{const b=document.createElement("button");b.className=k===(chosen[i]||0)?"cur":"";
@@ -80,15 +84,16 @@ async function convert(){
   const text=$("#in").value,my=++seq;
   if(!text.trim()){parts=[];chosen=[];render();$("#ms").textContent="";return}
   try{const r=await fetch("/api/transliterate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text,n_best:5})});
-    const d=await r.json();if(my!==seq)return;parts=d.parts;chosen=[];render();$("#ms").textContent=d.ms+" ms"}
+    const d=await r.json();if(my!==seq)return;parts=d.parts;chosen=[];forced=[];render();$("#ms").textContent=d.ms+" ms"}
   catch(e){$("#ms").textContent="server not reachable"}
 }
 $("#in").addEventListener("input",()=>{clearTimeout(timer);timer=setTimeout(convert,160)});
-$("#copy").onclick=async()=>{const t=parts.map((p,i)=>p.literal!==undefined?p.literal:p.cands[chosen[i]||0]).join("");
+$("#keepen").onchange=render;
+$("#copy").onclick=async()=>{const t=parts.map((p,i)=>p.literal!==undefined?p.literal:($("#keepen").checked&&p.english&&!forced[i]?p.src:p.cands[chosen[i]||0])).join("");
   try{await navigator.clipboard.writeText(t);$("#copy").textContent="Copied";setTimeout(()=>$("#copy").textContent="Copy Tamil",1200)}catch{prompt("Copy:",t)}};
 $("#clear").onclick=()=>{$("#in").value="";convert();$("#in").focus()};
 document.querySelectorAll(".try button").forEach(b=>b.onclick=()=>{$("#in").value=b.textContent;convert();$("#in").focus()});
-fetch("/api/info").then(r=>r.json()).then(i=>{$("#info").innerHTML=`<b>${i.name}</b> · dev CER ${i.dev_cer}% · test CER ${i.test_cer}%<br>${i.note}. Each word is converted on its own; English words are not detected, so type only Tanglish. Some typed forms are genuinely ambiguous: check the alternatives.`});
+fetch("/api/info").then(r=>r.json()).then(i=>{$("#info").innerHTML=`<b>${i.name}</b> · dev CER ${i.dev_cer}% · test CER ${i.test_cer}%<br>${i.note}. Each word is converted on its own; English words are kept as typed (frequent-word list; click one to convert it anyway). Some typed forms are genuinely ambiguous: check the alternatives.`});
 </script>
 </body>
 </html>
