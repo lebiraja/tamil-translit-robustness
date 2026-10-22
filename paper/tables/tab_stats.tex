@@ -1,0 +1,16 @@
+\begin{tabular}{llcc}
+\toprule
+System $a$ vs.\ $b$ & Suite & $\Delta$CER ($a-b$) & 95\% CI \\
+\midrule
+BiLSTM 3M vs.\ Trans. 3M & clean & -0.01 & [-0.15, +0.12] \\
+BiLSTM 3M vs.\ Trans. 3M & MIX $p{=}0.3$ & +1.30 & [+1.08, +1.53] \\
+BiLSTM 8M vs.\ Trans. 8M & MIX $p{=}0.3$ & +0.28 & [+0.08, +0.48] \\
+BiLSTM A2 vs.\ BiLSTM A1 & MIX $p{=}0.3$ & -0.70 & [-1.00, -0.41] \\
+Trans. A2 vs.\ Trans. A1 & MIX $p{=}0.3$ & -0.03 & [-0.32, +0.27] \\
+BiLSTM A3 vs.\ BiLSTM CTRL & clean & +0.03 & [-0.08, +0.13] \\
+BiLSTM A3 vs.\ BiLSTM CTRL & MIX $p{=}0.3$ & -0.58 & [-0.75, -0.42] \\
+Trans. A3 vs.\ Trans. CTRL & MIX $p{=}0.3$ & -0.81 & [-0.95, -0.66] \\
+BiLSTM A4 vs.\ BiLSTM A2 & clean & -0.48 & [-0.62, -0.35] \\
+Trans. A4 vs.\ Trans. A2 & clean & -0.83 & [-0.98, -0.68] \\
+\bottomrule
+\end{tabular}

@@ -1,7 +1,27 @@
-\section{Limitations}
-Dakshina is formal text romanized on request, not chat; we therefore speak of informal \emph{romanized} Tamil and test on separate real-typing sets.
-Synthetic noise is a model of typing, and its realism is tested rather than assumed.
-Back-transliterated training pairs inherit the errors of the model that made them.
-The real-chat set is small, labelled by a language model and verified by the authors, and comes from a few private conversations.
-The team-typed set has few typists and was typed from Tamil-script prompts, which may be more careful than spontaneous chat.
-Vowel-dropped inputs can be genuinely ambiguous, so we report top-$k$ accuracy as well as top-1.
+\section{Limitations and Threats to Validity}
+\label{sec:limits}
+\textbf{No real typing yet.}
+All noise is synthetic and applied to Dakshina romanizations, which are formal text typed with care, not chat.
+We built a real-chat word set from private message exports and a protocol for a team-typed set, but neither has been evaluated in this version, so the question of whether synthetic noise predicts real typing (our RQ2) is open.
+We therefore speak of informal \emph{romanized} Tamil and make no claim about chat text.
+
+\textbf{Synthetic noise and training data.}
+The operators and their rates come from the literature and from measurements on public code-mixed corpora, not from a hand-checked sample of real typing.
+Back-transliterated pairs are machine-made and inherit the errors of the generating model.
+Operators in the noisy test sets are the same ones that A2 trains on, except KEY and REPEAT, so only these two measure transfer.
+
+\textbf{Tuning and statistics.}
+Hyperparameters were tuned once per architecture and size on clean development CER with one seed, and noise-trained conditions reuse the tuned clean settings; early stopping uses clean development CER, which disadvantages noise-trained models.
+Five seeds give low power for small differences, and the paired bootstrap does not model seed variation.
+Parameter counts are matched only approximately.
+
+\textbf{An incident.}
+A bug in our job supervisor started duplicate worker processes overnight, and 33 of the first 72 finished augmentation runs were trained while a duplicate process trained the same run and shared its checkpoint folder.
+We checked the damage three ways.
+A clean rerun of one affected BiLSTM run reproduced the stored result exactly; a clean rerun of one affected Transformer run differed slightly (test CER 9.30 against 9.13), which is within normal seed variation for a non-deterministic model; and a per-item re-scoring of all 110 stored checkpoints found one model that did not reproduce its logged score (8.43 against 8.49 CER).
+That run was retrained cleanly and all other results were kept; the scripts, logs and the incident report are in the repository.
+
+\textbf{Other.}
+Dakshina's Tamil lexicon contains about 0.35\% bad pairs, which we did not remove from the test set.
+Vowel-dropped inputs can be genuinely ambiguous, so top-1 accuracy understates what a user-facing system with alternatives achieves.
+Our models are word-level; no sentence context is used.

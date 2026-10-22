@@ -1,19 +1,25 @@
 \section{Related Work}
-\textbf{Transliteration datasets and systems.}
-Dakshina covers twelve South Asian languages with native-script Wikipedia text, a romanization lexicon and romanized sentences~\cite{roark2020dakshina}.
-Aksharantar and the IndicXlit model extend coverage to 21 languages with millions of pairs~\cite{madhani2023aksharantar}.
-Earlier systems include Brahmi-Net~\cite{kunchukuttan2015brahminet} and the shared tasks collected in NEWS~\cite{chen2018news}.
-Context-aware and large-model approaches have recently been compared with character models~\cite{kirov2024context,azam2025beyond}.
+\textbf{Datasets and systems.}
+Dakshina provides Tamil romanization lexicons and romanized Wikipedia sentences for twelve South Asian languages~\cite{roark2020dakshina}.
+Aksharantar and the IndicXlit model extend coverage to 21 languages with 26 million pairs, mostly mined from monolingual and parallel corpora, and report a rise in Tamil top-1 accuracy from 56.0 to 67.7 when mined data are added~\cite{madhani2023aksharantar}.
+Earlier systems include rule and statistical models such as Brahmi-Net~\cite{kunchukuttan2015brahminet}, multilingual transliteration~\cite{kunchukuttan2018orthographic,kunchukuttan2021largescale} and the NEWS shared tasks whose metrics we follow~\cite{chen2018news}.
+Context-aware models, ensembles and byte-level pretrained models give further gains on sentences~\cite{kirov2024context,xue2022byt5}, and large language models are competitive on clean Tamil~\cite{azam2025beyond}.
+Production keyboards use small finite-state models under tight latency budgets~\cite{hellsten2017keyboard}.
 
-\textbf{Noisy and informal romanization.}
-Keyboard data show how users romanize at scale~\cite{hellsten2017keyboard}, and a large study documents Latin-script variation across South Asian languages~\cite{wolfsonkin2019latin}.
-For Tamil, a shorthand-aware study examines vowel dropping but evaluates no neural model~\cite{herath2024tamzhi}, and a Malayalam study reports CER rising from 7.4 to 22.7 when vowels are dropped~\cite{baiju2024malayalam}.
-Code-mixed Tamil corpora provide real informal text without Tamil-script labels~\cite{chakravarthi2020tamilmix}.
+\textbf{Informal and noisy romanization.}
+Wolf-Sonkin et al.\ describe variation in Latin-script input across South Asian languages, including optional aspiration and vowel doubling~\cite{wolfsonkin2019latin}.
+For Tamil, a shorthand-typing study derives rules from a survey of 215 users but evaluates no neural model~\cite{herath2024tamzhi}; a shared task on ad-hoc romanization shows that all systems degrade~\cite{sumanathilaka2025indonlp}; and for Malayalam a BiLSTM loses about 15 CER points on vowel-omitted input~\cite{baiju2024malayalam}.
+Code-mixed Tamil corpora such as TamilMixSentiment contain real informal text but have no Tamil-script references~\cite{chakravarthi2020tamilmix}.
+Lexicon snapping and language-model reranking can recover accuracy on noisy input~\cite{mandal2018normalization,gulcehre2015monolingual}.
 
-\textbf{Robustness and augmentation.}
-Character models are brittle to noise unless trained with it~\cite{belinkov2018synthetic}, and mixing noise types helps~\cite{karpukhin2019training}.
-Synthetic variation improves romanized language identification~\cite{benton2025romanizedlid}, and sampled back-translation is a standard way to create synthetic parallel data~\cite{sennrich2016backtranslation}.
-We transfer these ideas to Tamil transliteration.
+\textbf{Noise robustness and augmentation.}
+Character models are brittle to noise they were not trained on, and robustness to one noise type transfers poorly to others~\cite{belinkov2018synthetic}.
+A balanced mixture of deletions, insertions, substitutions and swaps improves robustness to typos at small clean cost but does not help stylistic variation~\cite{karpukhin2019training}.
+For romanized language identification, synthetic data that reproduces human spelling variation beats larger models, whereas machine-romanized data overstate accuracy~\cite{benton2025romanizedlid,madhani2023bhasha,gharami2025indotranslit}.
+Back-translation is the standard way of creating synthetic parallel data~\cite{sennrich2016backtranslation}, and we use its transliteration analogue.
+Byte-level models are intrinsically more robust to character noise than subword models~\cite{xue2022byt5,sennrich2016bpe}.
 
-\textbf{Evaluation practice.}
-Parameter confounds and weak statistics can reverse conclusions in character-level transduction~\cite{moran2020effective}; we match model size and tuning budget and report seed variance.
+\textbf{Architecture comparisons.}
+Attention encoder-decoders~\cite{sutskever2014sequence,bahdanau2015neural,luong2015effective} and Transformers~\cite{vaswani2017attention} have been compared on character transduction with mixed outcomes~\cite{roark2020dakshina,kirov2024context,wu2021applying,moran2020effective}.
+Moran and Lignos show that parameter count and weak statistics can reverse conclusions~\cite{moran2020effective}; we therefore match size, tuning budget and seeds.
+Our work differs from all of the above in studying Tamil word transliteration under controlled, paired, severity-graded noise, with training remedies and architectures compared on the same footing.
