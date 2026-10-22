@@ -27,7 +27,7 @@
 ## Phase 5: paper: DRAFT DONE (9 pages)
 - [x] IEEEtran skeleton, all sections written from logged numbers, 5 figures, 6 tables, references cleaned, builds clean
 - [x] Claim-to-evidence map, reproducibility guide, model card
-- [x] Co-authors added (KRM Lohit, Allen John Isac, KP Shohil), affiliation corrected
+- [x] Co-authors added (KRM Lohith, Allen John Isac, KP Shohil), affiliation corrected
 - [ ] Page limit, venue entries for arXiv-only references, add RQ2 results, proofread, final PDF
 
 ## Phase 6: deliverables and housekeeping

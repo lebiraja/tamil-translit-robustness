@@ -3,7 +3,7 @@
 Newest entry on top.
 
 ## 2026-10-22 · Co-authors added to paper v1 and v2
-- Authors: Lebi Raja, KRM Lohit, Allen John Isac, KP Shohil (same division and college). Both PDFs rebuilt clean (9 pages); tags `paper-v1.1` and `paper-v2.1`.
+- Authors: Lebi Raja, KRM Lohith, Allen John Isac, KP Shohil (same division and college). Both PDFs rebuilt clean (9 pages); tags `paper-v1.1` and `paper-v2.1`.
 
 ## 2026-10-22 · Paper v1 and v2 released
 - Affiliation corrected to "Division of Data Science and Cybersecurity, Karunya Institute of Technology and Sciences, India". `paper/releases/paper-v2.pdf` is the final (with the deployment model); `paper/releases/paper-v1.pdf` is the earlier complete draft without it. Git tags `paper-v1` (fef4072) and `paper-v2`. Both build clean (9 pages).
