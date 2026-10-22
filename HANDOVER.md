@@ -14,7 +14,7 @@ Research, experiments, final model, typing demo and a full IEEE paper draft all 
 ### What is left
 1. **Lebi:** verify `data/private/wa_verify.tsv` (413 real-chat words); decide who types the human set (`docs/human-typing-protocol.md`, `scripts/make_human_prompts.py`).
 2. **Then:** evaluate the verified chat set and the human set on v1/v2 and the 110 checkpoints (checkpoints in `runs/` on Leica or the private Hugging Face repo) to answer RQ2, add a Results subsection and update Limitations and the abstract; re-decide gate 4 (D20).
-3. Paper: add co-authors in `main.tex`, check the venue page limit, add missing venues to a few arXiv-only references, proofread, optional ablation on how colloquial forms fail.
+3. Paper (authors and affiliation done; v1 and v2 PDFs in `paper/releases/`): check the venue page limit, add missing venues to a few arXiv-only references, proofread, optional ablation on how colloquial forms fail.
 4. Optional: upload v2 to the private Hugging Face repo; improve colloquial-form accuracy (chat-style training data, self-training on DravidianCodeMix), lexicon/LM reranking (C4).
 5. Housekeeping: revoke the GitHub and Hugging Face tokens and rotate the two passwords (pasted in chat); delete `~/work/git.txt` and `~/work/hug.txt` on Leica; remove the supervisor/dashboard cron jobs on Leica when finished; remove the Excel from the repo before any public release.
 
