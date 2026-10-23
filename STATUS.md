@@ -2,6 +2,11 @@
 
 Newest entry on top.
 
+## 2026-10-23 · Paper v3 written (staff structure)
+- **Done:** `paper/v3/main.tex` (7 pages, builds clean, no undefined citations): six sections as the staff asked (Abstract of 145 words, Introduction, Related Work grouped rule-based/neural/LLM with a gap table, Proposed Methodology, Results and Discussion with comparison tables and figure last, Conclusion). New title "Robustness of Character-Level Transliteration to Informal Typing in Romanized Tamil". Two gaps claimed: G1 paired benchmark, G2 remedies and transfer. PDF: `paper/releases/paper-v3.pdf`. Plan: `docs/paper-v3-plan.md`. Audio of the staff conversation transcribed from `ignore-it/` (not saved).
+- **Corrected from v2:** reproduction paragraph compared our test top-1 with Roark's dev top-1; dev top-1 now 65.1 (BiLSTM 3M) vs 65.3 and 65.8 (Transformer 3M) vs 65.7. Azam 2025 sentence now notes fine-tuned GPT-4o reaches 37%. Mined-pair filter now states the authors' threshold (-0.35) and ours (-0.10).
+- **Open:** venue and page limit; run the staff's plagiarism check; real chat is still preliminary (`data/private/wa_verify.tsv` unverified).
+
 ## 2026-10-22 · Paper author block and layout (v3 layout tried and reverted)
 - Author block rebuilt in IEEE style (name with division and college under each, two authors per row), kept. A v3 layout (abstract alone in the left column, Introduction at the top of the right column) was tried and dropped at Lebi's request: `main.tex` is back to the v2 layout (text identical to `paper-v2.pdf`), the v3 PDF and the `paper-v3` tag were removed. Releases: `paper-v1.pdf`, `paper-v2.pdf` (final); tags `paper-v1.1`, `paper-v2.1`.
 

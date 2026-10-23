@@ -21,5 +21,7 @@ Every quantitative statement in `paper/` and where it comes from. All numbers ar
 | Incident disclosure | 33 of 72 runs overlapped; 1 of 110 mismatched (8.43 vs 8.49) | `FIXES.md` F3, `logs_archive/eval_mismatch.txt` | Limitations |
 | Final model v2 (Deployment model) | dev 8.56, test 8.93, top-1 65.27, AK-all 10.76, MIX0.3 17.77, KEY0.3 15.40 vs parent 8.47 / 9.02 / 63.88 / 10.95 / 21.80 / 23.04 | `results/final/v2-ft-s0.json`, `results/c2/c2-transformer-A4-s1.json` | Table `tab_v2`, Fig. `fig_v2` |
 | Preliminary real chat (370 words, model labels, unverified) | CER 25.4 (v1) vs 24.9 (v2); top-1 40.5 vs 39.7; top-5 68.6 vs 71.1 | computed on the laptop from `data/private/wa_test/WA-TA.tsv` (private, not in repo) | Deployment model, Limitations |
+| Dev top-1 matches published (v3 IV-A) | BiLSTM 3M 65.08 sd 0.52, Transformer 3M 65.82 sd 0.45 (mean of 5 seeds) vs Roark 65.3 / 65.7 | `results/c3/c3-*-3m-s*.json` key `dev.top1` | v3 Results A |
+| Abstract numbers (v3) | 22-24, 1-3 points, 24.0 to 17.7, 21.8 vs 25.5, 17.8, 12.6 MB | see rows above; `results/summary/c1_degradation.csv`, `c2.csv`, `results/final/v2-ft-s0.json` | v3 Abstract |
 
 Rules: no number is written into the paper by hand; a number not in this table must be added here with its source before it is added to the paper. Literature numbers (Roark 8.4/9.4, Kirov 8.2, Baiju 7.4->22.7, Azam ~20% top-1, Aksharantar 56.0->67.7) come from `research/KNOWLEDGE_BASE.md`, which quotes the PDFs in `research/papers/`.

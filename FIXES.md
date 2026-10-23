@@ -2,6 +2,12 @@
 
 Prepend an entry for each real bug or documentation error fixed: symptom, root cause, fix with `file:line`, verification. Newest on top. No code exists yet, so these are documentation and process fixes.
 
+## F4 · 2026-10-23 · Paper v1/v2 compared test top-1 with a published dev top-1
+- **Symptom:** the paper said our top-1 (63.3%) was below the published 65.3% and blamed scoring differences.
+- **Root cause:** 63.3 is the BiLSTM 3M test top-1 (`results/summary/c3_clean.csv`); Roark et al.'s 65.3 is a dev top-1. Dev top-1 was stored in each run JSON (`results/c3/*.json`, key `dev.top1`) but not aggregated.
+- **Fix:** v3 reports dev top-1 averaged over 5 seeds: BiLSTM 3M 65.08 (sd 0.52), Transformer 3M 65.82 (sd 0.45) against 65.3 and 65.7; the "below published" sentence is removed (`paper/v3/main.tex`, section IV-A). v1 and v2 PDFs are unchanged.
+- **Verification:** recomputed from the 30 C3 run JSONs; the numbers are in `docs/paper-claims-map.md`.
+
 ## F3 · 2026-10-22 · Supervisor launched duplicate workers; evaluation starved
 - **Symptom:** three `run_matrix.py c2 --seeds 0,1,2` processes trained the same run at once (identical loss lines in the log); the per-item evaluation sat at 31/110 for hours; one run crashed with `FileNotFoundError: last.tmp -> last.pt` (two processes sharing one checkpoint folder).
 - **Root cause:** `scripts/supervisor.py` checked for a running worker with the pattern `run_matrix.py <block> --seeds <s>` while `running()` anchors the match as `<python> <pattern>`, so it never matched `python scripts/run_matrix.py ...`. The supervisor believed no worker existed and launched another each cycle (about 17:06 onward); duplicates filled the 3 GPU slots, so evaluation never got one.
