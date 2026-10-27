@@ -2,6 +2,9 @@
 
 Newest entry on top.
 
+## 2026-10-28 · Architecture figure made compact and moved to Data and Benchmark
+- **Fix:** the first version of Fig. 1 was a tall `figure*` in Method that pushed every other figure to the end of the paper. It is now a short, wide figure at the top of the Data and Benchmark section, so all figures sit in their own sections again. Paper is 10 pages, no undefined references.
+
 ## 2026-10-28 · College-format report and slide deck
 - **Done:** `report/build_docx.js` builds `report/DL_IA3_Report.docx` in the Karunya skill-based-evaluation format copied from the NLP report (A4, 1-inch margins, Times New Roman 12 pt body justified at 1.3 spacing, 13 pt bold centred chapter headings, title page title 18 pt at 1.5 spacing and team names 16 pt per the official template, Latha for Tamil, footer page numbers from the abstract). Chapters 1 to 6, conclusion, references (17, all in `research/refs.bib`), appendices, evaluation sheet; 31 pytest tests pass (cited in Ch. 5). Slide deck made as a Claude slides artifact in the NLP deck theme (11 slides).
 - **Needs Lebi:** fill the course code and the Reg.No of KRM Lohith and Allen John Isac (constants at the top of `build_docx.js`; the cover shows placeholders), decide whether to keep the online-certificate page, and open the docx in Word to check pagination (it was not rendered here; no LibreOffice).
