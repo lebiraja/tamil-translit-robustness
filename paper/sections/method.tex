@@ -1,5 +1,7 @@
 \section{Method}
 \label{sec:method}
+\input{figures/fig_architecture}
+
 \textbf{Models.}
 Both models are character-level, with separate source and target vocabularies built from the training data (30 and 52 symbols including specials).
 The BiLSTM has a two-layer bidirectional encoder, a two-layer LSTM decoder and Luong ``general'' attention~\cite{luong2015effective,bahdanau2015neural}.
