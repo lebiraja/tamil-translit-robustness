@@ -2,6 +2,11 @@
 
 Newest entry on top.
 
+## 2026-10-27 · Open-sourced under Apache-2.0
+- **Done:** `LICENSE` (Apache-2.0) and README license section; GitHub `lebiraja/tamil-translit-robustness` now public. `Projects_with_Team_Members.xlsx` and `research/papers/` (32 third-party PDFs) removed from all history with git-filter-repo, then one authorised force-push of main (commit hashes changed); both stay on disk, gitignored. HF `lebiraja/tamil-tanglish-translit-v2` is public with LICENSE and `license: apache-2.0` in the card. The 113-checkpoint HF repo stays private.
+- **Caveat:** model card credits Dakshina (CC BY-SA 4.0) and Aksharantar (CC BY 4.0); share-alike on trained weights is unsettled (D18).
+- **Needs Lebi:** revoke the HF token pasted in chat today (and the earlier GitHub/HF ones) and rotate the lab passwords.
+
 ## 2026-10-23 · Paper v3 written (staff structure)
 - **Done:** `paper/v3/main.tex` (7 pages, builds clean, no undefined citations): six sections as the staff asked (Abstract of 145 words, Introduction, Related Work grouped rule-based/neural/LLM with a gap table, Proposed Methodology, Results and Discussion with comparison tables and figure last, Conclusion). New title "Robustness of Character-Level Transliteration to Informal Typing in Romanized Tamil". Two gaps claimed: G1 paired benchmark, G2 remedies and transfer. PDF: `paper/releases/paper-v3.pdf`. Plan: `docs/paper-v3-plan.md`. Audio of the staff conversation transcribed from `ignore-it/` (not saved).
 - **Corrected from v2:** reproduction paragraph compared our test top-1 with Roark's dev top-1; dev top-1 now 65.1 (BiLSTM 3M) vs 65.3 and 65.8 (Transformer 3M) vs 65.7. Azam 2025 sentence now notes fine-tuned GPT-4o reaches 37%. Mined-pair filter now states the authors' threshold (-0.35) and ours (-0.10).

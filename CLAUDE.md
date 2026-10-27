@@ -18,7 +18,7 @@ Read `HANDOVER.md`, the top of `STATUS.md`, `DECISIONS.md`, `CHECKLIST.md`. Addr
 - Paper: LaTeX, IEEEtran, in `paper/`; use the `research-paper` skill; compile cleanly before committing paper changes.
 - No secrets in files. Hugging Face tokens or passwords given in chat are used via environment variables only and never stored.
 - Docs sync: keep `docs/` in step with the code (architecture, docker, experiment plan). After a feature, fix, decision or blocker, prepend `STATUS.md`. After a real bug fix, prepend `FIXES.md`. Before editing HANDOVER, move "Current" into "Previous versions".
-- Commits: conventional (`feat:` `fix:` `docs:` `refactor:` `chore:`). Repo is private on GitHub: `lebiraja/tamil-translit-robustness`.
+- Commits: conventional (`feat:` `fix:` `docs:` `refactor:` `chore:`). Repo is public (Apache-2.0) on GitHub: `lebiraja/tamil-translit-robustness`.
 - Helper agents: relay only actionable news to Lebi, not idle or duplicate notifications.
 
 ## Layout
