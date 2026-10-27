@@ -16,3 +16,6 @@ logs/
 .playwright-mcp/
 quarantine/runs/
 quarantine/items/
+ignore-it/
+research/papers/
+*.xlsx
