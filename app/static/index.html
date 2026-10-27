@@ -4,43 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tanglish to Tamil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:dark;--bg:#12110f;--ink:#f1ece2;--ink2:#b9b2a3;--mut:#7d7769;--line:#2a2823;--acc:#e8b04a;--sel:#1d1b17;
---ta:"Noto Sans Tamil","Latha","Nirmala UI","Lohit Tamil","Tamil Sangam MN",sans-serif;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--serif:Georgia,"Times New Roman",serif}
+:root{color-scheme:light;--bg:#f5f8fd;--ink:#0a0f1c;--ink2:#2b3752;--mut:#55627a;--line:#c9d6ec;--grid:#dce6f7;--acc:#0b5cff;--accsoft:#e3edff;--accglow:#a9c6ff;--card:#ffffff;--sel:#e3edff;
+--ta:"Noto Sans Tamil","Latha","Nirmala UI","Lohit Tamil","Tamil Sangam MN",sans-serif;--mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;--sans:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
-main{max-width:860px;margin:0 auto;padding:44px 20px 80px}
-h1{font:400 clamp(30px,6vw,46px)/1.08 var(--serif);margin:0 0 6px;letter-spacing:-.01em}
+body{margin:0;background-color:var(--bg);background-image:repeating-linear-gradient(90deg,var(--grid) 0,var(--grid) 1px,transparent 1px,transparent 48px),repeating-linear-gradient(180deg,var(--grid) 0,var(--grid) 1px,transparent 1px,transparent 48px);color:var(--ink);font:16px/1.5 var(--sans);min-height:100vh}
+main{max-width:860px;margin:0 auto;padding:44px 20px 80px;position:relative}
+main::before{content:"";position:absolute;top:24px;right:20px;width:32px;height:32px;border-top:3px solid var(--acc);border-right:3px solid var(--acc)}
+.tag{font:12px var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--acc);margin:0 0 14px}
+h1{font:700 clamp(32px,6vw,52px)/1.08 var(--sans);margin:0 0 10px;letter-spacing:-.02em}
 h1 em{color:var(--acc);font-style:normal}
 .sub{color:var(--ink2);margin:0 0 30px;max-width:56ch}
 label{display:block;font:11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:0 0 8px}
-textarea{width:100%;min-height:120px;resize:vertical;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--ink);font:22px/1.5 var(--mono);padding:6px 0 14px;outline:none}
-textarea:focus{border-bottom-color:var(--acc)}
-textarea::placeholder{color:#4a463d}
-.out{margin-top:34px;min-height:130px;border-bottom:1px solid var(--line);padding-bottom:18px;font:34px/1.9 var(--ta);overflow-wrap:anywhere}
+textarea{width:100%;min-height:120px;resize:vertical;background:var(--card);border:1px solid var(--line);border-radius:8px;color:var(--ink);font:22px/1.5 var(--mono);padding:16px 18px;outline:none;box-shadow:0 16px 40px #d6e3f8}
+textarea:focus{border-color:var(--acc)}
+textarea::placeholder{color:#9aa8c2}
+.out{margin-top:28px;min-height:130px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px 18px 18px;font:34px/1.9 var(--ta);overflow-wrap:anywhere;box-shadow:0 16px 40px #d6e3f8}
 .out .lit{color:var(--ink2);white-space:pre-wrap}
 .w{position:relative;display:inline-block;cursor:pointer;border-radius:4px;padding:0 3px;margin:0 -3px}
 .w:hover,.w.open{background:var(--sel)}
 .w:focus-visible,button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
-.w .alt{position:absolute;left:0;top:100%;z-index:5;white-space:nowrap;width:max-content;background:#0d0c0a;border:1px solid var(--line);border-radius:6px;padding:6px;min-width:190px;box-shadow:0 12px 30px #0009;font-size:24px;line-height:1.4}
+.w .alt{position:absolute;left:0;top:100%;z-index:5;white-space:nowrap;width:max-content;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:190px;box-shadow:0 16px 40px #a9c6ff99;font-size:24px;line-height:1.4}
 .alt button{white-space:nowrap;display:flex;justify-content:space-between;align-items:baseline;gap:18px;width:100%;background:none;border:0;color:var(--ink);padding:4px 8px;border-radius:4px;cursor:pointer;font:inherit;text-align:left}
 .alt button:hover{background:var(--sel)}
 .w.en{font:600 22px var(--mono);color:var(--ink2);border:1px dashed var(--line);padding:0 8px;margin:0 2px;vertical-align:middle}
 .alt small{font:11px var(--mono);color:var(--mut)}
 .alt button.cur{color:var(--acc)}
 .row{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:16px;font:12px var(--mono);color:var(--mut)}
-.btn{background:var(--acc);color:#1a1409;border:0;border-radius:4px;padding:8px 16px;font:600 13px var(--mono);cursor:pointer}
-.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line)}
+.btn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:9px 18px;font:600 13px var(--mono);cursor:pointer;box-shadow:0 8px 24px #a9c6ff}
+.btn.ghost{background:transparent;color:var(--ink2);border:1px solid var(--line);box-shadow:none}
 .try{margin-top:34px}
-.try button{background:none;border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:5px 12px;margin:0 8px 8px 0;font:13px var(--mono);cursor:pointer}
-.try button:hover{border-color:var(--acc);color:var(--ink)}
+.try button{background:var(--card);border:1px solid var(--line);color:var(--ink2);border-radius:999px;padding:5px 12px;margin:0 8px 8px 0;font:13px var(--mono);cursor:pointer}
+.try button:hover{border-color:var(--acc);color:var(--acc)}
 footer{margin-top:54px;font:12px/1.7 var(--mono);color:var(--mut)}
-footer b{color:var(--ink2);font-weight:500}
+footer b{color:var(--ink);font-weight:500}
+input[type=checkbox]{accent-color:var(--acc)}
 @media(max-width:560px){.out{font-size:28px}textarea{font-size:18px}}
 </style>
 </head>
 <body>
 <main>
+  <p class="tag">NLP · IA3 · Text normalisation</p>
   <h1>Type Tanglish.<br>Get <em>தமிழ்</em>.</h1>
   <p class="sub">A character-level transformer trained on real romanizations and noisy typing. Click any word to see the other candidates.</p>
 

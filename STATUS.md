@@ -2,6 +2,9 @@
 
 Newest entry on top.
 
+## 2026-10-27 · Demo UI updated
+- **Done:** `app/static/index.html` replaced with the redesigned light, blueprint-grid UI from `../nlp/app/static/index.html` (Space Grotesk and JetBrains Mono via Google Fonts). `app/server.py` was already identical, so the API is unchanged.
+
 ## 2026-10-27 · Open-sourced under Apache-2.0
 - **Done:** `LICENSE` (Apache-2.0) and README license section; GitHub `lebiraja/tamil-translit-robustness` now public. `Projects_with_Team_Members.xlsx` and `research/papers/` (32 third-party PDFs) removed from all history with git-filter-repo, then one authorised force-push of main (commit hashes changed); both stay on disk, gitignored. HF `lebiraja/tamil-tanglish-translit-v2` is public with LICENSE and `license: apache-2.0` in the card. The 113-checkpoint HF repo stays private.
 - **Caveat:** model card credits Dakshina (CC BY-SA 4.0) and Aksharantar (CC BY 4.0); share-alike on trained weights is unsettled (D18).
